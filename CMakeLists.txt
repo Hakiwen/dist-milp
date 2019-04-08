@@ -28,5 +28,5 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 #add_executable(${PROJECT_NAME} "src/ilomipex1.cpp")
 #add_executable(get_test_cut "src/wrtnode.c")
 
-target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_LIBRARIES} libpugixml.a)
+target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES}  ${MPI_CXX_LINK_FLAGS} libpugixml.a)
 #target_link_libraries(get_test_cut ${CPLEX_LINK_LIBS})
