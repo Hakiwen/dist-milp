@@ -65,8 +65,6 @@ int main (void)
 //    }
 //    while(NoC.status && NoC_Fault.Fault_Detection(&NoC));
 
-    while (1){ break; }; // does nothing, but smiling at you :)
-
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);
 
@@ -89,6 +87,8 @@ int main (void)
 
     // Finalize the MPI environment.
     MPI_Finalize();
+
+    while (1){}; // does nothing, but smiling at you :)
 
     return 0;
 
