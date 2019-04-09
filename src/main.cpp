@@ -14,7 +14,7 @@ typedef IloArray<IloNumVarArray> IloNumVarArray2D;
 
 static void populatebyrow(IloModel model, IloNumVarArray x, IloRangeArray c);
 
-int main (void)
+int main (void) // TODO try...catch... for checking if all arguments to all functions are valid
 {
     /*
      * user-initialized topology
@@ -50,45 +50,45 @@ int main (void)
     /*
      * Main Loop
      */
-//    do
-//    {
-//        NoC_CPLEX.write_LP(&NoC);
-//        if(prob.solve() != CPX_STAT_INFEASIBLE)
-//        {
-//            NoC_CPLEX.read_Sol(&NoC, "sol.xml");
-//            NoC.Disp();
-//        }
-//        else
-//        {
-//            NoC.status = 0;
-//        }
-//    }
-//    while(NoC.status && NoC_Fault.Fault_Detection(&NoC));
+    do
+    {
+        NoC_CPLEX.write_LP(&NoC);
+        if(prob.solve() != CPX_STAT_INFEASIBLE)
+        {
+            NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+            NoC.Disp();
+        }
+        else
+        {
+            NoC.solver_status = 0;
+        }
+    }
+    while(NoC.solver_status && NoC_Fault.Fault_Detection(&NoC));
 
-    // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
-
-    // Get the number of processes
-    int world_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-
-    // Get the rank of the process
-    int world_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-
-    // Get the name of the processor
-    char processor_name[MPI_MAX_PROCESSOR_NAME];
-    int name_len;
-    MPI_Get_processor_name(processor_name, &name_len);
-
-    // Print off a hello world message
-    printf("Hello world from processor %s, rank %d out of %d processors\n",
-           processor_name, world_rank, world_size);
-
-    // Finalize the MPI environment.
-    MPI_Finalize();
-
-    while (1){}; // does nothing, but smiling at you :)
+//    // Initialize the MPI environment
+//    MPI_Init(NULL, NULL);
+//
+//    // Get the number of processes
+//    int world_size;
+//    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+//
+//    // Get the rank of the process
+//    int world_rank;
+//    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+//
+//    // Get the name of the processor
+//    char processor_name[MPI_MAX_PROCESSOR_NAME];
+//    int name_len;
+//    MPI_Get_processor_name(processor_name, &name_len);
+//
+//    // Print off a hello world message
+//    printf("Hello world from processor %s, rank %d out of %d processors\n",
+//           processor_name, world_rank, world_size);
+//
+//    // Finalize the MPI environment.
+//    MPI_Finalize();
+//
+//    while (1){}; // does nothing, but smiling at you :)
 
     return 0;
 

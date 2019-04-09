@@ -35,14 +35,17 @@ public:
     Eigen::MatrixXi M_apps;
     Eigen::MatrixXi X_CRs_nodes_old;
 
+    int *app_on_node; // app to run on each node, solver sends
+    int run_app; // app to run on each node, each node receives
+
     int N_Faults;
-    int *Fault_CRs;
+    int *Fault_CRs; // faulty status of each node, solver recieves
+    int fault_status; // faulty status of each node, each node sends
+    int solver_status;
 
     int obj_val;
     int var_size;
     int con_size;
-
-    int status;
 
     NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[]);
 

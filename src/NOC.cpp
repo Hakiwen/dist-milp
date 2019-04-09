@@ -20,6 +20,7 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
 
 void NOC::CreateTopology(const char *topo)
 {
+    // TODO Other topologies
     // Only Square Topology for NOW!
     this->CreateSquareTopology();
     this->CreateIncidentMatrices(topo);
@@ -149,15 +150,21 @@ void NOC::CreateDecisionMatrices()
     {
         this->R_apps(i) = 1;
     }
+    this->app_on_node = new int[this->N_CRs];
+    for (int i = 0; i < this->N_CRs; i++) {
+        this->app_on_node[i] = 0; // initially alive, but not running any apps
+    }
+    this->run_app = 0; // initially alive, but not running any apps
 
     this->N_Faults = 0;
-    this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault
+    this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
     for (int i = 0; i < this->N_CRs; i++)
     {
         this->Fault_CRs[i] = 0;
     }
 
-    this->status = 1; // 1 feasible, 0 infeasible
+    this->fault_status = 0; // 0 no fault, 1 has fault (for each node)
+    this->solver_status = 1; // 1 feasible, 0 infeasible
 
     if(VERBOSE)
     {
@@ -232,7 +239,6 @@ void NOC::Disp()
         std::cout << "M_apps: \n" << this->M_apps << std::endl;
     }
 
-    Eigen::MatrixXi app_on_node(this->N_CRs,1);
     Eigen::MatrixXi result1(this->N_Row_CRs, this->N_Col_CRs), result2(this->N_Row_CRs, this->N_Col_CRs);
     for (int i = 0; i < this->N_CRs; i++)
     {
@@ -240,17 +246,17 @@ void NOC::Disp()
         {
             if(this->Fault_CRs[i] == 1)
             {
-                app_on_node(i) = -1;
+                this->app_on_node[i] = -1;
                 break;
             }
             else if(this->X_CRs_nodes(i,j) == 1)
             {
-                app_on_node(i) = j+1;
+                this->app_on_node[i] = j+1;
                 break;
             }
             else
             {
-                app_on_node(i) = 0;
+                this->app_on_node[i] = 0;
             }
         }
     }
@@ -259,12 +265,12 @@ void NOC::Disp()
     {
         for (int j = 0; j < this->N_Col_CRs; j++)
         {
-            result1(i,j) = app_on_node(i*this->N_Col_CRs + j);
-            result2(i,j) = get_app_from_node(app_on_node(i*this->N_Col_CRs + j));
+            result1(i,j) = this->app_on_node[i*this->N_Col_CRs + j];
+            result2(i,j) = get_app_from_node(this->app_on_node[i*this->N_Col_CRs + j]);
         }
     }
 
-    std::cout << "status: " << this->status << std::endl;
+//    std::cout << "status: " << this->solver_status << std::endl;
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 }
