@@ -36,7 +36,8 @@ public:
     Eigen::MatrixXi X_CRs_nodes_old;
 
     int *app_on_node; // app to run on each node, solver sends
-    int run_app; // app to run on each node, each node receives
+    int app_to_run; // app to run on each node, each node receives
+    void (*app_ptr)(int);
 
     int N_Faults;
     int *Fault_CRs; // faulty status of each node, solver recieves

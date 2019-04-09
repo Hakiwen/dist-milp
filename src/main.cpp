@@ -1,20 +1,17 @@
-#include <ilcplex/ilocplex.h>
-#include <ilconcert/iloexpression.h>
-#include <ilcplex/ilocplexi.h>
-
 #include "NOC.hpp"
 #include "NOC_CPLEX.hpp"
 #include "NOC_FAULT.hpp"
 #include "DIST_MILP_SOLVER.hpp"
 
 #include <mpi.h>
+#include <wiringPi.h>
 
 ILOSTLBEGIN
 typedef IloArray<IloNumVarArray> IloNumVarArray2D;
 
 static void populatebyrow(IloModel model, IloNumVarArray x, IloRangeArray c);
 
-int main (void) // TODO try...catch... for checking if all arguments to all functions are valid
+int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
 {
     /*
      * user-initialized topology
@@ -25,6 +22,8 @@ int main (void) // TODO try...catch... for checking if all arguments to all func
     N_Row_apps[0] = 2;    N_Col_apps[0] = 3;
     N_Row_apps[1] = 2;    N_Col_apps[1] = 2;
     N_Row_apps[2] = 2;    N_Col_apps[2] = 1;
+    void (*app_ptr[N_apps])(int);
+//    app_ptr[0] = &; app_ptr[1] = &; *app_ptr[2] = &;
 
     /*
      * NoC Object
@@ -46,6 +45,14 @@ int main (void) // TODO try...catch... for checking if all arguments to all func
      * Solver Object
      */
     DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml");
+
+//    wiringPiSetup () ;
+//    pinMode (0, OUTPUT) ;
+//    for (;;)
+//    {
+//        digitalWrite (0, HIGH) ; delay (500) ;
+//        digitalWrite (0,  LOW) ; delay (500) ;
+//    }
 
     /*
      * Main Loop

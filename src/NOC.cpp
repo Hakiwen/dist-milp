@@ -126,7 +126,8 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
                 {
                     M(i, path_ind[LEFT_IND] - 1) = 0;
                 }
-            } else if ((i + 1) % N_Col == 0) // last column
+            }
+            else if ((i + 1) % N_Col == 0) // last column
             {
                 if (path_ind[RIGHT_IND] > 0 && path_ind[RIGHT_IND] <= N_joint)
                 {
@@ -151,10 +152,11 @@ void NOC::CreateDecisionMatrices()
         this->R_apps(i) = 1;
     }
     this->app_on_node = new int[this->N_CRs];
-    for (int i = 0; i < this->N_CRs; i++) {
+    for (int i = 0; i < this->N_CRs; i++)
+    {
         this->app_on_node[i] = 0; // initially alive, but not running any apps
     }
-    this->run_app = 0; // initially alive, but not running any apps
+    this->app_to_run = 0; // initially alive, but not running any apps
 
     this->N_Faults = 0;
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
