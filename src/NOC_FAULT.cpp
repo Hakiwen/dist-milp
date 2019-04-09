@@ -18,7 +18,8 @@ int NOC_FAULT::Fault_Detection(NOC *NoC)
     NoC->Fault_CRs[fault_node - 1] = 1;
 
     NoC->N_Faults = 0;
-    for (int i = 0; i < NoC->N_CRs; i++) {
+    for (int i = 0; i < NoC->N_CRs; i++)
+    {
         if(NoC->Fault_CRs[i] == 1)
         {
             NoC->N_Faults += 1;
