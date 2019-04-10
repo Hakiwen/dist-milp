@@ -157,6 +157,7 @@ void NOC::CreateDecisionMatrices()
         this->app_on_node[i] = 0; // initially alive, but not running any apps
     }
     this->app_to_run = 0; // initially alive, but not running any apps
+    this->prev_app_to_run = -1;
 
     this->N_Faults = 0;
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)

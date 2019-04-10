@@ -1,10 +1,9 @@
 #include "NOC.hpp"
 #include "NOC_CPLEX.hpp"
 #include "NOC_FAULT.hpp"
+#include "NOC_APP.hpp"
+#include "NOC_MPI.hpp"
 #include "DIST_MILP_SOLVER.hpp"
-
-#include <mpi.h>
-#include <wiringPi.h>
 
 ILOSTLBEGIN
 typedef IloArray<IloNumVarArray> IloNumVarArray2D;
@@ -23,7 +22,9 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     N_Row_apps[1] = 2;    N_Col_apps[1] = 2;
     N_Row_apps[2] = 2;    N_Col_apps[2] = 1;
     void (*app_ptr[N_apps])(int);
-//    app_ptr[0] = &; app_ptr[1] = &; *app_ptr[2] = &;
+    app_ptr[0] = &APP_LED;
+    app_ptr[1] = &APP_LED;
+    app_ptr[2] = &APP_LED;
 
     /*
      * NoC Object
@@ -42,60 +43,48 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC_FAULT NoC_Fault = NOC_FAULT();
 
     /*
+     * NoC MPI Object
+     */
+    NOC_MPI NoC_MPI = NOC_MPI();
+
+    /*
      * Solver Object
      */
     DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml");
 
-//    wiringPiSetup () ;
-//    pinMode (0, OUTPUT) ;
-//    for (;;)
-//    {
-//        digitalWrite (0, HIGH) ; delay (500) ;
-//        digitalWrite (0,  LOW) ; delay (500) ;
-//    }
-
     /*
      * Main Loop
      */
-    do
+    while (1)
     {
-        NoC_CPLEX.write_LP(&NoC);
-        if(prob.solve() != CPX_STAT_INFEASIBLE)
+        if (NoC_MPI.world_rank == 0)
         {
-            NoC_CPLEX.read_Sol(&NoC, "sol.xml");
-            NoC.Disp();
+            do {
+                NoC_CPLEX.write_LP(&NoC);
+                if (prob.solve() != CPX_STAT_INFEASIBLE)
+                {
+                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+                    NoC.Disp();
+                }
+                else
+                    {
+                    NoC.solver_status = 0;
+                }
+            }
+            while (NoC.solver_status && NoC_Fault.Fault_Detection(&NoC));
         }
         else
         {
-            NoC.solver_status = 0;
+            if(NoC.prev_app_to_run != NoC.app_to_run)
+            {
+                NoC.prev_app_to_run = NoC.app_to_run;
+                app_ptr[0](NoC.app_to_run);
+            }
         }
     }
-    while(NoC.solver_status && NoC_Fault.Fault_Detection(&NoC));
 
-//    // Initialize the MPI environment
-//    MPI_Init(NULL, NULL);
-//
-//    // Get the number of processes
-//    int world_size;
-//    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-//
-//    // Get the rank of the process
-//    int world_rank;
-//    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-//
-//    // Get the name of the processor
-//    char processor_name[MPI_MAX_PROCESSOR_NAME];
-//    int name_len;
-//    MPI_Get_processor_name(processor_name, &name_len);
-//
-//    // Print off a hello world message
-//    printf("Hello world from processor %s, rank %d out of %d processors\n",
-//           processor_name, world_rank, world_size);
-//
-//    // Finalize the MPI environment.
-//    MPI_Finalize();
-//
-//    while (1){}; // does nothing, but smiling at you :)
+    NoC_MPI.Finalize();
+    while (1){}; // does nothing, but smiling at you :)
 
     return 0;
 

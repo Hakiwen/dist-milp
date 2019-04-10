@@ -9,7 +9,7 @@
 
 #include <Eigen/Dense>
 
-#define VERBOSE 1
+#define VERBOSE 0
 
 class NOC{
 public:
@@ -37,6 +37,7 @@ public:
 
     int *app_on_node; // app to run on each node, solver sends
     int app_to_run; // app to run on each node, each node receives
+    int prev_app_to_run;
     void (*app_ptr)(int);
 
     int N_Faults;

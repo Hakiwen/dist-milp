@@ -13,6 +13,8 @@ find_package(MPI REQUIRED)
 find_library(wiringPi_LIB wiringPi)
 
 include_directories(include
+			apps
+			lib
 		    ${EIGEN3_INCLUDE_DIRS}
 			${MPI_INCLUDE_PATH}
 		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
@@ -23,9 +25,10 @@ link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pi
 set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB APPS "apps/*.cpp")
 
 add_definitions(-DIL_STD) 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${APPS})
 #add_executable(${PROJECT_NAME} "src/ilomipex1.cpp")
 #add_executable(get_test_cut "src/wrtnode.c")
 

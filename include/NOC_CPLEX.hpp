@@ -17,8 +17,6 @@
 
 #include "NOC.hpp"
 
-#define VERBOSE 1
-
 class NOC_CPLEX {
     typedef IloArray<IloNumVarArray> IloNumVarArray2D;
     IloModel model;

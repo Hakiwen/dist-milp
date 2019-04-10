@@ -33,7 +33,20 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="" />
+    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/include/NOC_APP.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/NOC_MPI.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/NOC_APP.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/NOC_MPI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/APP_LED.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/apps/APP_LED.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/APP_LED.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/apps/APP_LED.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/NOC.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NOC.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,52 +77,41 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="27" column="35" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="35" />
+            <state relative-caret-position="255">
+              <caret line="17" column="34" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="57" column="16" lean-forward="true" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
+            <state relative-caret-position="130">
+              <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
               <folding>
-                <element signature="e#2#20#0" expanded="true" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/apps/APP_LED.hpp">
+        <entry file="file://$PROJECT_DIR$/include/NOC_MPI.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="270">
+              <caret line="18" column="19" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="19" />
+              <folding>
+                <element signature="e#104#123#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
+        <entry file="file://$PROJECT_DIR$/src/NOC_MPI.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2151">
-              <caret line="182" column="84" selection-start-line="182" selection-start-column="84" selection-end-line="182" selection-end-column="84" />
+            <state relative-caret-position="315">
+              <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -117,8 +119,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/NOC.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+            <state relative-caret-position="195">
+              <caret line="39" column="24" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
               <folding>
                 <element signature="e#96#115#0" expanded="true" />
               </folding>
@@ -129,8 +131,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/NOC.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1935">
-              <caret line="129" column="12" selection-start-line="129" selection-start-column="12" selection-end-line="129" selection-end-column="12" />
+            <state relative-caret-position="400">
+              <caret line="159" column="30" selection-start-line="159" selection-start-column="30" selection-end-line="159" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NOC_APP.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/NOC_APP.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="35" selection-start-line="1" selection-start-column="35" selection-end-line="1" selection-end-column="35" />
+              <folding>
+                <element signature="e#104#123#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,26 +170,30 @@
         <option value="$PROJECT_DIR$/src/Matrix.cpp" />
         <option value="$PROJECT_DIR$/src/ilomipex1.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_LP.hpp" />
-        <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_FAULT.hpp" />
         <option value="$PROJECT_DIR$/include/NOC_FAULT.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
         <option value="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/src/DIST_MILP_SOLVER.cpp" />
         <option value="$PROJECT_DIR$/src/NOC_CPLEX.cpp" />
-        <option value="$PROJECT_DIR$/src/NOC.cpp" />
-        <option value="$PROJECT_DIR$/include/NOC.hpp" />
+        <option value="$PROJECT_DIR$/apps/APP_LED.cpp" />
+        <option value="$PROJECT_DIR$/include/NOC_APP.hpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/apps/APP_LED.hpp" />
+        <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
+        <option value="$PROJECT_DIR$/include/NOC_MPI.hpp" />
+        <option value="$PROJECT_DIR$/src/NOC_MPI.cpp" />
+        <option value="$PROJECT_DIR$/include/NOC.hpp" />
+        <option value="$PROJECT_DIR$/src/NOC.cpp" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds">
-    <option name="x" value="261" />
-    <option name="y" value="208" />
-    <option name="width" value="1389" />
-    <option name="height" value="789" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2583" />
+    <option name="width" value="1257" />
+    <option name="height" value="557" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -176,17 +203,13 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
               <item name="Dist_MILP" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Dist_MILP" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
@@ -203,15 +226,10 @@
               <item name="Dist_MILP" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -252,7 +270,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MPI_DIST_MILP " type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-np 9 xterm -e ./DIST_MILP" WORKING_DIR="file://$PROJECT_DIR$/bin" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DIST_MILP" TARGET_NAME="DIST_MILP" CONFIG_NAME="Debug" RUN_PATH="/usr/local/bin/mpiexec">
+    <configuration name="MPI_DIST_MILP " type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-np 13 xterm -e ./DIST_MILP" WORKING_DIR="file://$PROJECT_DIR$/bin" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DIST_MILP" TARGET_NAME="DIST_MILP" CONFIG_NAME="Debug" RUN_PATH="/usr/local/bin/mpiexec">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -288,6 +306,7 @@
       <workItem from="1554749258834" duration="1079000" />
       <workItem from="1554752045729" duration="2037000" />
       <workItem from="1554754151847" duration="93000" />
+      <workItem from="1554857197695" duration="1785000" />
     </task>
     <task id="LOCAL-00001" summary="Mains">
       <created>1554754468807</created>
@@ -321,7 +340,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="82121000" />
+    <option name="totallyTimeSpent" value="89089000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -333,25 +352,25 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="25" width="1680" height="968" extended-state="6" />
+    <frame x="1920" y="-2" width="1920" height="1082" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20807834" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21024546" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.499388" weight="0.32936978" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49265605" weight="0.32936978" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7093023" visible="true" weight="0.3849821" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.70117396" visible="true" weight="0.38405037" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.68115056" weight="0.32657927" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.67395943" weight="0.32633787" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.29069766" side_tool="true" visible="true" weight="0.3849821" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.29882604" side_tool="true" visible="true" weight="0.38405037" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6627907" weight="0.32896304" />
-      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.62913096" weight="0.32936978" />
+      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.6286019" weight="0.32843652" />
       <window_info anchor="bottom" id="TeamCity" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -524,68 +543,91 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/include/wiringPi.h">
+    <entry file="file:///usr/local/include/wiringPi.h" />
+    <entry file="file://$PROJECT_DIR$/apps/APP_LED.hpp" />
+    <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp" />
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="197" column="22" selection-start-line="197" selection-start-column="22" selection-end-line="197" selection-end-column="22" />
+        <state relative-caret-position="255">
+          <caret line="17" column="34" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC.cpp">
+    <entry file="file://$PROJECT_DIR$/include/NOC_MPI.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1935">
-          <caret line="129" column="12" selection-start-line="129" selection-start-column="12" selection-end-line="129" selection-end-column="12" />
+        <state relative-caret-position="270">
+          <caret line="18" column="19" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="19" />
+          <folding>
+            <element signature="e#104#123#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2151">
-          <caret line="182" column="84" selection-start-line="182" selection-start-column="84" selection-end-line="182" selection-end-column="84" />
+        <state relative-caret-position="210">
+          <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/src/NOC_APP.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="27" column="35" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="35" />
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/NOC.hpp">
+    <entry file="file://$PROJECT_DIR$/include/NOC_APP.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+        <state relative-caret-position="15">
+          <caret line="1" column="35" selection-start-line="1" selection-start-column="35" selection-end-line="1" selection-end-column="35" />
           <folding>
-            <element signature="e#96#115#0" expanded="true" />
+            <element signature="e#104#123#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="205">
+          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+          <folding>
+            <element signature="e#108#127#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC_MPI.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/NOC.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="39" column="24" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
+          <folding>
+            <element signature="e#96#115#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="159" column="30" selection-start-line="159" selection-start-column="30" selection-end-line="159" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="57" column="16" lean-forward="true" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
+        <state relative-caret-position="130">
+          <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
           <folding>
-            <element signature="e#2#20#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/APP_LED.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
