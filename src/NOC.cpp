@@ -151,15 +151,18 @@ void NOC::CreateDecisionMatrices()
     {
         this->R_apps(i) = 1;
     }
-    this->app_on_node = new int[this->N_CRs];
+    this->nodes_on_CRs = new int[this->N_CRs];
+    this->apps_on_CRs = new int[this->N_CRs];
     for (int i = 0; i < this->N_CRs; i++)
     {
-        this->app_on_node[i] = 0; // initially alive, but not running any apps
+        this->nodes_on_CRs[i] = 0; // initially alive, but not running any apps
+        this->apps_on_CRs[i] = 0;
     }
     this->app_to_run = 0; // initially alive, but not running any apps
     this->prev_app_to_run = -1;
 
-    this->N_Faults = 0;
+    this->N_Faults = -1;
+    this->prev_N_Faults = -1;
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
     for (int i = 0; i < this->N_CRs; i++)
     {
@@ -204,22 +207,14 @@ int NOC::get_app_from_node(int node)
     return apps;
 }
 
-int NOC::get_app_from_link(int node)
+int NOC::get_app_from_link(int link)
 {
     int sum_N_link = 0, apps = 0;
     for (int k = 0; k < this->N_apps; k++)
     {
-        if(node == 0)
+        if(link < this->N_links_apps[k] + sum_N_link)
         {
-            apps = 0;
-        }
-        else if(node == -1)
-        {
-            apps = -1;
-        }
-        else if((node-1) < this->N_links_apps[k] + sum_N_link)
-        {
-            apps = k+1;
+            apps = k;
             break;
         }
         else
@@ -228,6 +223,38 @@ int NOC::get_app_from_link(int node)
         }
     }
     return apps;
+}
+
+void NOC::Update_State()
+{
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        if(this->solver_status)
+        {
+            for (int j = 0; j < this->N_nodes; j++)
+            {
+                if (this->Fault_CRs[i] == 1)
+                {
+                    this->nodes_on_CRs[i] = -1;
+                    break;
+                }
+                else if (this->X_CRs_nodes(i, j) == 1)
+                {
+                    this->nodes_on_CRs[i] = j + 1;
+                    break;
+                }
+                else
+                {
+                    this->nodes_on_CRs[i] = 0;
+                }
+            }
+        }
+        else
+        {
+            this->nodes_on_CRs[i] = -1;
+        }
+        this->apps_on_CRs[i] = get_app_from_node(this->nodes_on_CRs[i]);
+    }
 }
 
 void NOC::Disp()
@@ -243,33 +270,13 @@ void NOC::Disp()
     }
 
     Eigen::MatrixXi result1(this->N_Row_CRs, this->N_Col_CRs), result2(this->N_Row_CRs, this->N_Col_CRs);
-    for (int i = 0; i < this->N_CRs; i++)
-    {
-        for (int j = 0; j < this->N_nodes; j++)
-        {
-            if(this->Fault_CRs[i] == 1)
-            {
-                this->app_on_node[i] = -1;
-                break;
-            }
-            else if(this->X_CRs_nodes(i,j) == 1)
-            {
-                this->app_on_node[i] = j+1;
-                break;
-            }
-            else
-            {
-                this->app_on_node[i] = 0;
-            }
-        }
-    }
 
     for (int i = 0; i < this->N_Row_CRs; i++)
     {
         for (int j = 0; j < this->N_Col_CRs; j++)
         {
-            result1(i,j) = this->app_on_node[i*this->N_Col_CRs + j];
-            result2(i,j) = get_app_from_node(this->app_on_node[i*this->N_Col_CRs + j]);
+            result1(i,j) = this->nodes_on_CRs[i*this->N_Col_CRs + j];
+            result2(i,j) = this->apps_on_CRs[i*this->N_Col_CRs + j];
         }
     }
 

@@ -59,7 +59,8 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
     for (int i = 0; i < NoC->N_paths; i++)
     {
         X_paths_links[i] = IloNumVarArray(env);
-        for (int j = 0; j < NoC->N_links; j++) {
+        for (int j = 0; j < NoC->N_links; j++)
+        {
             X_paths_links[i].add(IloNumVar(env, 0.0, 1.0, ILOINT));
         }
         std::string name = "X_paths_links_" + std::to_string(i);
@@ -150,7 +151,7 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
         {
             constraints.operator+=(X_paths_links[j][i]);
         }
-        constraints.operator-=(R_apps[NoC->get_app_from_link(i+1) - 1]);
+        constraints.operator-=(R_apps[NoC->get_app_from_link(i)]);
         c.add(constraints == 0);
         constraints.clear();
     }
@@ -223,7 +224,8 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
         {
             try
             {
-                if((i + 1) % NoC->N_Col_CRs != 0 && NoC->N_Col_apps[k] > 1) {
+                if((i + 1) % NoC->N_Col_CRs != 0 && NoC->N_Col_apps[k] > 1)
+                {
                     constraints.operator+=(X_CRs_nodes[i][spatial_nodes_ind[k][0]] -
                                            X_CRs_nodes[i + 1][spatial_nodes_ind[k][1]]); // top and right
                     c.add(constraints == 0);
@@ -270,6 +272,7 @@ int NOC_CPLEX::read_Sol(NOC *NoC, const char* Sol_file)
     {
         slack[variable.attribute("index").as_int()] = variable.attribute("slack").as_int();
     }
+    doc.end();
 
     int k = 0;
     for (k = 0; k < (NoC->N_apps + NoC->N_nodes); k++) {

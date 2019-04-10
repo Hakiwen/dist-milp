@@ -6,12 +6,16 @@
 #define DIST_MILP_NOC_FAULT_HPP
 
 #include <iostream>
+#include <fstream>
+
 #include "NOC.hpp"
 
 class NOC_FAULT
 {
 public:
-    NOC_FAULT();
+    std::fstream fault_file;
+
+    NOC_FAULT(NOC *NoC);
 
     int Fault_Detection(NOC *NoC); // user input for now
 };

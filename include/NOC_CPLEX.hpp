@@ -6,7 +6,6 @@
 #define DIST_MILP_NOC_CPLEX_HPP
 
 #include <iostream>
-#include <csignal>
 
 #include <Eigen/Dense>
 

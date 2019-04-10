@@ -29,7 +29,6 @@ file(GLOB APPS "apps/*.cpp")
 
 add_definitions(-DIL_STD) 
 add_executable(${PROJECT_NAME} ${SOURCES} ${APPS})
-#add_executable(${PROJECT_NAME} "src/ilomipex1.cpp")
 #add_executable(get_test_cut "src/wrtnode.c")
 
 target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)

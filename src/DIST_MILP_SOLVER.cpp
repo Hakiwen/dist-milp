@@ -25,6 +25,7 @@ int DIST_MILP_SOLVER::solve()
         cplex.solve();
         status = cplex.getStatus();
         cplex.writeSolutions(this->Sol_file);
+        cplex.clear();
     }
     catch (IloException& e)
     {

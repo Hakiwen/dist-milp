@@ -35,13 +35,15 @@ public:
     Eigen::MatrixXi M_apps;
     Eigen::MatrixXi X_CRs_nodes_old;
 
-    int *app_on_node; // app to run on each node, solver sends
-    int app_to_run; // app to run on each node, each node receives
+    int *nodes_on_CRs; // node to run on each CR
+    int *apps_on_CRs; // app to run on each CR, solver sends
+    int app_to_run; // app to run on each CR, each node receives
     int prev_app_to_run;
     void (*app_ptr)(int);
 
     int N_Faults;
-    int *Fault_CRs; // faulty status of each node, solver recieves
+    int prev_N_Faults;
+    int *Fault_CRs; // faulty status of each node, solver receives
     int fault_status; // faulty status of each node, each node sends
     int solver_status;
 
@@ -59,6 +61,7 @@ public:
     void InitialAllocation();
     int get_app_from_node(int node);
     int get_app_from_link(int node);
+    void Update_State();
     void Disp();
 };
 
