@@ -25,10 +25,12 @@ include_directories(include
 #set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB CPLEX "src_cplex/*.cpp")
 file(GLOB APPS "apps/*.cpp")
 
-add_definitions(-DIL_STD) 
+add_definitions(-DIL_STD)
 add_executable(${PROJECT_NAME} ${SOURCES} ${APPS})
+#add_executable(${PROJECT_NAME} ${SOURCES} ${CPLEX} ${APPS})
 #add_executable(get_test_cut "src/wrtnode.c")
 
 target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
