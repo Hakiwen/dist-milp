@@ -10,6 +10,8 @@
 
 #ifdef __x86_64__
 #define IS_UBUNTU 1
+#else
+#define IS_UBUNTU 0
 #endif
 
 using namespace std;

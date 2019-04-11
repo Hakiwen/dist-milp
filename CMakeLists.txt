@@ -33,7 +33,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${APPS})
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
 	target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
 else()
-	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
+	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt libconcert.a libcplex.a)
 endif ()
 
 
