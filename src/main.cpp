@@ -31,8 +31,10 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NoC.CreateTopology("square");
     NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
     NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
+#ifdef __x86_64__
     NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
     DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml"); // Solver Object
+#endif
 
     /*
      * Main Loop

@@ -10,7 +10,6 @@
 #ifdef __x86_64__
 #include <ilcplex/ilocplex.h>
 #include <ilconcert/iloexpression.h>
-#endif
 
 class DIST_MILP_SOLVER{
 
@@ -20,9 +19,9 @@ class DIST_MILP_SOLVER{
 public:
     DIST_MILP_SOLVER(const char* LP_file, const char* Sol_file);
 
-#ifdef __x86_64__
     int solve();
-#endif
+
 };
+#endif
 
 #endif //DIST_MILP_DIST_MILP_SOLVER_HPP

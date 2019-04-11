@@ -12,7 +12,6 @@
 #ifdef __x86_64__
 #include <ilcplex/ilocplex.h>
 #include <ilconcert/iloexpression.h>
-#endif
 
 #include "pugixml.hpp"
 
@@ -20,20 +19,19 @@
 
 class NOC_CPLEX {
 
-#ifdef __x86_64__
     typedef IloArray<IloNumVarArray> IloNumVarArray2D;
     IloModel model;
     IloCplex cplex;
-#endif
+
 
 public:
     NOC_CPLEX();
 
-#ifdef __x86_64__
     void write_LP(NOC *NoC);
     void CreateModel(IloModel model, NOC *NoC);
     int read_Sol(NOC *NoC, const char* Sol_file);
-#endif
+
 };
+#endif
 
 #endif //DIST_MILP_NOC_CPLEX_HPP
