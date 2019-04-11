@@ -6,10 +6,8 @@
 #include "DIST_MILP_SOLVER.hpp"
 #include <unistd.h>
 #include <fstream>
-ILOSTLBEGIN
-typedef IloArray<IloNumVarArray> IloNumVarArray2D;
 
-static void populatebyrow(IloModel model, IloNumVarArray x, IloRangeArray c);
+ILOSTLBEGIN
 
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
 {
@@ -31,8 +29,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC NoC = NOC(N_Row_CRs, N_Col_CRs, N_apps, N_Row_apps, N_Col_apps); // NoC Object
     NoC.CreateTopology("square");
     NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
-    NOC_FAULT NoC_Fault = NOC_FAULT(&NoC); // NoC Fault Detection Object
     NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
+    NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
     DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml"); // Solver Object
 
     /*
@@ -42,7 +40,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-            if(NoC_Fault.Fault_Detection(&NoC))
+            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
             {
                 NoC_CPLEX.write_LP(&NoC);
                 if (prob.solve() != CPX_STAT_INFEASIBLE)
@@ -54,25 +52,23 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                     cout << "Infeasible Solution" << endl;
                     NoC.solver_status = 0;
                 }
+                NoC.Update_State();
             }
-            NoC.Update_State();
             NoC.Disp();
-
-            if(!NoC.solver_status){ break; }
         }
-//        else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
-//        {
-//
-//        }
+        else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
+        {
+            cout << "I'm the jet engine!" << endl;
+        }
         else // computer resource node
         {
-//            if(NoC.prev_app_to_run != NoC.app_to_run)
-//            {
-//                NoC.prev_app_to_run = NoC.app_to_run;
-                app_ptr[0](NoC.app_to_run);
-//            }
+            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
+            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
+            app_ptr[0](NoC.app_to_run);
         }
-        sleep(3);
+        NoC_MPI.Scatter_Apps(&NoC); // TODO should be no blocking
+        NoC_MPI.Gather_Faults(&NoC);
+        sleep(1);
     }
 
     while (1){}; // does nothing, but smiling at you :)

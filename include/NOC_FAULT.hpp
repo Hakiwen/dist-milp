@@ -15,9 +15,9 @@ class NOC_FAULT
 public:
     std::fstream fault_file;
 
-    NOC_FAULT(NOC *NoC);
+    NOC_FAULT(NOC *NoC, int rank);
 
-    int Fault_Detection(NOC *NoC); // user input for now
+    int Fault_Detection(NOC *NoC, int rank);// user input for now
 };
 
 #endif //DIST_MILP_NOC_FAULT_HPP

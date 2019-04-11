@@ -38,7 +38,7 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
 
     /*
      * Create Decision Variables
-     * */
+     */
 
     IloNumVarArray2D X_CRs_nodes(env, NoC->N_CRs), X_paths_links(env, NoC->N_paths);
     IloNumVarArray R_apps(env), M_apps(env);
@@ -86,7 +86,7 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
 
     /*
      * Create an Objective Function
-     * */
+     */
 
     IloExpr obj(env);
 
@@ -101,7 +101,7 @@ void NOC_CPLEX::CreateModel(IloModel model, NOC *NoC)
 
     /*
      * Create Constraints
-     * */
+     */
 
     IloRangeArray c(env);
     IloExpr constraints(env);
