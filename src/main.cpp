@@ -66,7 +66,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
             app_ptr[0](NoC.app_to_run);
         }
-        NoC_MPI.Scatter_Apps(&NoC); // TODO should be no blocking
+        NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
         NoC_MPI.Gather_Faults(&NoC);
         sleep(1);
     }
