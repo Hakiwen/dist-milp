@@ -8,12 +8,6 @@
 #include "NOC_CPLEX.hpp"
 #include "DIST_MILP_SOLVER.hpp"
 
-#ifdef __x86_64__
-#define IS_UBUNTU 1
-#else
-#define IS_UBUNTU 0
-#endif
-
 using namespace std;
 
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
@@ -47,7 +41,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && IS_UBUNTU)
+#ifdef __x86_64__
+            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
             {
                 NoC_CPLEX.write_LP(&NoC);
                 if (prob.solve() != CPX_STAT_INFEASIBLE)
@@ -61,6 +56,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                 }
                 NoC.Update_State();
             }
+#endif
             NoC.Disp();
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)

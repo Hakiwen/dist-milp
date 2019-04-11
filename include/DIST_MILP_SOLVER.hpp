@@ -20,7 +20,9 @@ class DIST_MILP_SOLVER{
 public:
     DIST_MILP_SOLVER(const char* LP_file, const char* Sol_file);
 
+#ifdef __x86_64__
     int solve();
+#endif
 };
 
 #endif //DIST_MILP_DIST_MILP_SOLVER_HPP

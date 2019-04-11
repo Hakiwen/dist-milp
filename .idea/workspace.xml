@@ -35,8 +35,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -68,19 +68,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="34" column="6" selection-start-line="34" selection-start-column="6" selection-end-line="34" selection-end-column="6" />
+            <state relative-caret-position="435">
+              <caret line="35" column="140" selection-start-line="35" selection-start-column="140" selection-end-line="35" selection-end-column="140" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="690">
+              <caret line="55" column="17" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#232#251#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -89,19 +90,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state relative-caret-position="201">
+              <caret line="22" selection-start-line="22" selection-end-line="22" selection-end-column="17" />
+              <folding>
+                <element signature="e#108#127#0" expanded="true" />
+                <element signature="e#171#200#0" expanded="true" />
+                <element signature="e#246#268#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+            <state relative-caret-position="360">
+              <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
               <folding>
-                <element signature="e#122#141#0" expanded="true" />
+                <element signature="e#161#190#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -120,11 +126,9 @@
         <option value="$PROJECT_DIR$/src/ilomipex1.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_LP.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_FAULT.hpp" />
-        <option value="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/apps/APP_LED.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_APP.hpp" />
         <option value="$PROJECT_DIR$/apps/APP_LED.hpp" />
-        <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
         <option value="$PROJECT_DIR$/src/DIST_MILP_SOLVER.cpp" />
         <option value="$PROJECT_DIR$/include/NOC.hpp" />
         <option value="$PROJECT_DIR$/src/NOC.cpp" />
@@ -143,8 +147,10 @@
         <option value="$PROJECT_DIR$/bin/fault_file_6.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_7.txt" />
         <option value="$PROJECT_DIR$/src/NOC_MPI.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
+        <option value="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" />
       </list>
     </option>
   </component>
@@ -350,11 +356,25 @@
       <option name="project" value="LOCAL" />
       <updated>1555008648703</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="rpi">
+      <created>1555010400733</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1555010400733</updated>
+    </task>
+    <task id="LOCAL-00013" summary="rpi">
+      <created>1555010658759</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1555010658759</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117589000" />
+    <option name="totallyTimeSpent" value="118090000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -369,20 +389,20 @@
     <frame x="1280" y="25" width="1680" height="968" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13892289" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13892289" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.57451403" weight="0.32843652" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49028078" weight="0.32843652" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6474908" weight="0.38259834" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.64687884" visible="true" weight="0.38259834" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.61750305" visible="true" weight="0.32419547" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.61750305" weight="0.32419547" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.38249695" side_tool="true" visible="true" weight="0.32419547" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.35312116" side_tool="true" visible="true" weight="0.38259834" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6627907" weight="0.32896304" />
       <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.626071" weight="0.32657927" />
       <window_info anchor="bottom" id="TeamCity" order="13" />
@@ -456,7 +476,6 @@
       </provider>
     </entry>
     <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/cplex/include/ilcplex/ilocplexi.h" />
-    <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/cplex/include/ilcplex/cpxconst.h" />
     <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/concert/include/ilconcert/iloexpression.h" />
     <entry file="file://$PROJECT_DIR$/bin/sol.xml">
       <provider selected="true" editor-type-id="text-editor">
@@ -482,13 +501,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DIST_MILP_SOLVER.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/concert/include/ilconcert/iloenv.h" />
     <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/linux/share/cmake-3.12/Modules/FindPackageHandleStandardArgs.cmake" />
     <entry file="file://$PROJECT_DIR$/bin/fault_file.txt" />
@@ -506,13 +518,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="285" column="1" selection-start-line="285" selection-start-column="1" selection-end-line="285" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="306" column="1" lean-forward="true" selection-start-line="306" selection-start-column="1" selection-end-line="306" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -640,36 +645,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
+    <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        <state relative-caret-position="4590">
+          <caret line="306" column="1" lean-forward="true" selection-start-line="306" selection-start-column="1" selection-end-line="306" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp">
+    <entry file="file://$PROJECT_DIR$/src/DIST_MILP_SOLVER.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
-          <folding>
-            <element signature="e#122#141#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="405">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/cplex/include/ilcplex/cpxconst.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="1393" column="8" selection-start-line="1393" selection-start-column="8" selection-end-line="1393" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="34" column="6" selection-start-line="34" selection-start-column="6" selection-end-line="34" selection-end-column="6" />
+        <state relative-caret-position="435">
+          <caret line="35" column="140" selection-start-line="35" selection-start-column="140" selection-end-line="35" selection-end-column="140" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="690">
+          <caret line="55" column="17" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#232#251#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="22" selection-start-line="22" selection-end-line="22" selection-end-column="17" />
+          <folding>
+            <element signature="e#108#127#0" expanded="true" />
+            <element signature="e#171#200#0" expanded="true" />
+            <element signature="e#246#268#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+          <folding>
+            <element signature="e#161#190#0" expanded="true" />
           </folding>
         </state>
       </provider>
