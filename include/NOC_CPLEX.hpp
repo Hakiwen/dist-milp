@@ -9,8 +9,10 @@
 
 #include <Eigen/Dense>
 
+#ifdef __x86_64__
 #include <ilcplex/ilocplex.h>
 #include <ilconcert/iloexpression.h>
+#endif
 
 #include "pugixml.hpp"
 

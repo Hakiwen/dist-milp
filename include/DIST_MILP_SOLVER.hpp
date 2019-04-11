@@ -7,8 +7,10 @@
 
 #include <iostream>
 
+#ifdef __x86_64__
 #include <ilcplex/ilocplex.h>
 #include <ilconcert/iloexpression.h>
+#endif
 
 class DIST_MILP_SOLVER{
 

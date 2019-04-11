@@ -16,23 +16,28 @@ include_directories(include
 			apps
 			lib
 		    ${EIGEN3_INCLUDE_DIRS}
-			${MPI_INCLUDE_PATH})
-#		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
-#		    "/opt/ibm/ILOG/CPLEX_Studio129/concert/include")
+			${MPI_INCLUDE_PATH}
+		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
+		    "/opt/ibm/ILOG/CPLEX_Studio129/concert/include")
 
-#link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pic"
-#		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/lib/x86-64_linux/static_pic")
-#set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
+link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pic"
+		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/lib/x86-64_linux/static_pic")
+set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
-file(GLOB CPLEX "src_cplex/*.cpp")
+#file(GLOB CPLEX "src_cplex/*.cpp")
 file(GLOB APPS "apps/*.cpp")
 
 add_definitions(-DIL_STD)
 add_executable(${PROJECT_NAME} ${SOURCES} ${APPS})
-#add_executable(${PROJECT_NAME} ${SOURCES} ${CPLEX} ${APPS})
-#add_executable(get_test_cut "src/wrtnode.c")
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+	target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
+else()
+	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
+endif ()
 
-target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
-#target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt)
+
+
+
+#add_executable(get_test_cut "src/wrtnode.c")
 #target_link_libraries(get_test_cut ${CPLEX_LINK_LIBS})

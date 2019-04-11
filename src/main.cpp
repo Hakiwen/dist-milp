@@ -1,11 +1,16 @@
+#include <unistd.h>
+#include <fstream>
+
 #include "NOC.hpp"
 #include "NOC_FAULT.hpp"
 #include "NOC_APP.hpp"
 #include "NOC_MPI.hpp"
-//#include "NOC_CPLEX.hpp"
-//#include "DIST_MILP_SOLVER.hpp"
-#include <unistd.h>
-#include <fstream>
+#include "NOC_CPLEX.hpp"
+#include "DIST_MILP_SOLVER.hpp"
+
+#ifdef __x86_64__
+#define IS_UBUNTU 1
+#endif
 
 using namespace std;
 
@@ -28,10 +33,10 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 
     NOC NoC = NOC(N_Row_CRs, N_Col_CRs, N_apps, N_Row_apps, N_Col_apps); // NoC Object
     NoC.CreateTopology("square");
-//    NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
     NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
     NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
-//    DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml"); // Solver Object
+    NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
+    DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml"); // Solver Object
 
     /*
      * Main Loop
@@ -40,20 +45,20 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-//            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
-//            {
-//                NoC_CPLEX.write_LP(&NoC);
-//                if (prob.solve() != CPX_STAT_INFEASIBLE)
-//                {
-//                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
-//                }
-//                else
-//                {
-//                    cout << "Infeasible Solution" << endl;
-//                    NoC.solver_status = 0;
-//                }
-//                NoC.Update_State();
-//            }
+            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && IS_UBUNTU)
+            {
+                NoC_CPLEX.write_LP(&NoC);
+                if (prob.solve() != CPX_STAT_INFEASIBLE)
+                {
+                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+                }
+                else
+                {
+                    cout << "Infeasible Solution" << endl;
+                    NoC.solver_status = 0;
+                }
+                NoC.Update_State();
+            }
             NoC.Disp();
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
