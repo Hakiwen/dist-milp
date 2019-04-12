@@ -1,12 +1,22 @@
 #include <unistd.h>
 #include <fstream>
 
+#include "MY_MACROS.hpp"
+
+#include "DIST_MILP_SOLVER.hpp"
 #include "NOC.hpp"
 #include "NOC_FAULT.hpp"
 #include "NOC_APP.hpp"
 #include "NOC_MPI.hpp"
+
+#if defined(CPLEX_AS_SOLVER)
 #include "NOC_CPLEX.hpp"
-#include "DIST_MILP_SOLVER.hpp"
+#include "CPLEX_SOLVER.hpp"
+#elif defined(GLPK_AS_SOLVER)
+#include "NOC_GLPK.hpp"
+#include "GLPK_SOLVER.hpp"
+#endif
+
 
 using namespace std;
 
@@ -31,9 +41,12 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NoC.CreateTopology("square");
     NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
     NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
-#ifdef __x86_64__
+#if defined(CPLEX_AS_SOLVER)
     NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
-    DIST_MILP_SOLVER prob = DIST_MILP_SOLVER("NoC.lp", "sol.xml"); // Solver Object
+    CPLEX_SOLVER prob_CPLEX = CPLEX_SOLVER("NoC.lp", "sol.xml"); // Solver Object
+#elif defined(GLPK_AS_SOLVER)
+    NOC_GLPK NoC_GLPK = NOC_GLPK(); // NoC to GLPK Object
+    GLPK_SOLVER prob_GLPK = GLPK_SOLVER("NoC.lp", "sol.txt"); // Solver Object
 #endif
 
     /*
@@ -43,22 +56,27 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-#ifdef __x86_64__
+
             if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
             {
-                NoC_CPLEX.write_LP(&NoC);
-                if (prob.solve() != CPX_STAT_INFEASIBLE)
-                {
-                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
-                }
-                else
-                {
-                    cout << "Infeasible Solution" << endl;
-                    NoC.solver_status = 0;
-                }
+#if defined(CPLEX_AS_SOLVER)
+//                NoC_CPLEX.write_LP(&NoC);
+//                if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
+//                {
+//                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+//                }
+//                else
+//                {
+//                    cout << "Infeasible Solution" << endl;
+//                    NoC.solver_status = 0;
+//                }
+#elif defined(GLPK_AS_SOLVER)
+                NoC_GLPK.write_LP(&NoC);
+                prob_GLPK.solve(&NoC_GLPK);
+                NoC_GLPK.read_Sol(&NoC);
+#endif
                 NoC.Update_State();
             }
-#endif
             NoC.Disp();
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
@@ -73,7 +91,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
         NoC_MPI.Gather_Faults(&NoC);
-        sleep(1);
+        sleep(3);
     }
 
     while (1){}; // does nothing, but smiling at you :)

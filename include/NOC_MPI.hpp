@@ -5,6 +5,7 @@
 #ifndef DIST_MILP_NOC_MPI_HPP
 #define DIST_MILP_NOC_MPI_HPP
 
+#include "MY_MACROS.hpp"
 #include <iostream>
 #include <mpi.h>
 #include "NOC.hpp"

@@ -6,10 +6,10 @@
 #define DIST_MILP_NOC_CPLEX_HPP
 
 #include <iostream>
-
 #include <Eigen/Dense>
+#include "MY_MACROS.hpp"
 
-#ifdef __x86_64__
+#ifdef CPLEX_AS_SOLVER
 #include <ilcplex/ilocplex.h>
 #include <ilconcert/iloexpression.h>
 

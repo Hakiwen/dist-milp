@@ -5,6 +5,7 @@
 #ifndef DIST_MILP_NOC_FAULT_HPP
 #define DIST_MILP_NOC_FAULT_HPP
 
+#include "MY_MACROS.hpp"
 #include <iostream>
 #include <fstream>
 

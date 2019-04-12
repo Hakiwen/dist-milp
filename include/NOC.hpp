@@ -5,8 +5,8 @@
 #ifndef DIST_MILP_NOC_HPP
 #define DIST_MILP_NOC_HPP
 
+#include "MY_MACROS.hpp"
 #include <iostream>
-
 #include <Eigen/Dense>
 
 #define VERBOSE 0
