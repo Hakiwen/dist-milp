@@ -25,7 +25,6 @@ link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pi
 set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
-#file(GLOB CPLEX "src_cplex/*.cpp")
 file(GLOB APPS "apps/*.cpp")
 
 add_definitions(-DIL_STD)
