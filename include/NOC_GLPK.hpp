@@ -16,19 +16,15 @@
 
 class NOC_GLPK {
 
-//    typedef IloArray<IloNumVarArray> IloNumVarArray2D;
-//    IloModel model;
-//    IloCplex cplex;
 public:
-
     glp_prob *model;
 
     NOC_GLPK();
 
     void write_LP(NOC *NoC);
     void CreateModel(NOC *NoC);
-    int read_Sol(NOC *NoC);
-
+    void read_Sol(NOC *NoC);
+    void DeleteModel(NOC *NoC);
 };
 #endif
 

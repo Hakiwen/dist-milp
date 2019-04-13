@@ -7,19 +7,22 @@
 #ifdef GLPK_AS_SOLVER
 NOC_GLPK::NOC_GLPK()
 {
-    this->model = glp_create_prob();
-    glp_set_prob_name(this->model, "NoC");
-    glp_set_obj_dir(this->model, GLP_MAX);
+
 }
 
 void NOC_GLPK::write_LP(NOC *NoC)
 {
+    this->model = glp_create_prob();
+    glp_set_prob_name(this->model, "NoC");
+
     CreateModel(NoC);
     glp_write_lp(this->model, NULL, "NoC.lp");
 }
 
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
+    glp_set_obj_dir(this->model, GLP_MAX);
+
     /*
      * Create Decision Variables
      */
@@ -67,15 +70,16 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_cols(model, 1);
         glp_set_col_name(model, NoC->var_size, name.c_str());
         glp_set_col_kind(model, NoC->var_size, GLP_BV);
-        glp_set_obj_coef(model, NoC->var_size, 1.0);
+        glp_set_obj_coef(model, NoC->var_size, -1.0);
     }
 
     /*
      * Create Constraints
      */
-    int ia[1+5000], ja[1+5000];
+    int max_size = 3000+1;
+    int ia[max_size], ja[max_size];
     int ind_count = 0;
-    double ar[1+5000];
+    double ar[max_size];
 
     glp_add_rows(this->model, 1);
     glp_set_row_name(this->model, 1, "c1");
@@ -89,7 +93,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-        if(NoC->Fault_CRs[i] == 0)
+        if(NoC->Fault_CRs[i-1] == 0)
         {
             glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 1.0);
         }
@@ -113,7 +117,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "node_" + std::to_string(i-1) + "_sum_in_CRs";
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
-        glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
+        glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
 
         for (int j = i; j <= NoC->N_CRs*NoC->N_nodes; j+= NoC->N_nodes)
         {
@@ -122,6 +126,11 @@ void NOC_GLPK::CreateModel(NOC *NoC)
             ja[ind_count] = j;
             ar[ind_count] = 1;
         }
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = NoC->get_app_from_node(i) + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+        ar[ind_count] = -1;
     }
 
     for (int i = 1; i <= NoC->N_paths; i++)
@@ -147,7 +156,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "link_" + std::to_string(i-1) + "_sum_in_paths";
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
-        glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
+        glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
 
         for (int j = i; j <= NoC->N_paths*NoC->N_links; j+= NoC->N_links)
         {
@@ -156,6 +165,11 @@ void NOC_GLPK::CreateModel(NOC *NoC)
             ja[ind_count] = j + NoC->N_CRs*NoC->N_nodes;
             ar[ind_count] = 1;
         }
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = NoC->get_app_from_link(i-1) + 1 + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+        ar[ind_count] = -1;
     }
 
     // Conformity to the architecture
@@ -319,19 +333,18 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
-    std::cout << ind_count << std::endl;
+//    std::cout << ind_count << std::endl;
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
 
-int NOC_GLPK::read_Sol(NOC *NoC)
+void NOC_GLPK::read_Sol(NOC *NoC)
 {
 //    glp_prob *mip = glp_create_prob();
 //    glp_read_mip(mip, "sol_glpk.txt");
 
-    double z = glp_mip_obj_val(this->model);
+    NoC->obj_val= glp_mip_obj_val(this->model);
 
     int k = 1;
-
 
     for (int i = 0; i < NoC->N_CRs; i++)
     {
@@ -340,7 +353,6 @@ int NOC_GLPK::read_Sol(NOC *NoC)
             NoC->X_CRs_nodes(i,j) = glp_mip_col_val(this->model, k);
             k++;
         }
-        std::cout << std::endl;
     }
 
     for (int i = 0; i < NoC->N_paths; i++)
@@ -366,6 +378,13 @@ int NOC_GLPK::read_Sol(NOC *NoC)
         k++;
     }
 
-    return z;
+    DeleteModel(NoC);
+}
+
+void NOC_GLPK::DeleteModel(NOC *NoC)
+{
+    glp_delete_prob(this->model);
+    NoC->var_size = 0;
+    NoC->con_size = 0;
 }
 #endif

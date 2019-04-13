@@ -33,22 +33,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="Centralized CPLEX">
-      <change afterPath="$PROJECT_DIR$/include/CPLEX_SOLVER.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/GLPK_SOLVER.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/MY_MACROS.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/NOC_GLPK.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/CPLEX_SOLVER.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GLPK_SOLVER.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/NOC_GLPK.cpp" afterDir="false" />
+    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC_APP.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_APP.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_CPLEX.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC_FAULT.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_FAULT.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC_MPI.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_MPI.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/MY_MACROS.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/MY_MACROS.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/NOC_GLPK.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_GLPK.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NOC_GLPK.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_GLPK.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -81,21 +70,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="92" column="36" selection-start-line="92" selection-start-column="36" selection-end-line="92" selection-end-column="36" />
+            <state relative-caret-position="-17">
+              <caret line="51" column="6" selection-start-line="51" selection-start-column="6" selection-end-line="51" selection-end-column="6" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#218#270#0" expanded="true" />
                 <element signature="e#301#324#0" expanded="true" />
-                <element signature="e#1235#1368#0" expanded="true" />
-                <element signature="e#1766#2136#0" expanded="true" />
+                <element signature="e#1781#1962#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <caret column="1" selection-start-column="1" selection-end-column="1" />
@@ -104,41 +92,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_12.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-30">
-              <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/GLPK_SOLVER.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/include/GLPK_SOLVER.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
-              <folding>
-                <element signature="e#113#132#0" expanded="true" />
-                <element signature="e#181#198#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/NOC_GLPK.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1338">
-              <caret line="168" column="71" lean-forward="true" selection-start-line="168" selection-start-column="71" selection-end-line="168" selection-end-column="71" />
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -153,14 +110,55 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/include/NOC_GLPK.hpp">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_9.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
-              <folding>
-                <element signature="e#107#126#0" expanded="true" />
-                <element signature="e#199#216#0" expanded="true" />
-              </folding>
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_10.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_11.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -170,6 +168,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>var_size</find>
+      <find>Fault</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,12 +191,6 @@
         <option value="$PROJECT_DIR$/apps/APP_LED.hpp" />
         <option value="$PROJECT_DIR$/src/NOC.cpp" />
         <option value="$PROJECT_DIR$/bin/fault_file.txt" />
-        <option value="$PROJECT_DIR$/bin/fault_file_8.txt" />
-        <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
-        <option value="$PROJECT_DIR$/bin/fault_file_3.txt" />
-        <option value="$PROJECT_DIR$/bin/fault_file_11.txt" />
-        <option value="$PROJECT_DIR$/bin/fault_file_6.txt" />
-        <option value="$PROJECT_DIR$/bin/fault_file_7.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_2.txt" />
         <option value="$PROJECT_DIR$/src/NOC_MPI.cpp" />
         <option value="$PROJECT_DIR$/src/DIST_MILP_SOLVER.cpp" />
@@ -207,28 +200,37 @@
         <option value="$PROJECT_DIR$/include/NOC_FAULT.hpp" />
         <option value="$PROJECT_DIR$/include/NOC_APP.hpp" />
         <option value="$PROJECT_DIR$/include/NOC.hpp" />
-        <option value="$PROJECT_DIR$/bin/fault_file_1.txt" />
         <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_CPLEX.cpp" />
         <option value="$PROJECT_DIR$/src/CPLEX_SOLVER.cpp" />
-        <option value="$PROJECT_DIR$/include/MY_MACROS.hpp" />
-        <option value="$PROJECT_DIR$/include/NOC_GLPK.hpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/include/GLPK_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/src/GLPK_SOLVER.cpp" />
-        <option value="$PROJECT_DIR$/bin/fault_file_5.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_6.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_7.txt" />
+        <option value="$PROJECT_DIR$/include/MY_MACROS.hpp" />
         <option value="$PROJECT_DIR$/src/main.cpp" />
-        <option value="$PROJECT_DIR$/bin/fault_file_4.txt" />
+        <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
+        <option value="$PROJECT_DIR$/include/NOC_GLPK.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_GLPK.cpp" />
+        <option value="$PROJECT_DIR$/bin/fault_file_1.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_12.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_4.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_9.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_5.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_8.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_10.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_11.txt" />
+        <option value="$PROJECT_DIR$/bin/fault_file_3.txt" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1304" />
-    <option name="y" value="27" />
-    <option name="width" value="1247" />
-    <option name="height" value="557" />
+    <option name="x" value="1920" />
+    <option name="y" value="-2" />
+    <option name="width" value="960" />
+    <option name="height" value="1082" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -238,7 +240,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -265,6 +266,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -348,7 +350,8 @@
       <workItem from="1554925328913" duration="3061000" />
       <workItem from="1554947666091" duration="5841000" />
       <workItem from="1555037260301" duration="3367000" />
-      <workItem from="1555084718849" duration="18468000" />
+      <workItem from="1555084718849" duration="18579000" />
+      <workItem from="1555118942244" duration="5698000" />
     </task>
     <task id="LOCAL-00001" summary="Mains">
       <created>1554754468807</created>
@@ -483,11 +486,18 @@
       <option name="project" value="LOCAL" />
       <updated>1555085662485</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="glpk">
+      <created>1555103369598</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1555103369598</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142638000" />
+    <option name="totallyTimeSpent" value="148447000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -499,23 +509,23 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="25" width="1680" height="968" extended-state="6" />
+    <frame x="2880" y="-2" width="960" height="1082" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.14259486" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.29540482" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.57451403" weight="0.32843652" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49028078" weight="0.32843652" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.5740514" visible="true" weight="0.38259834" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.55032825" visible="true" weight="0.3809024" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.5451937" weight="0.3226257" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.5218818" weight="0.3210913" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.4259486" side_tool="true" visible="true" weight="0.38259834" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.44967178" side_tool="true" visible="true" weight="0.3809024" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6627907" weight="0.32896304" />
       <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.626071" weight="0.32657927" />
       <window_info anchor="bottom" id="TeamCity" order="13" />
@@ -538,7 +548,8 @@
     <MESSAGE value="Benjamains" />
     <MESSAGE value="rpi" />
     <MESSAGE value="Centralized CPLEX" />
-    <option name="LAST_COMMIT_MESSAGE" value="Centralized CPLEX" />
+    <MESSAGE value="glpk" />
+    <option name="LAST_COMMIT_MESSAGE" value="glpk" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -552,10 +563,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/concert/include/ilconcert/iloexpression.h" />
-    <entry file="file:///usr/local/include/wiringPi.h" />
-    <entry file="file://$PROJECT_DIR$/apps/APP_LED.hpp" />
-    <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp" />
     <entry file="file://$PROJECT_DIR$/src/NOC_APP.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -575,41 +582,6 @@
     <entry file="file://$PROJECT_DIR$/bin/fault_file.txt" />
     <entry file="file://$PROJECT_DIR$/bin/fault_file_0.txt">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_11.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_6.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_7.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
     </entry>
     <entry file="file:///usr/local/include/mpi.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -691,38 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4425">
-          <caret line="295" column="9" lean-forward="true" selection-start-line="295" selection-start-column="9" selection-end-line="295" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="7" selection-start-line="7" selection-end-line="9" selection-end-column="24" />
-          <folding>
-            <element signature="e#108#127#0" expanded="true" />
-            <element signature="e#200#584#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="16" column="23" lean-forward="true" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/CPLEX_SOLVER.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -730,16 +670,6 @@
           <folding>
             <element signature="e#115#134#0" expanded="true" />
             <element signature="e#184#415#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CPLEX_SOLVER.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="41" selection-end-column="1" />
-          <folding>
-            <element signature="e#96#897#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -758,45 +688,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/MY_MACROS.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/glpk-4.65/src/env/error.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/glpk-4.65/src/api/prob1.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="381" selection-start-line="381" selection-end-line="381" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/NoC.lp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6803">
-          <caret line="767" lean-forward="true" selection-start-line="767" selection-end-line="767" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/NOC_GLPK.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
-          <folding>
-            <element signature="e#107#126#0" expanded="true" />
-            <element signature="e#199#216#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/sol2.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -807,21 +698,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/sol.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="566">
-          <caret line="351" column="35" selection-start-line="351" selection-start-column="35" selection-end-line="351" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/sol_glpk.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-180" />
       </provider>
     </entry>
+    <entry file="file:///usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h" />
     <entry file="file://$PROJECT_DIR$/include/GLPK_SOLVER.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
+        <state relative-caret-position="180">
           <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
           <folding>
             <element signature="e#113#132#0" expanded="true" />
@@ -830,45 +715,150 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h">
+    <entry file="file://$PROJECT_DIR$/bin/sol.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="424" selection-start-line="424" selection-end-line="424" />
+        <state relative-caret-position="-465">
+          <caret line="393" column="29" selection-start-line="393" selection-start-column="29" selection-end-line="393" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
+    <entry file="file://$PROJECT_DIR$/include/NOC_CPLEX.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+        <state relative-caret-position="87">
+          <caret line="7" selection-start-line="7" selection-end-line="9" selection-end-column="24" />
+          <folding>
+            <element signature="e#108#127#0" expanded="true" />
+            <element signature="e#200#584#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
+    <entry file="file://$PROJECT_DIR$/src/NOC.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2674">
+          <caret line="16" column="23" lean-forward="true" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/glpk-4.65/src/api/prob1.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="1034" selection-start-line="1034" selection-end-line="1034" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/glpk-4.65/src/env/error.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CPLEX_SOLVER.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="18" column="5" lean-forward="true" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_6.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="1" selection-start-column="1" selection-end-column="1" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_7.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/include/glpk.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="252" column="8" selection-start-line="252" selection-start-column="8" selection-end-line="252" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/MY_MACROS.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="27" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC_CPLEX.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2547">
+          <caret line="295" column="9" selection-start-line="295" selection-start-column="9" selection-end-line="295" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/NoC.lp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11445">
+          <caret line="763" selection-start-line="763" selection-end-line="763" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/NOC_GLPK.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="e#107#126#0" expanded="true" />
+            <element signature="e#199#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/GLPK_SOLVER.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
+        <state relative-caret-position="120">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC_GLPK.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="78" column="20" selection-start-line="78" selection-start-column="20" selection-end-line="78" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="92" column="36" selection-start-line="92" selection-start-column="36" selection-end-line="92" selection-end-column="36" />
+        <state relative-caret-position="-17">
+          <caret line="51" column="6" selection-start-line="51" selection-start-column="6" selection-end-line="51" selection-end-column="6" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#218#270#0" expanded="true" />
             <element signature="e#301#324#0" expanded="true" />
-            <element signature="e#1235#1368#0" expanded="true" />
-            <element signature="e#1766#2136#0" expanded="true" />
+            <element signature="e#1781#1962#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_12.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -879,10 +869,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC_GLPK.cpp">
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_9.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1338">
-          <caret line="168" column="71" lean-forward="true" selection-start-line="168" selection-start-column="71" selection-end-line="168" selection-end-column="71" />
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_10.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_11.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
         </state>
       </provider>
     </entry>

@@ -17,7 +17,6 @@
 #include "GLPK_SOLVER.hpp"
 #endif
 
-
 using namespace std;
 
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
@@ -56,25 +55,25 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-
-            if(NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
-            {
+            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && NoC.solver_status) {
 #if defined(CPLEX_AS_SOLVER)
-//                NoC_CPLEX.write_LP(&NoC);
-//                if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
-//                {
-//                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
-//                }
-//                else
-//                {
-//                    cout << "Infeasible Solution" << endl;
-//                    NoC.solver_status = 0;
-//                }
+                NoC_CPLEX.write_LP(&NoC);
+                if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
+                {
+                    NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+                }
 #elif defined(GLPK_AS_SOLVER)
                 NoC_GLPK.write_LP(&NoC);
-                prob_GLPK.solve(&NoC_GLPK);
-                NoC_GLPK.read_Sol(&NoC);
+                if(prob_GLPK.solve(&NoC_GLPK) == GLP_INTEGER_OPTIMAL)
+                {
+                    NoC_GLPK.read_Sol(&NoC);
+                }
 #endif
+                else
+                {
+                    cout << "Infeasible Solution" << endl;
+                    NoC.solver_status = 0;
+                }
                 NoC.Update_State();
             }
             NoC.Disp();
@@ -91,7 +90,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
         NoC_MPI.Gather_Faults(&NoC);
-        sleep(3);
+        sleep(1);
     }
 
     while (1){}; // does nothing, but smiling at you :)
