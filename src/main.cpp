@@ -1,5 +1,5 @@
-#include <unistd.h>
 #include <signal.h>
+#include <unistd.h>
 #include <fstream>
 
 #include "MY_MACROS.hpp"
@@ -32,7 +32,6 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     signal(SIGABRT, &sighandler);
     signal(SIGTERM, &sighandler);
     signal(SIGINT, &sighandler);
-    wiringPiSetup() ;
 #endif
 
     /** User-Initialized Parameters **/
@@ -69,8 +68,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-//            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && NoC.solver_status) {
-                if (NoC.solver_status) {
+            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && NoC.solver_status) {
 #if defined(CPLEX_AS_SOLVER)
                 NoC_CPLEX.write_LP(&NoC);
                 if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
@@ -103,8 +101,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
             app_ptr[0](NoC.app_to_run);
         }
-//        NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
-//        NoC_MPI.Gather_Faults(&NoC);
+        NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
+        NoC_MPI.Gather_Faults(&NoC);
         sleep(1);
     }
 

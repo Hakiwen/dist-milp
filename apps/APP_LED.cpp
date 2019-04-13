@@ -28,6 +28,7 @@ void APP_LED(int color)
         std::cout << "BLUE" << std::endl;
     }
 #else
+    wiringPiSetup () ;
     int RED_LED   = 26;
     int GREEN_LED = 27;
     int BLUE_LED  = 28;
@@ -65,4 +66,12 @@ void APP_LED(int color)
         digitalWrite (BLUE_LED,  HIGH);
     }
 #endif
+
+    //    wiringPiSetup () ;
+//    pinMode (0, OUTPUT) ;
+//    for (;;)
+//    {
+//        digitalWrite (0, HIGH) ; delay (500) ;
+//        digitalWrite (0,  LOW) ; delay (500) ;
+//    }
 }
