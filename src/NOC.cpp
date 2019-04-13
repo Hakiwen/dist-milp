@@ -229,29 +229,22 @@ void NOC::Update_State()
 {
     for (int i = 0; i < this->N_CRs; i++)
     {
-        if(this->solver_status)
+        for (int j = 0; j < this->N_nodes; j++)
         {
-            for (int j = 0; j < this->N_nodes; j++)
+            if (this->Fault_CRs[i] == 1)
             {
-                if (this->Fault_CRs[i] == 1)
-                {
-                    this->nodes_on_CRs[i] = -1;
-                    break;
-                }
-                else if (this->X_CRs_nodes(i, j) == 1)
-                {
-                    this->nodes_on_CRs[i] = j + 1;
-                    break;
-                }
-                else
-                {
-                    this->nodes_on_CRs[i] = 0;
-                }
+                this->nodes_on_CRs[i] = -1;
+                break;
             }
-        }
-        else
-        {
-            this->nodes_on_CRs[i] = -1;
+            else if (this->X_CRs_nodes(i, j) == 1)
+            {
+                this->nodes_on_CRs[i] = j + 1;
+                break;
+            }
+            else
+            {
+                this->nodes_on_CRs[i] = 0;
+            }
         }
         this->apps_on_CRs[i] = get_app_from_node(this->nodes_on_CRs[i]);
     }

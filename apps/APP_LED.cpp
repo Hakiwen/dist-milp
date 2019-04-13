@@ -28,7 +28,6 @@ void APP_LED(int color)
         std::cout << "BLUE" << std::endl;
     }
 #else
-    wiringPiSetup () ;
     int RED_LED   = 26;
     int GREEN_LED = 27;
     int BLUE_LED  = 28;

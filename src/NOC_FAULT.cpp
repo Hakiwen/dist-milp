@@ -41,7 +41,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {
-            std::cout << "No New Faults Occurred, Do Nothing" << std::endl;
+            std::cout << "No New Node Fails/Recovers, Do Nothing" << std::endl;
             return 0;
         }
         else
@@ -53,13 +53,14 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             }
             else
             {
-                std::cout << "A New Fault Occurred, Reallocating..." << std::endl;
+                std::cout << "A New Node Fails/Recovers, Reallocating..." << std::endl;
                 return 1;
             }
         }
     }
     else
     {
+#if defined(__x86_64__)
         // Read file instead of user input so that the loop can keep running
         std::string name = "fault_file_" + std::to_string(rank) + ".txt";
         this->fault_file.open(name, std::fstream::in);
@@ -68,5 +69,21 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         this->fault_file.close();
         NoC->fault_status = (int)buf[0] - '0';
         delete[] buf;
+#else
+        int switch_button_1 = 29;
+        int switch_button_2 = 25;
+        pinMode (switch_button_1, INPUT);
+        pinMode (switch_button_2, INPUT);
+        pullUpDnControl (switch_button_1, PUD_UP);
+        pullUpDnControl (switch_button_2, PUD_UP);
+        if(digitalRead (switch_button_1) == 1)
+        {
+            NoC->fault_status = 0;
+        }
+        else
+        {
+            NoC->fault_status = 1;
+        }
+#endif
     }
 }
