@@ -35,10 +35,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/MY_MACROS.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/MY_MACROS.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC_GLPK.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_GLPK.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NOC_GLPK.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_GLPK.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -70,95 +67,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-17">
-              <caret line="51" column="6" selection-start-line="51" selection-start-column="6" selection-end-line="51" selection-end-column="6" />
+            <state relative-caret-position="825">
+              <caret line="55" column="5" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#218#270#0" expanded="true" />
                 <element signature="e#301#324#0" expanded="true" />
-                <element signature="e#1781#1962#0" expanded="true" />
+                <element signature="e#1234#1373#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_12.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_4.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_9.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_10.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_11.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
+              <caret column="34" selection-start-column="34" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -203,17 +128,14 @@
         <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_CPLEX.cpp" />
         <option value="$PROJECT_DIR$/src/CPLEX_SOLVER.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/include/GLPK_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/src/GLPK_SOLVER.cpp" />
         <option value="$PROJECT_DIR$/bin/fault_file_6.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_7.txt" />
         <option value="$PROJECT_DIR$/include/MY_MACROS.hpp" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_GLPK.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_GLPK.cpp" />
-        <option value="$PROJECT_DIR$/bin/fault_file_1.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_12.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_4.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_9.txt" />
@@ -222,15 +144,17 @@
         <option value="$PROJECT_DIR$/bin/fault_file_10.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_11.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_3.txt" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/bin/fault_file_1.txt" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
-    <option name="y" value="-2" />
-    <option name="width" value="960" />
-    <option name="height" value="1082" />
+    <option name="x" value="-535" />
+    <option name="width" value="1237" />
+    <option name="height" value="557" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -302,7 +226,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.MPI_DIST_MILP ">
+  <component name="RunManager" selected="CMake Application.DIST_MILP">
     <configuration name="DIST_MILP" type="CMakeRunConfiguration" factoryName="Application" singleton="false" nameIsGenerated="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DIST_MILP" TARGET_NAME="DIST_MILP" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="DIST_MILP" RUN_TARGET_NAME="DIST_MILP">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -351,7 +275,8 @@
       <workItem from="1554947666091" duration="5841000" />
       <workItem from="1555037260301" duration="3367000" />
       <workItem from="1555084718849" duration="18579000" />
-      <workItem from="1555118942244" duration="5698000" />
+      <workItem from="1555118942244" duration="6390000" />
+      <workItem from="1555136385981" duration="1193000" />
     </task>
     <task id="LOCAL-00001" summary="Mains">
       <created>1554754468807</created>
@@ -493,11 +418,18 @@
       <option name="project" value="LOCAL" />
       <updated>1555103369598</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Centralized GLPK no demo">
+      <created>1555125871681</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1555125871681</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="148447000" />
+    <option name="totallyTimeSpent" value="150332000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -509,23 +441,23 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="2880" y="-2" width="960" height="1082" extended-state="4" />
+    <frame x="0" y="-2" width="1280" height="969" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.29540482" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.19286872" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.57451403" weight="0.32843652" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49028078" weight="0.32843652" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.55032825" visible="true" weight="0.3809024" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.54943275" visible="true" weight="0.3797619" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.5218818" weight="0.3210913" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.5202593" weight="0.32023808" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.44967178" side_tool="true" visible="true" weight="0.3809024" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.45056728" side_tool="true" visible="true" weight="0.3797619" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6627907" weight="0.32896304" />
       <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.626071" weight="0.32657927" />
       <window_info anchor="bottom" id="TeamCity" order="13" />
@@ -549,7 +481,8 @@
     <MESSAGE value="rpi" />
     <MESSAGE value="Centralized CPLEX" />
     <MESSAGE value="glpk" />
-    <option name="LAST_COMMIT_MESSAGE" value="glpk" />
+    <MESSAGE value="Centralized GLPK no demo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Centralized GLPK no demo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -691,13 +624,6 @@
     <entry file="file://$PROJECT_DIR$/bin/sol2.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="34" column="85" selection-start-line="34" selection-start-column="85" selection-end-line="34" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/sol_glpk.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-180" />
@@ -835,62 +761,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-17">
-          <caret line="51" column="6" selection-start-line="51" selection-start-column="6" selection-end-line="51" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#218#270#0" expanded="true" />
-            <element signature="e#301#324#0" expanded="true" />
-            <element signature="e#1781#1962#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_12.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_4.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_9.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_10.txt">
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="1" selection-start-column="1" selection-end-column="1" />
@@ -904,10 +775,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/fault_file_3.txt">
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_10.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_8.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_5.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_9.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_4.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_12.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/fault_file_1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="55" column="5" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#218#270#0" expanded="true" />
+            <element signature="e#301#324#0" expanded="true" />
+            <element signature="e#1234#1373#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="34" selection-start-column="34" selection-end-column="34" />
         </state>
       </provider>
     </entry>

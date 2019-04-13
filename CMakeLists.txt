@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.7.2 FATAL_ERROR)
 project(DIST_MILP)
 set (CMAKE_CXX_FLAGS "-g -Wall -std=c++11")
 
