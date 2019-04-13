@@ -69,7 +69,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && NoC.solver_status) {
+//            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank) && NoC.solver_status) {
+                if (NoC.solver_status) {
 #if defined(CPLEX_AS_SOLVER)
                 NoC_CPLEX.write_LP(&NoC);
                 if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
