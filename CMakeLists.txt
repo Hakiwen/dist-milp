@@ -35,8 +35,5 @@ else()
 	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} ${wiringPi_LIB} -lrt -lcrypt -lglpk)
 endif ()
 
-
-
-
 #add_executable(get_test_cut "src/wrtnode.c")
 #target_link_libraries(get_test_cut ${CPLEX_LINK_LIBS})

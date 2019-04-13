@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <signal.h>
 #include <fstream>
 
 #include "MY_MACROS.hpp"
@@ -19,8 +20,21 @@
 
 using namespace std;
 
+void sighandler(int sig)
+{
+    APP_LED(-1);
+    exit(1);
+}
+
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
 {
+#ifndef __x86_64__
+    signal(SIGABRT, &sighandler);
+    signal(SIGTERM, &sighandler);
+    signal(SIGINT, &sighandler);
+    wiringPiSetup () ;
+#endif
+
     /** User-Initialized Parameters **/
 
     int N_Row_CRs = 3, N_Col_CRs = 4;
@@ -80,12 +94,12 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
-            cout << "I'm the jet engine!" << endl;
+//            cout << "I'm the jet engine!" << endl;
         }
         else // computer resource node
         {
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
-            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
+//            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
             app_ptr[0](NoC.app_to_run);
         }
         NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking

@@ -33,9 +33,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
+    <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="Centralized GLPK no demo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/APP_LED.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/apps/APP_LED.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/APP_LED.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/apps/APP_LED.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/NOC_FAULT.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC_FAULT.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machinefile.txt" beforeDir="false" afterPath="$PROJECT_DIR$/machinefile.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NOC_FAULT.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_FAULT.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -65,25 +71,48 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main.cpp">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="825">
-              <caret line="55" column="5" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#218#270#0" expanded="true" />
-                <element signature="e#301#324#0" expanded="true" />
-                <element signature="e#1234#1373#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="268">
+              <caret line="30" column="24" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+        <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="34" selection-start-column="34" selection-end-column="34" />
+            <state relative-caret-position="-210">
+              <caret line="50" column="38" lean-forward="true" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#218#270#0" expanded="true" />
+                <element signature="e#301#324#0" expanded="true" />
+                <element signature="e#601#720#0" expanded="true" />
+                <element signature="e#1464#1603#0" expanded="true" />
+                <element signature="e#2031#2212#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="990">
+              <caret line="66" column="6" selection-start-line="66" selection-start-column="6" selection-end-line="66" selection-end-column="6" />
+              <folding>
+                <element signature="e#547#1511#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="753">
+              <caret line="53" column="16" lean-forward="true" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -112,8 +141,6 @@
         <option value="$PROJECT_DIR$/src/ilomipex1.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_LP.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_FAULT.hpp" />
-        <option value="$PROJECT_DIR$/apps/APP_LED.cpp" />
-        <option value="$PROJECT_DIR$/apps/APP_LED.hpp" />
         <option value="$PROJECT_DIR$/src/NOC.cpp" />
         <option value="$PROJECT_DIR$/bin/fault_file.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_2.txt" />
@@ -122,7 +149,6 @@
         <option value="$PROJECT_DIR$/include/DIST_MILP_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/include/CPLEX_SOLVER.hpp" />
         <option value="$PROJECT_DIR$/include/NOC_MPI.hpp" />
-        <option value="$PROJECT_DIR$/include/NOC_FAULT.hpp" />
         <option value="$PROJECT_DIR$/include/NOC_APP.hpp" />
         <option value="$PROJECT_DIR$/include/NOC.hpp" />
         <option value="$PROJECT_DIR$/include/NOC_CPLEX.hpp" />
@@ -133,7 +159,6 @@
         <option value="$PROJECT_DIR$/bin/fault_file_6.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_7.txt" />
         <option value="$PROJECT_DIR$/include/MY_MACROS.hpp" />
-        <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
         <option value="$PROJECT_DIR$/include/NOC_GLPK.hpp" />
         <option value="$PROJECT_DIR$/src/NOC_GLPK.cpp" />
         <option value="$PROJECT_DIR$/bin/fault_file_12.txt" />
@@ -144,15 +169,20 @@
         <option value="$PROJECT_DIR$/bin/fault_file_10.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_11.txt" />
         <option value="$PROJECT_DIR$/bin/fault_file_3.txt" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/bin/fault_file_1.txt" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/include/NOC_FAULT.hpp" />
+        <option value="$PROJECT_DIR$/apps/APP_LED.hpp" />
+        <option value="$PROJECT_DIR$/src/NOC_FAULT.cpp" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/apps/APP_LED.cpp" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-535" />
+    <option name="x" value="1364" />
+    <option name="y" value="27" />
     <option name="width" value="1237" />
     <option name="height" value="557" />
   </component>
@@ -170,6 +200,11 @@
             <path>
               <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
               <item name="Dist_MILP" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Dist_MILP" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DIST_MILP" type="b2602c69:ProjectViewProjectNode" />
@@ -276,7 +311,7 @@
       <workItem from="1555037260301" duration="3367000" />
       <workItem from="1555084718849" duration="18579000" />
       <workItem from="1555118942244" duration="6390000" />
-      <workItem from="1555136385981" duration="1193000" />
+      <workItem from="1555136385981" duration="6261000" />
     </task>
     <task id="LOCAL-00001" summary="Mains">
       <created>1554754468807</created>
@@ -425,11 +460,25 @@
       <option name="project" value="LOCAL" />
       <updated>1555125871681</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Centralized GLPK no demo">
+      <created>1555138425469</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1555138425470</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Centralized GLPK no demo">
+      <created>1555139161749</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1555139161749</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="150332000" />
+    <option name="totallyTimeSpent" value="155400000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -441,23 +490,23 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-2" width="1280" height="969" extended-state="6" />
+    <frame x="1280" y="25" width="1680" height="968" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.19286872" />
+      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.14565483" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.57451403" weight="0.32843652" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49028078" weight="0.32843652" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.54943275" visible="true" weight="0.3797619" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.5483476" visible="true" weight="0.38021454" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.5202593" weight="0.32023808" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.51897186" weight="0.31942788" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.45056728" side_tool="true" visible="true" weight="0.3797619" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.45165238" side_tool="true" visible="true" weight="0.38021454" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6627907" weight="0.32896304" />
       <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.626071" weight="0.32657927" />
       <window_info anchor="bottom" id="TeamCity" order="13" />
@@ -496,20 +545,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/NOC_APP.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="22" lean-forward="true" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/c++/7/bits/basic_string.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="6404" column="2" selection-start-line="6404" selection-start-column="2" selection-end-line="6404" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///opt/ibm/ILOG/CPLEX_Studio129/concert/include/ilconcert/iloenv.h" />
     <entry file="file://$APPLICATION_HOME_DIR$/bin/cmake/linux/share/cmake-3.12/Modules/FindPackageHandleStandardArgs.cmake" />
     <entry file="file://$PROJECT_DIR$/bin/fault_file.txt" />
@@ -562,13 +597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="485">
           <caret line="50" column="9" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/NOC_FAULT.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -740,13 +768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" selection-start-column="2" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GLPK_SOLVER.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -824,23 +845,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+    <entry file="file://$PROJECT_DIR$/apps/APP_LED.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="55" column="5" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#218#270#0" expanded="true" />
-            <element signature="e#301#324#0" expanded="true" />
-            <element signature="e#1234#1373#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="105">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="34" selection-start-column="34" selection-end-column="34" />
+        <state relative-caret-position="268">
+          <caret line="30" column="24" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/NOC_FAULT.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="21" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/APP_LED.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="990">
+          <caret line="66" column="6" selection-start-line="66" selection-start-column="6" selection-end-line="66" selection-end-column="6" />
+          <folding>
+            <element signature="e#547#1511#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/NOC_FAULT.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="753">
+          <caret line="53" column="16" lean-forward="true" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-210">
+          <caret line="50" column="38" lean-forward="true" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#218#270#0" expanded="true" />
+            <element signature="e#301#324#0" expanded="true" />
+            <element signature="e#601#720#0" expanded="true" />
+            <element signature="e#1464#1603#0" expanded="true" />
+            <element signature="e#2031#2212#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
