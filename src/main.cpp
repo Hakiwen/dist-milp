@@ -32,7 +32,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     signal(SIGABRT, &sighandler);
     signal(SIGTERM, &sighandler);
     signal(SIGINT, &sighandler);
-    wiringPiSetup () ;
+    wiringPiSetup() ;
 #endif
 
     /** User-Initialized Parameters **/
@@ -79,16 +79,16 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                 }
 #elif defined(GLPK_AS_SOLVER)
                 NoC_GLPK.write_LP(&NoC);
-//                if(prob_GLPK.solve(&NoC_GLPK) == GLP_INTEGER_OPTIMAL)
-//                {
-//                    NoC_GLPK.read_Sol(&NoC);
-//                }
+                if(prob_GLPK.solve(&NoC_GLPK) == GLP_INTEGER_OPTIMAL)
+                {
+                    NoC_GLPK.read_Sol(&NoC);
+                }
 #endif
-//                else
-//                {
-//                    cout << "Infeasible Solution" << endl;
-//                    NoC.solver_status = 0;
-//                }
+                else
+                {
+                    cout << "Infeasible Solution" << endl;
+                    NoC.solver_status = 0;
+                }
                 NoC.Update_State();
             }
             NoC.Disp();
