@@ -61,12 +61,12 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "R_apps_" + std::to_string(i-1);
         glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
         glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
-        coeff += NoC->N_nodes_apps[i-1];
+        coeff += NoC->N_nodes + 1;
         for (int j = NoC->N_apps; j >= i; j--)
         {
             coeff += NoC->N_nodes_apps[j-1];
         }
-        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff+1);
+        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff);
     }
 
     for (int i = 0; i < NoC->N_nodes; i++)
