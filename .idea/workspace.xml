@@ -43,14 +43,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a7dc65c4-37b7-492c-89a3-c8ecc35e32da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/MY_MACROS.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/MY_MACROS.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/NOC.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/NOC.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GLPK_SOLVER.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/GLPK_SOLVER.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NOC.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NOC_FAULT.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_FAULT.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NOC_GLPK.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_GLPK.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NOC_MPI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/NOC_MPI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -96,8 +88,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/NOC_GLPK.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="795">
-              <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+            <state relative-caret-position="133">
+              <caret line="46" column="31" lean-forward="true" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -105,8 +97,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/NoC.lp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="29" column="46" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
+            <state relative-caret-position="45">
+              <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -176,9 +168,8 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="298" />
-    <option name="y" value="158" />
-    <option name="width" value="1391" />
+    <option name="x" value="1812" />
+    <option name="width" value="1381" />
     <option name="height" value="791" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -308,7 +299,7 @@
       <workItem from="1555118942244" duration="6390000" />
       <workItem from="1555136385981" duration="11323000" />
       <workItem from="1555177873325" duration="6129000" />
-      <workItem from="1555212666836" duration="2321000" />
+      <workItem from="1555212666836" duration="4872000" />
     </task>
     <task id="LOCAL-00001" summary="Mains">
       <created>1554754468807</created>
@@ -506,11 +497,25 @@
       <option name="project" value="LOCAL" />
       <updated>1555146258915</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Centralized GLPK demo LED with switch">
+      <created>1555224960396</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1555224960396</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Centralized GLPK demo LED with switch">
+      <created>1555228696162</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1555228696162</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168912000" />
+    <option name="totallyTimeSpent" value="171463000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -531,15 +536,15 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.57451403" weight="0.32843652" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.48986125" weight="0.32843652" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.51909244" visible="true" weight="0.3790497" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.5146652" weight="0.3790497" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893278" weight="0.32879582" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.4875484" weight="0.31857452" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.4831212" weight="0.31857452" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.4809076" side_tool="true" visible="true" weight="0.3790497" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.66156673" weight="0.2657926" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.4853348" side_tool="true" visible="true" weight="0.31857452" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.6607637" weight="0.26565874" />
       <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.626071" weight="0.32657927" />
       <window_info anchor="bottom" id="TeamCity" order="13" sideWeight="0.4994664" weight="0.32948583" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -614,7 +619,8 @@
     <MESSAGE value="glpk" />
     <MESSAGE value="Centralized GLPK no demo" />
     <MESSAGE value="Centralized GLPK demo LED no switch" />
-    <option name="LAST_COMMIT_MESSAGE" value="Centralized GLPK demo LED no switch" />
+    <MESSAGE value="Centralized GLPK demo LED with switch" />
+    <option name="LAST_COMMIT_MESSAGE" value="Centralized GLPK demo LED with switch" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -966,15 +972,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/NoC.lp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="46" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
+        <state relative-caret-position="45">
+          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/NOC_GLPK.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+        <state relative-caret-position="133">
+          <caret line="46" column="31" lean-forward="true" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
         </state>
       </provider>
     </entry>
