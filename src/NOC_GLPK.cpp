@@ -53,14 +53,20 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
-    for (int i = 0; i < NoC->N_apps; i++)
+    int coeff = 0;
+    glp_add_cols(model, NoC->N_apps);
+    NoC->var_size += NoC->N_apps;
+    for (int i = NoC->N_apps; i > 0; i--)
     {
-        NoC->var_size += 1;
-        std::string name = "R_apps_" + std::to_string(i);
-        glp_add_cols(model, 1);
-        glp_set_col_name(model, NoC->var_size, name.c_str());
-        glp_set_col_kind(model, NoC->var_size, GLP_BV);
-        glp_set_obj_coef(model, NoC->var_size, (NoC->N_nodes + 1));
+        std::string name = "R_apps_" + std::to_string(i-1);
+        glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
+        glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
+        coeff += NoC->N_nodes_apps[i-1];
+        for (int j = NoC->N_apps; j >= i; j--)
+        {
+            coeff += NoC->N_nodes_apps[j-1];
+        }
+        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff+1);
     }
 
     for (int i = 0; i < NoC->N_nodes; i++)
@@ -240,37 +246,37 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     }
 
     // Priorities
-    for (int i = 1; i <= NoC->N_apps; i++)
-    {
-        NoC->con_size += 1;
-        std::string name = "Priority_" + std::to_string(i-1);
-        glp_add_rows(this->model, 1);
-        glp_set_row_name(this->model, NoC->con_size, name.c_str());
-
-        if(i == 1)
-        {
-            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 1.0, 0.0);
-
-            ind_count += 1;
-            ia[ind_count] = NoC->con_size;
-            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
-            ar[ind_count] = 1;
-        }
-        else
-        {
-            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 0.0, 0.0);
-
-            ind_count += 1;
-            ia[ind_count] = NoC->con_size;
-            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
-            ar[ind_count] = -1;
-
-            ind_count += 1;
-            ia[ind_count] = NoC->con_size;
-            ja[ind_count] = (i-1) + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
-            ar[ind_count] = 1;
-        }
-    }
+//    for (int i = 1; i <= NoC->N_apps; i++)
+//    {
+//        NoC->con_size += 1;
+//        std::string name = "Priority_" + std::to_string(i-1);
+//        glp_add_rows(this->model, 1);
+//        glp_set_row_name(this->model, NoC->con_size, name.c_str());
+//
+//        if(i == 1)
+//        {
+//            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 1.0, 0.0);
+//
+//            ind_count += 1;
+//            ia[ind_count] = NoC->con_size;
+//            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+//            ar[ind_count] = 1;
+//        }
+//        else
+//        {
+//            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 0.0, 0.0);
+//
+//            ind_count += 1;
+//            ia[ind_count] = NoC->con_size;
+//            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+//            ar[ind_count] = -1;
+//
+//            ind_count += 1;
+//            ia[ind_count] = NoC->con_size;
+//            ja[ind_count] = (i-1) + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+//            ar[ind_count] = 1;
+//        }
+//    }
 
     // Spatial Orientation
     int sum_N_nodes_apps = 0;
@@ -345,7 +351,6 @@ void NOC_GLPK::read_Sol(NOC *NoC)
     NoC->obj_val= glp_mip_obj_val(this->model);
 
     int k = 1;
-
     for (int i = 0; i < NoC->N_CRs; i++)
     {
         for (int j = 0; j < NoC->N_nodes; j++)

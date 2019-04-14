@@ -74,14 +74,21 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                 if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
                 {
                     NoC_CPLEX.read_Sol(&NoC, "sol.xml");
+                    NoC.solver_status = 1;
                 }
 #elif defined(GLPK_AS_SOLVER)
                 NoC_GLPK.write_LP(&NoC);
-                if(prob_GLPK.solve(&NoC_GLPK) == GLP_INTEGER_OPTIMAL)
+                if(prob_GLPK.solve(&NoC_GLPK))
                 {
                     NoC_GLPK.read_Sol(&NoC);
+                    NoC.solver_status = 1;
                 }
 #endif
+                else
+                {
+                    cout << "Infeasible Solution" << endl;
+                    NoC.solver_status = 0;
+                }
                 NoC.Update_State();
             }
             NoC.Disp();
@@ -92,14 +99,19 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else // computer resource node
         {
-            wiringPiSetup();
+#ifndef __x86_64__
+            wiringPiSetup(); // TODO somehow mess up glpk, still fine for centralized version
+#endif
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
 //            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
+            NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             app_ptr[0](NoC.app_to_run);
         }
+#ifdef USE_MPI
         NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
         NoC_MPI.Gather_Faults(&NoC);
-//        sleep(1);
+#endif
+        sleep(1);
     }
 
     while (1){}; // does nothing, but smiling at you :)

@@ -26,11 +26,11 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
         scatter_data_send[NoC->N_CRs + 1] = 0;
         for (int i = 0; i < NoC->N_CRs; i++)
         {
-            scatter_data_send[i + 1] = NoC->apps_on_CRs[i];
+            scatter_data_send[i + 1] = NoC->nodes_on_CRs[i];
         }
     }
 
-    MPI_Scatter(scatter_data_send, 1, MPI_INT, &NoC->app_to_run, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(scatter_data_send, 1, MPI_INT, &NoC->node_to_run, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
 void NOC_MPI::Gather_Faults(NOC *NoC)

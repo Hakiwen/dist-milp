@@ -158,6 +158,7 @@ void NOC::CreateDecisionMatrices()
         this->nodes_on_CRs[i] = 0; // initially alive, but not running any apps
         this->apps_on_CRs[i] = 0;
     }
+    this->node_to_run = 0; // initially alive, but not running any apps
     this->app_to_run = 0; // initially alive, but not running any apps
     this->prev_app_to_run = -1;
 
@@ -231,19 +232,24 @@ void NOC::Update_State()
     {
         for (int j = 0; j < this->N_nodes; j++)
         {
-            if (this->Fault_CRs[i] == 1)
+            if (this->Fault_CRs[i] == 1) // that node is faulty
             {
                 this->nodes_on_CRs[i] = -1;
                 break;
             }
-            else if (this->X_CRs_nodes(i, j) == 1)
+            else if (this->solver_status == 0) // infeasible solution, all alive nodes run nothing
+            {
+                this->nodes_on_CRs[i] = 0;
+                break;
+            }
+            else if (this->X_CRs_nodes(i, j) == 1) // i_th CR runs j_th node
             {
                 this->nodes_on_CRs[i] = j + 1;
                 break;
             }
             else
             {
-                this->nodes_on_CRs[i] = 0;
+                this->nodes_on_CRs[i] = 0; //  i_th CR do not run j_th node
             }
         }
         this->apps_on_CRs[i] = get_app_from_node(this->nodes_on_CRs[i]);

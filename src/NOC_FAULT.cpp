@@ -17,10 +17,18 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
 {
     if (rank == 0)
     {
-//        int fault_node = 0;
-//        std::cout << "Please input the valid number of node you want to kill: ";
-//        std::cin >> fault_node;
-//        NoC->Fault_CRs[fault_node - 1] = 1;
+
+#ifndef USE_MPI
+        if(NoC->prev_N_Faults != -1 || NoC->N_Faults == 0)
+        {
+            /* user input for killing nodes */
+            int fault_node = 0;
+            std::cout << "Please input the valid number of node you want to kill: ";
+            std::cin >> fault_node;
+            NoC->Fault_CRs[fault_node - 1] = 1;
+            /* end */
+        }
+#endif
 
         std::cout << "All Nodes' Status: ";
         for (int i = 0; i < NoC->N_CRs; i++)

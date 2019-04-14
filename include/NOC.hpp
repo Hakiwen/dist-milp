@@ -35,9 +35,10 @@ public:
     Eigen::MatrixXi M_apps;
     Eigen::MatrixXi X_CRs_nodes_old;
 
-    int *nodes_on_CRs; // node to run on each CR
-    int *apps_on_CRs; // app to run on each CR, solver sends
-    int app_to_run; // app to run on each CR, each node receives
+    int *nodes_on_CRs; // node to run on each CR, solver sends
+    int *apps_on_CRs; // app to run on each CR
+    int node_to_run; // node to run on each CR, each node receives
+    int app_to_run; // app to run on each CR
     int prev_app_to_run;
     void (*app_ptr)(int);
 
