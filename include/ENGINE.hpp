@@ -11,7 +11,7 @@
 
 #include <wiringPi.h>
 #include <phidget22.h>
-#include "PhidgetHelperFunctions.h"
+#include "PhidgetHelperFunctions.hpp"
 
 class ENGINE
 {
