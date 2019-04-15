@@ -5,6 +5,7 @@
 
 NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[])
 {
+    // From user's inputs
     this->N_Row_CRs = N_Row_CRs;
     this->N_Col_CRs = N_Col_CRs;
     this->N_apps = N_apps;
@@ -13,9 +14,37 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->N_Col_apps = new int[N_apps];
     this->N_Col_apps = N_Col_apps;
 
+    // Optimization
     this->obj_val = 0;
     this->var_size = 0;
     this->con_size = 0;
+
+    // Total Number of Computer Resources
+    this->N_CRs = this->N_Row_CRs * this->N_Col_CRs;
+
+    // Node/App to Run on Each CR
+    this->nodes_on_CRs = new int[this->N_CRs];
+    this->apps_on_CRs = new int[this->N_CRs];
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        this->nodes_on_CRs[i] = 0; // initially alive, but not running any apps
+        this->apps_on_CRs[i] = 0;
+    }
+    this->node_to_run = 0; // initially alive, but not running any apps
+    this->app_to_run = 0; // initially alive, but not running any apps
+    this->prev_app_to_run = -1;
+
+    // Fault Detection
+    this->N_Faults = -1;
+    this->prev_N_Faults = -1;
+    this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        this->Fault_CRs[i] = 0;
+    }
+    this->fault_status = 0; // 0 no fault, 1 has fault (for each node)
+
+    this->solver_status = 1; // 1 feasible, 0 infeasible
 }
 
 void NOC::CreateTopology(const char *topo)
@@ -29,7 +58,6 @@ void NOC::CreateTopology(const char *topo)
 
 void NOC::CreateSquareTopology()
 {
-    this->N_CRs = this->N_Row_CRs * this->N_Col_CRs;
     this->N_paths =
             (this->N_Col_CRs - 1) * this->N_Row_CRs + (this->N_Row_CRs - 1) * this->N_Col_CRs; // square topology
     this->N_nodes_apps = new int[this->N_apps];
@@ -151,27 +179,6 @@ void NOC::CreateDecisionMatrices()
     {
         this->R_apps(i) = 1;
     }
-    this->nodes_on_CRs = new int[this->N_CRs];
-    this->apps_on_CRs = new int[this->N_CRs];
-    for (int i = 0; i < this->N_CRs; i++)
-    {
-        this->nodes_on_CRs[i] = 0; // initially alive, but not running any apps
-        this->apps_on_CRs[i] = 0;
-    }
-    this->node_to_run = 0; // initially alive, but not running any apps
-    this->app_to_run = 0; // initially alive, but not running any apps
-    this->prev_app_to_run = -1;
-
-    this->N_Faults = -1;
-    this->prev_N_Faults = -1;
-    this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
-    for (int i = 0; i < this->N_CRs; i++)
-    {
-        this->Fault_CRs[i] = 0;
-    }
-
-    this->fault_status = 0; // 0 no fault, 1 has fault (for each node)
-    this->solver_status = 1; // 1 feasible, 0 infeasible
 
     if(VERBOSE)
     {

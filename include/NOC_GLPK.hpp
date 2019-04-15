@@ -21,9 +21,9 @@ public:
 
     NOC_GLPK();
 
-    void write_LP(NOC *NoC);
+    void write_LP(NOC *NoC, const char* LP_file);
     void CreateModel(NOC *NoC);
-    void read_Sol(NOC *NoC);
+    void read_Sol(NOC *NoC, const char* Sol_file);
     void DeleteModel(NOC *NoC);
 };
 #endif

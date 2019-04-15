@@ -11,6 +11,11 @@ NOC_MPI::NOC_MPI()
     MPI_Comm_rank(MPI_COMM_WORLD, &this->world_rank);
 }
 
+void NOC_MPI::Barrier()
+{
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
 void NOC_MPI::Finalize()
 {
     MPI_Finalize();
@@ -38,16 +43,40 @@ void NOC_MPI::Gather_Faults(NOC *NoC)
     int *gather_data_receive = NULL;
     if(this->world_rank == 0)
     {
-        gather_data_receive = new int[NoC->N_CRs + 2];
+        gather_data_receive = new int[this->world_size];
     }
 
     MPI_Gather(&NoC->fault_status, 1, MPI_INT, gather_data_receive, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     if(this->world_rank == 0)
     {
-        for (int i = 0; i < NoC->N_CRs; i++)
+        for (int i = 0; i < this->world_size - 2; i++)
         {
             NoC->Fault_CRs[i] = gather_data_receive[i + 1];
+        }
+    }
+}
+
+void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
+{
+    MPI_Bcast(&Engine->sensor_data, 1, MPI_FLOAT, this->world_size - 1, MPI_COMM_WORLD);
+}
+
+void NOC_MPI::Gather_PWM(ENGINE *Engine)
+{
+    int *gather_data_receive = NULL;
+    if(this->world_rank == this->world_size - 1)
+    {
+        gather_data_receive = new int[this->world_size];
+    }
+
+    MPI_Gather(&Engine->PWM_out, 1, MPI_INT, gather_data_receive, 1, MPI_INT, this->world_size - 1, MPI_COMM_WORLD);
+
+    if(this->world_rank == this->world_size - 1)
+    {
+        for (int i = 0; i < this->world_size - 2; i++)
+        {
+            Engine->PWM_in[i] = gather_data_receive[i + 1];
         }
     }
 }

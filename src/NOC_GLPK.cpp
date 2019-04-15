@@ -10,13 +10,13 @@ NOC_GLPK::NOC_GLPK()
 
 }
 
-void NOC_GLPK::write_LP(NOC *NoC)
+void NOC_GLPK::write_LP(NOC *NoC, const char* LP_file)
 {
     this->model = glp_create_prob();
     glp_set_prob_name(this->model, "NoC");
 
     CreateModel(NoC);
-    glp_write_lp(this->model, NULL, "NoC.lp");
+    glp_write_lp(this->model, NULL, LP_file);
 }
 
 void NOC_GLPK::CreateModel(NOC *NoC)
@@ -343,10 +343,10 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
 
-void NOC_GLPK::read_Sol(NOC *NoC)
+void NOC_GLPK::read_Sol(NOC *NoC, const char* Sol_file)
 {
 //    glp_prob *mip = glp_create_prob();
-//    glp_read_mip(mip, "sol_glpk.txt");
+//    glp_read_mip(mip, Sol_file);
 
     NoC->obj_val= glp_mip_obj_val(this->model);
 

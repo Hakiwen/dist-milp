@@ -10,6 +10,8 @@
 #include "NOC_APP.hpp"
 #include "NOC_MPI.hpp"
 
+#include "ENGINE.hpp"
+
 #if defined(CPLEX_AS_SOLVER)
 #include "NOC_CPLEX.hpp"
 #include "CPLEX_SOLVER.hpp"
@@ -47,7 +49,14 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     app_ptr[1] = &APP_LED;
     app_ptr[2] = &APP_LED;
 
+    const char* LP_file = "NoC.lp"; // problem file name
+    const char* Sol_file = "sol.txt"; // solution file name
+
     /** End of User Initialization **/
+
+    /*
+     * Initialization
+     */
 
     NOC NoC = NOC(N_Row_CRs, N_Col_CRs, N_apps, N_Row_apps, N_Col_apps); // NoC Object
     NoC.CreateTopology("square");
@@ -56,10 +65,14 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 #if defined(CPLEX_AS_SOLVER)
     NOC_CPLEX NoC_CPLEX = NOC_CPLEX(); // NoC to CPLEX Object
     CPLEX_SOLVER prob_CPLEX = CPLEX_SOLVER("NoC.lp", "sol.xml"); // Solver Object
+    // TODO change file name for CPLEX solver
 #elif defined(GLPK_AS_SOLVER)
     NOC_GLPK NoC_GLPK = NOC_GLPK(); // NoC to GLPK Object
-    GLPK_SOLVER prob_GLPK = GLPK_SOLVER("NoC.lp", "sol.txt"); // Solver Object
+    GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 #endif
+    ENGINE Engine = ENGINE(NoC.N_CRs, NoC.N_apps);
+
+    /** End of Initialization **/
 
     /*
      * Main Loop
@@ -77,10 +90,10 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                     NoC.solver_status = 1;
                 }
 #elif defined(GLPK_AS_SOLVER)
-                NoC_GLPK.write_LP(&NoC);
+                NoC_GLPK.write_LP(&NoC, LP_file);
                 if(prob_GLPK.solve(&NoC_GLPK))
                 {
-                    NoC_GLPK.read_Sol(&NoC);
+                    NoC_GLPK.read_Sol(&NoC, Sol_file);
                     NoC.solver_status = 1;
                 }
 #endif
@@ -95,7 +108,12 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
-//            cout << "I'm the jet engine!" << endl;
+            cout << "I'm the jet engine!" << endl;
+            Engine.read_sensor();
+            Engine.voter();
+            Engine.pwm_send();
+
+            Engine.sensor_data = 10;
         }
         else // computer resource node
         {
@@ -103,13 +121,20 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             wiringPiSetup(); // TODO somehow mess up glpk, still fine for centralized version
 #endif
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
-//            cout << "My Rank: " << NoC_MPI.world_rank << ", My Fault: " << NoC.fault_status << ", My App: ";
+            cout << "My Rank: " << NoC_MPI.world_rank;
+            cout << ", My Fault: " << NoC.fault_status;
+            cout << ", My Sensor: " << Engine.sensor_data;
+            cout << ", My App: ";
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             app_ptr[0](NoC.app_to_run);
         }
-#ifdef USE_MPI
-        NoC_MPI.Scatter_Apps(&NoC); // TODO should be non-blocking
+#ifdef USE_MPI // TODO should be non-blocking
+        NoC_MPI.Barrier();
+        NoC_MPI.Broadcast_Sensor(&Engine);
+        NoC_MPI.Gather_PWM(&Engine);
+        NoC_MPI.Scatter_Apps(&NoC);
         NoC_MPI.Gather_Faults(&NoC);
+        NoC_MPI.Barrier();
 #endif
         sleep(1);
     }
