@@ -1,8 +1,9 @@
 #ifndef PHIDGET_HELPER_FUNCTIONS_H
 #define PHIDGET_HELPER_FUNCTIONS_H
 
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+#include <iostream>
 #include <phidget22.h>
 
 /* Determine if we are on Windows of Unix */

@@ -129,7 +129,7 @@ static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx)
 
     if (channelSubclass == PHIDCHSUBCLASS_VOLTAGEINPUT_SENSOR_PORT) {
         printf("\tSetting VoltageRatio SensorType\n");
-//        prc = PhidgetVoltageRatioInput_setSensorType((PhidgetVoltageRatioInputHandle)ph, SENSOR_TYPE_VOLTAGE);
+        prc = PhidgetVoltageRatioInput_setSensorType((PhidgetVoltageRatioInputHandle)ph, SENSOR_TYPE_VOLTAGERATIO);
     }
 }
 

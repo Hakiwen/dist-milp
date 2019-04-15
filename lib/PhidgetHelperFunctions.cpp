@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <phidget22.h>
 #include "PhidgetHelperFunctions.h"
 
 int ProcessYesNo_Input(int* val, int def) {
