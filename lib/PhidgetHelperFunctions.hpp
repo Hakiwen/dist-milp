@@ -1,5 +1,5 @@
-#ifndef PHIDGET_HELPER_FUNCTIONS_H
-#define PHIDGET_HELPER_FUNCTIONS_H
+#ifndef PHIDGET_HELPER_FUNCTIONS_HPP
+#define PHIDGET_HELPER_FUNCTIONS_HPP
 
 //#include <stdio.h>
 //#include <stdlib.h>

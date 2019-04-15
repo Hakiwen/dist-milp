@@ -11,7 +11,7 @@
 
 #include <wiringPi.h>
 #include <phidget22.h>
-#include "PhidgetHelperFunctions.hpp"
+#include "PhidgetHelperFunctions.hpp" // TODO fix this lib using a clever way than manually changing from C to C++
 
 class ENGINE
 {

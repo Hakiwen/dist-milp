@@ -1,4 +1,4 @@
-#include "PhidgetHelperFunctions.h"
+#include "PhidgetHelperFunctions.hpp"
 
 int ProcessYesNo_Input(int* val, int def) {
 	char strvar[100];
@@ -30,7 +30,7 @@ void DisplayLocatePhidgetsLink() {
 	printf("\n  | In the following example, you will be asked to provide information that specifies which Phidget the program will use. "
 		"\n  | If you are unsure of any of these parameters, be sure to check www.phidgets.com/docs/Finding_The_Addressing_Information "
 		"\n  | Press ENTER once you have read this message.\n");
-	getchar();
+//	getchar();
 
 	printf("\n--------------------\n");
 }
@@ -296,10 +296,10 @@ void SetupNetwork(ChannelInfo *channelInfoPtr) {
 			break;
 		}
 		// Remove trailing newline
-		if ((pos=strchr(channelInfoPtr->netInfo.hostname, '\n')) != NULL) {
-			*pos = '\0';
-			break;
-		}
+//		if ((pos=strchr(channelInfoPtr->netInfo.hostname, '\n')) != NULL) {
+//			*pos = '\0';
+//			break;
+//		}
 	}
 
 	printf("\n--------------------------------------\n");
@@ -324,10 +324,10 @@ void SetupNetwork(ChannelInfo *channelInfoPtr) {
 		if (fgets(channelInfoPtr->netInfo.password, 100, stdin) == NULL)
 			continue;
 		// Remove trailing newline
-		if ((pos=strchr(channelInfoPtr->netInfo.password, '\n')) != NULL) {
-			*pos = '\0';
-			break;
-		}
+//		if ((pos=strchr(channelInfoPtr->netInfo.password, '\n')) != NULL) {
+//			*pos = '\0';
+//			break;
+//		}
 	}
 	printf("\n--------------------------------------\n");
 
@@ -342,14 +342,14 @@ void CheckOpenError(PhidgetReturnCode e, PhidgetHandle *chptr) {
 	if (e == EPHIDGET_OK)
 		return;
 
-	DisplayError(e, "Opening Phidget Channel");
+//	DisplayError(e, "Opening Phidget Channel");
 	if (e == EPHIDGET_TIMEOUT) {
 		fprintf(stderr, "\nThis error commonly occurs if your device is not connected as specified, "
 			"or if another program is using the device, such as the Phidget Control Panel.\n\n"
 			"If your Phidget has a plug or terminal block for external power, ensure it is plugged in and powered.\n");
 		
 		prc = Phidget_getChannelClass(*chptr, &channelClass);
-		CheckError(prc, "Getting ChannelClass", chptr);
+//		CheckError(prc, "Getting ChannelClass", chptr);
 
 		if (channelClass != PHIDCHCLASS_VOLTAGEINPUT
 			&& channelClass != PHIDCHCLASS_VOLTAGERATIOINPUT
@@ -360,7 +360,7 @@ void CheckOpenError(PhidgetReturnCode e, PhidgetHandle *chptr) {
 		}
 
 		prc = Phidget_getIsRemote(*chptr, &isRemote);
-		CheckError(prc, "Getting IsRemote", chptr);
+//		CheckError(prc, "Getting IsRemote", chptr);
 
 		if (isRemote)
 			fprintf(stderr, "\nEnsure the Phidget Network Server is enabled on the machine the Phidget is plugged into.\n");
@@ -374,7 +374,7 @@ void CheckEnableServerDiscoveryError(PhidgetReturnCode e, PhidgetHandle *chptr) 
 	if (e == EPHIDGET_OK)
 		return;
 
-	DisplayError(e, "Enable Server Discovery");
+//	DisplayError(e, "Enable Server Discovery");
 	if (e == EPHIDGET_UNSUPPORTED) {
 		fprintf(stderr, "\nThis error commonly occurs if your computer does not have the required mDNS support. "
 			"We recommend using Bonjour Print Services on Windows and Mac, or Avahi on Linux.\n");
