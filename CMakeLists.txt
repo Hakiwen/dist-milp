@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7.2 FATAL_ERROR)
 project(DIST_MILP)
-set (CMAKE_CXX_FLAGS "-g -Wall -std=c++11")
+set (CMAKE_CXX_FLAGS "-ggdb3 -Wall -std=c++11")
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})

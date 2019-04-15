@@ -1,5 +1,4 @@
 #include <signal.h>
-#include <unistd.h>
 #include <fstream>
 
 #include "MY_MACROS.hpp"
@@ -108,12 +107,13 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
+#ifndef __x86_64__
+            wiringPiSetup(); // TODO somehow mess up glpk, still fine for centralized version
+#endif
             cout << "I'm the jet engine!" << endl;
             Engine.read_sensor();
             Engine.voter();
             Engine.pwm_send();
-
-            Engine.sensor_data = 10;
         }
         else // computer resource node
         {
@@ -128,6 +128,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             app_ptr[0](NoC.app_to_run);
         }
+
 #ifdef USE_MPI // TODO should be non-blocking
         NoC_MPI.Barrier();
         NoC_MPI.Broadcast_Sensor(&Engine);
@@ -136,7 +137,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC_MPI.Gather_Faults(&NoC);
         NoC_MPI.Barrier();
 #endif
-        sleep(1);
+        delay(1000);
     }
 
     while (1){}; // does nothing, but smiling at you :)
