@@ -34,9 +34,9 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     int N_Row_CRs = 3, N_Col_CRs = 4;
     int N_apps = 3;
     int N_Row_apps[N_apps], N_Col_apps[N_apps];
-    N_Row_apps[0] = 2;    N_Col_apps[0] = 2;
-    N_Row_apps[1] = 1;    N_Col_apps[1] = 2;
-    N_Row_apps[2] = 2;    N_Col_apps[2] = 1;
+    N_Row_apps[0] = 3;    N_Col_apps[0] = 1;
+    N_Row_apps[1] = 2;    N_Col_apps[1] = 1;
+    N_Row_apps[2] = 1;    N_Col_apps[2] = 2;
     void (*app_ptr[N_apps])(int);
     app_ptr[0] = &APP_LED;
     app_ptr[1] = &APP_LED;
@@ -109,9 +109,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
 //            cout << "I'm the jet engine!" << endl;
-//            Engine.read_sensor();
-//            Engine.voter();
-//            Engine.pwm_send();
+#ifndef __x86_64__
+            Engine.read_sensor();
+            Engine.voter();
+            Engine.pwm_send();
+#endif
         }
         else // computer resource node
         {
@@ -135,7 +137,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         delay(1000);
     }
 
-    while(true){}; // does nothing, but smiling at you :)
+    while (true){}; // does nothing, but smiling at you :)
 
     return 0;
 

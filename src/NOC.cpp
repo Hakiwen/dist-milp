@@ -32,7 +32,6 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     }
     this->node_to_run = 0; // initially alive, but not running any apps
     this->app_to_run = 0; // initially alive, but not running any apps
-    this->prev_app_to_run = -1;
 
     // Fault Detection
     this->N_Faults = -1;
