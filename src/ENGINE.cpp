@@ -3,7 +3,6 @@
 //
 
 #include "ENGINE.hpp"
-#include "phidget22.h"
 
 ENGINE::ENGINE(int N_CRs, int N_apps)
 {
@@ -47,15 +46,27 @@ void ENGINE::read_sensor()
         Phidget_setOnAttachHandler((PhidgetHandle)this->ch, onAttachHandler, NULL);
         Phidget_setOnDetachHandler((PhidgetHandle)this->ch, onDetachHandler, NULL);
 
-        PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(ch, onVoltageRatioChangeHandler, NULL);
+        PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(ch, onVoltageRatioChangeHandler, this);
 
         Phidget_openWaitForAttachment((PhidgetHandle)ch, 5000);
     }
 }
 
-void ENGINE::voter()
+void ENGINE::voter(int N_CRs, int N_apps)
 {
-
+    int j = 0;
+    for (int i = 0; i < N_CRs; i++)
+    {
+        if (this->PWM_in[i] > 0)
+        {
+            this->PWM_for_Voter[j] = this->PWM_in[i];
+            j++;
+            if(j == N_apps)
+            {
+                break;
+            }
+        }
+    }
 }
 
 void ENGINE::pwm_send()
@@ -73,8 +84,17 @@ void ENGINE::pwm_send()
         pwmWrite(this->PWM_PIN, 100);
         delay(10000);
     }
+
+    if(this->PWM_to_Engine < MIN_PWM)
+    {
+        this->PWM_to_Engine = MIN_PWM;
+    }
+    else if(this->PWM_to_Engine > MAX_PWM)
+    {
+        this->PWM_to_Engine = MAX_PWM;
+    }
 //    pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
-    pwmWrite(this->PWM_PIN, 110);
+    pwmWrite(this->PWM_PIN, 120);
 }
 
 /** Phidget Functions **/
@@ -129,5 +149,7 @@ static void CCONV onDetachHandler(PhidgetHandle ph, void *ctx)
 
 static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph, void *ctx, double voltageRatio)
 {
-    printf("[VoltageRatio Event] -> VoltageRatio: %.4g\n", voltageRatio);
+//    printf("[VoltageRatio Event] -> VoltageRatio: %.4g\n", voltageRatio);
+    ENGINE *Engine = (ENGINE *)ctx;
+    Engine->sensor_data = voltageRatio*100000.0;
 }

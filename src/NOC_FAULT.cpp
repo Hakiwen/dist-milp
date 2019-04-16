@@ -6,11 +6,13 @@
 
 NOC_FAULT::NOC_FAULT(NOC *NoC, int rank)
 {
+#if defined(__x86_64__)
     std::string name = "fault_file_" + std::to_string(rank) + ".txt";
     this->fault_file.open(name, std::fstream::out);
     this->fault_file.clear();
-    this->fault_file << std::to_string(NoC->fault_status);
+    this->fault_file << std::to_string(NoC->fault_internal_status);
     this->fault_file.close();
+#endif
 }
 
 int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
@@ -41,6 +43,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         NoC->N_Faults = 0;
         for (int i = 0; i < NoC->N_CRs; i++)
         {
+            NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i];
             if(NoC->Fault_CRs[i] == 1)
             {
                 NoC->N_Faults += 1;
@@ -54,16 +57,15 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         }
         else
         {
-            if(NoC->N_Faults == 0 && NoC->prev_N_Faults == -1)
-            {
+//            if(NoC->N_Faults == 0 && NoC->prev_N_Faults == -1)
+//            {
 //                std::cout << "First Reallocation..." << std::endl;
-                return 1;
-            }
-            else
-            {
+//            }
+//            else
+//            {
 //                std::cout << "A New Node Fails/Recovers, Reallocating..." << std::endl;
-                return 1;
-            }
+//            }
+            return 1;
         }
     }
     else
@@ -75,7 +77,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         char *buf = new char[1];
         this->fault_file.read(buf, 1);
         this->fault_file.close();
-        NoC->fault_status = (int)buf[0] - '0';
+        NoC->fault_internal_status = (int)buf[0] - '0';
         delete[] buf;
 #else
         int switch_button_1 = 29;

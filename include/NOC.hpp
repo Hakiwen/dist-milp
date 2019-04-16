@@ -9,7 +9,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-#define VERBOSE 1
+#define VERBOSE 0
 
 class NOC{
 public:
@@ -43,7 +43,10 @@ public:
     int N_Faults;
     int prev_N_Faults;
     int *Fault_CRs; // faulty status of each node, solver receives
-    int fault_status; // faulty status of each node, each node sends
+    int *Fault_Internal_CRs;
+    int fault_internal_status; // faulty status of each node, each node sends
+    int *Fault_External_CRs;
+    int fault_external_status;
     int solver_status;
 
     int obj_val;
@@ -57,7 +60,6 @@ public:
     void CreateIncidentMatrices(const char* topo);
     Eigen::MatrixXi CreateIncidentMatrixSquareTopology(int N_Row, int N_Col);
     void CreateDecisionMatrices();
-    void InitialAllocation();
     int get_app_from_node(int node);
     int get_app_from_link(int node);
     void Update_State();

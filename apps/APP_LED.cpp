@@ -4,8 +4,9 @@
 
 #include "APP_LED.hpp"
 
-void APP_LED(int color)
+void APP_LED(NOC *NoC, ENGINE *Engine)
 {
+    int color = NoC->get_app_from_node(NoC->node_to_run);
 #if defined(__x86_64__)
     if(color == LED_OFF)
     {
@@ -64,5 +65,39 @@ void APP_LED(int color)
         digitalWrite (GREEN_LED,  LOW);
         digitalWrite (BLUE_LED,  HIGH);
     }
+#endif
+}
+
+void APP_LED_WHITE(NOC *NoC, ENGINE *Engine)
+{
+#if defined(__x86_64__)
+    std::cout << "WHITE" << std::endl;
+#else
+    int RED_LED   = 26;
+    int GREEN_LED = 27;
+    int BLUE_LED  = 28;
+    pinMode (RED_LED, OUTPUT);
+    pinMode (GREEN_LED, OUTPUT);
+    pinMode (BLUE_LED, OUTPUT);
+    digitalWrite (RED_LED,  HIGH);
+    digitalWrite (GREEN_LED,  HIGH);
+    digitalWrite (BLUE_LED,  HIGH);
+#endif
+}
+
+void APP_LED_OFF()
+{
+#if defined(__x86_64__)
+    std::cout << "OFF" << std::endl;
+#else
+    int RED_LED   = 26;
+    int GREEN_LED = 27;
+    int BLUE_LED  = 28;
+    pinMode (RED_LED, OUTPUT);
+    pinMode (GREEN_LED, OUTPUT);
+    pinMode (BLUE_LED, OUTPUT);
+    digitalWrite (RED_LED,  LOW);
+    digitalWrite (GREEN_LED,  LOW);
+    digitalWrite (BLUE_LED,  LOW);
 #endif
 }

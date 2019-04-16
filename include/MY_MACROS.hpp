@@ -5,7 +5,7 @@
 #ifndef DIST_MILP_MY_MACROS_HPP
 #define DIST_MILP_MY_MACROS_HPP
 
-//#define USE_MPI
+#define USE_MPI
 
 // Choose one, comment others
 //#define CPLEX_AS_SOLVER

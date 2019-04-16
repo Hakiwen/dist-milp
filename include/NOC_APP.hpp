@@ -8,5 +8,6 @@
 #include "MY_MACROS.hpp"
 #include <iostream>
 #include "APP_LED.hpp"
+#include "APP_PID.hpp"
 
 #endif //DIST_MILP_NOC_APP_HPP

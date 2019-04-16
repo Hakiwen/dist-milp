@@ -46,13 +46,13 @@ void NOC_MPI::Gather_Faults(NOC *NoC)
         gather_data_receive = new int[this->world_size];
     }
 
-    MPI_Gather(&NoC->fault_status, 1, MPI_INT, gather_data_receive, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(&NoC->fault_internal_status, 1, MPI_INT, gather_data_receive, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     if(this->world_rank == 0)
     {
         for (int i = 0; i < this->world_size - 2; i++)
         {
-            NoC->Fault_CRs[i] = gather_data_receive[i + 1];
+            NoC->Fault_Internal_CRs[i] = gather_data_receive[i + 1];
         }
     }
 }
@@ -79,4 +79,6 @@ void NOC_MPI::Gather_PWM(ENGINE *Engine)
             Engine->PWM_in[i] = gather_data_receive[i + 1];
         }
     }
+
+    Engine->PWM_out = 0;
 }

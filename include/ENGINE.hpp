@@ -13,6 +13,10 @@
 #include <phidget22.h>
 #include "PhidgetHelperFunctions.hpp" // Manually Modified
 
+#define MIN_PWM 100
+#define MAX_PWM 200
+#define OPER_PWM 120
+
 class ENGINE
 {
 public:
@@ -34,14 +38,12 @@ public:
     ENGINE(int N_nodes, int N_apps);
 
     void read_sensor();
-    void voter();
+    void voter(int N_CRs, int N_apps);
     void pwm_send();
 };
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);
 static void CCONV onDetachHandler(PhidgetHandle ph, void *ctx);
-static void CCONV onErrorHandler(PhidgetHandle ph, void *ctx, Phidget_ErrorEventCode errorCode, const char *errorString);
 static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph, void *ctx, double voltageRatio);
-static void CCONV onSensorChangeHandler(PhidgetVoltageRatioInputHandle ph, void *ctx, double sensorValue, Phidget_UnitInfo *unitInfo);
 
 #endif //DIST_MILP_ENGINE_HPP

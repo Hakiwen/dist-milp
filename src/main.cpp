@@ -23,7 +23,7 @@ using namespace std;
 
 void sighandler()
 {
-    APP_LED(-1);
+    APP_LED_OFF();
     exit(1);
 }
 
@@ -37,10 +37,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     N_Row_apps[0] = 3;    N_Col_apps[0] = 1;
     N_Row_apps[1] = 2;    N_Col_apps[1] = 1;
     N_Row_apps[2] = 1;    N_Col_apps[2] = 2;
-    void (*app_ptr[N_apps])(int);
-    app_ptr[0] = &APP_LED;
-    app_ptr[1] = &APP_LED;
-    app_ptr[2] = &APP_LED;
+    void (*app_ptr[N_apps + 1])(NOC*, ENGINE*);
+    app_ptr[0] = &APP_LED_WHITE; // IDLE
+    app_ptr[1] = &APP_PID; // 1st priority app
+    app_ptr[2] = &APP_LED; // 2nd priority app
+    app_ptr[3] = &APP_LED; // 3rd priority app
 
     const char* LP_file = "NoC.lp"; // problem file name
     const char* Sol_file = "sol.txt"; // solution file name
@@ -81,7 +82,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
-            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank)) {
+            if (NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank))
+            {
 #if defined(CPLEX_AS_SOLVER)
                 NoC_CPLEX.write_LP(&NoC);
                 if (prob_CPLEX.solve() != CPX_STAT_INFEASIBLE)
@@ -111,11 +113,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << "I'm the jet engine!" << endl;
 #ifndef __x86_64__
             Engine.read_sensor();
-            Engine.voter();
+            Engine.voter(NoC.N_CRs, NoC.N_apps);
             Engine.pwm_send();
 #endif
         }
-        else // computer resource node
+        else // computer resource nodes
         {
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
 //            cout << "My Rank: " << NoC_MPI.world_rank;
@@ -123,7 +125,14 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << ", My Sensor: " << Engine.sensor_data;
 //            cout << ", My App: ";
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
-            app_ptr[0](NoC.app_to_run);
+            if(NoC.app_to_run == -1) // dead
+            {
+                APP_LED_OFF();
+            }
+            else
+            {
+                app_ptr[NoC.app_to_run](&NoC, &Engine);
+            }
         }
 
 #ifdef USE_MPI // TODO should be non-blocking

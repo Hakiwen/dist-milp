@@ -7,12 +7,14 @@
 #ifdef GLPK_AS_SOLVER
 NOC_GLPK::NOC_GLPK()
 {
-    this->model = glp_create_prob();
-    glp_set_prob_name(this->model, "NoC");
+
 }
 
 void NOC_GLPK::write_LP(NOC *NoC, const char* LP_file)
 {
+    this->model = glp_create_prob();
+    glp_set_prob_name(this->model, "NoC");
+
     CreateModel(NoC);
     glp_write_lp(this->model, NULL, LP_file);
 }

@@ -37,11 +37,16 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->N_Faults = -1;
     this->prev_N_Faults = -1;
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
+    this->Fault_Internal_CRs = new int[this->N_CRs];
+    this->Fault_External_CRs = new int[this->N_CRs];
     for (int i = 0; i < this->N_CRs; i++)
     {
         this->Fault_CRs[i] = 0;
+        this->Fault_Internal_CRs[i] = 0;
+        this->Fault_External_CRs[i] = 0;
     }
-    this->fault_status = 0; // 0 no fault, 1 has fault (for each node)
+    this->fault_internal_status = 0; // 0 no fault, 1 has fault (for each node)
+    this->fault_external_status = 0;
 
     this->solver_status = 1; // 1 feasible, 0 infeasible
 }
@@ -124,7 +129,8 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
     for (int i = 0; i < N_elements; i++)
     {
         int current_row = int(i / N_Col);
-        int path_ind[4], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
+        int PATH_NUM = 4; // UP, DOWN, LEFT, RIGHT
+        int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
         path_ind[UP_IND] = (i+1) - N_Col + (N_Col - 1)*current_row;
         path_ind[DOWN_IND] = (i+1) + (N_Col - 1)*(current_row + 1);
         path_ind[LEFT_IND] = (i+1) - N_Col + (N_Col - 1)*(current_row + 1);
@@ -139,7 +145,7 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
                       << ", right: " << path_ind[RIGHT_IND] << std::endl;
         }
 
-        for(int j = 0; j < 4; j++)
+        for(int j = 0; j < PATH_NUM; j++)
         {
             if(path_ind[j] > 0 && path_ind[j] <= N_joint)
             {
