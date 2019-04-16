@@ -1,4 +1,4 @@
-#include <signal.h>
+#include <csignal>
 #include <fstream>
 
 #include "MY_MACROS.hpp"
@@ -21,7 +21,7 @@
 
 using namespace std;
 
-void sighandler(int sig)
+void sighandler()
 {
     APP_LED(-1);
     exit(1);
@@ -77,7 +77,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     /*
      * Main Loop
      */
-    while (1)
+    while (true)
     {
         if (NoC_MPI.world_rank == 0) // central node
         {
@@ -109,9 +109,9 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
 //            cout << "I'm the jet engine!" << endl;
-            Engine.read_sensor();
+//            Engine.read_sensor();
 //            Engine.voter();
-            Engine.pwm_send();
+//            Engine.pwm_send();
         }
         else // computer resource node
         {
@@ -132,10 +132,10 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC_MPI.Gather_Faults(&NoC);
         NoC_MPI.Barrier();
 #endif
-//        delay(1000);
+        delay(1000);
     }
 
-    while (1){}; // does nothing, but smiling at you :)
+    while(true){}; // does nothing, but smiling at you :)
 
     return 0;
 
