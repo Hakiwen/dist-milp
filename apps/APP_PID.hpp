@@ -11,6 +11,8 @@
 #include "ENGINE.hpp"
 #include "APP_LED.hpp"
 
+#define MAX_I 50
+
 void APP_PID(NOC *NoC, ENGINE *Engine);
 
 #endif //DIST_MILP_APP_PID_HPP

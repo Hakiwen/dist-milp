@@ -4,14 +4,14 @@
 
 #include "ENGINE.hpp"
 
-ENGINE::ENGINE(int N_CRs, int N_apps)
+ENGINE::ENGINE(int N_CRs, int N_apps_to_vote)
 {
     this->sensor_data = 0;
 
     this->PWM_out = 0;
     this->PWM_in = new int[N_CRs];
 
-    this->PWM_for_Voter = new int[N_apps];
+    this->PWM_for_Voter = new int[N_apps_to_vote];
     this->PWM_to_Engine = 0;
 
     for (int i = 0; i < N_CRs; i++)
@@ -19,7 +19,7 @@ ENGINE::ENGINE(int N_CRs, int N_apps)
         this->PWM_in[i] = 0;
     }
 
-    for (int i = 0; i < N_apps; i++)
+    for (int i = 0; i < N_apps_to_vote; i++)
     {
         this->PWM_for_Voter[i] = 0;
     }
@@ -50,23 +50,34 @@ void ENGINE::read_sensor()
 
         Phidget_openWaitForAttachment((PhidgetHandle)ch, 5000);
     }
+
+//    std::cout << "sensor: " << this->sensor_data << std::endl;
 }
 
-void ENGINE::voter(int N_CRs, int N_apps)
+void ENGINE::voter(int N_CRs, int N_apps_to_vote)
 {
+    for (int i = 0; i < N_apps_to_vote; i++) {
+        this->PWM_for_Voter[i] = MIN_PWM;
+    }
+
     int j = 0;
     for (int i = 0; i < N_CRs; i++)
     {
-        if (this->PWM_in[i] > 0)
+//        std::cout << "PWM_" << i << ": " << PWM_in[i] << ", ";
+        if (this->PWM_in[i] > MIN_PWM)
         {
             this->PWM_for_Voter[j] = this->PWM_in[i];
             j++;
-            if(j == N_apps)
+
+            if(j == N_apps_to_vote)
             {
                 break;
             }
         }
     }
+//    std::cout << std::endl;
+
+    this->PWM_to_Engine = this->PWM_for_Voter[0];
 }
 
 void ENGINE::pwm_send()
@@ -93,8 +104,10 @@ void ENGINE::pwm_send()
     {
         this->PWM_to_Engine = MAX_PWM;
     }
-//    pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
-    pwmWrite(this->PWM_PIN, 120);
+
+    std::cout << "sensor: " << this->sensor_data << "PWM: " << this->PWM_to_Engine << std::endl;
+    pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
+//    pwmWrite(this->PWM_PIN, 120);
 }
 
 /** Phidget Functions **/
@@ -151,5 +164,5 @@ static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph,
 {
 //    printf("[VoltageRatio Event] -> VoltageRatio: %.4g\n", voltageRatio);
     ENGINE *Engine = (ENGINE *)ctx;
-    Engine->sensor_data = voltageRatio*100000.0;
+    Engine->sensor_data = voltageRatio*1000000.0; // TODO Calibrate Sensor
 }

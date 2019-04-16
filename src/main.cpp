@@ -21,7 +21,7 @@
 
 using namespace std;
 
-void sighandler()
+void sighandler(int signal)
 {
     APP_LED_OFF();
     exit(1);
@@ -64,7 +64,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC_GLPK NoC_GLPK = NOC_GLPK(); // NoC to GLPK Object
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 #endif
-    ENGINE Engine = ENGINE(NoC.N_CRs, NoC.N_apps);
+    ENGINE Engine = ENGINE(NoC.N_CRs, NoC.N_nodes_apps[0]); // Engine controller being the 1st priority app
 
 #ifndef __x86_64__
     signal(SIGABRT, &sighandler);
@@ -106,14 +106,14 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                 }
                 NoC.Update_State();
             }
-            NoC.Disp();
+//            NoC.Disp();
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
 //            cout << "I'm the jet engine!" << endl;
 #ifndef __x86_64__
             Engine.read_sensor();
-            Engine.voter(NoC.N_CRs, NoC.N_apps);
+            Engine.voter(NoC.N_CRs, NoC.N_nodes_apps[0]);
             Engine.pwm_send();
 #endif
         }
@@ -143,7 +143,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC_MPI.Gather_Faults(&NoC);
         NoC_MPI.Barrier();
 #endif
-        delay(1000);
+//        delay(1000);
     }
 
     while (true){}; // does nothing, but smiling at you :)

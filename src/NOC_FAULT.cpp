@@ -88,11 +88,11 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         pullUpDnControl (switch_button_2, PUD_UP);
         if(digitalRead (switch_button_1) == 1)
         {
-            NoC->fault_status = 0;
+            NoC->fault_internal_status = 0;
         }
         else
         {
-            NoC->fault_status = 1;
+            NoC->fault_internal_status = 1;
         }
 #endif
         return 1;

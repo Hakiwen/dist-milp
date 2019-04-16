@@ -15,7 +15,7 @@
 
 #define MIN_PWM 100
 #define MAX_PWM 200
-#define OPER_PWM 120
+#define OPER_PWM 130
 
 class ENGINE
 {
