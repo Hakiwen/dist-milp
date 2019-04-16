@@ -17,6 +17,8 @@
 #define MAX_PWM 200
 #define OPER_PWM 120
 
+#define TOLERANCE 5
+
 class ENGINE
 {
 public:
@@ -32,14 +34,19 @@ public:
     int EngineSetup;
     int SensorSetup;
 
+    int fault_from_voter;
+
     PhidgetVoltageRatioInputHandle ch;
     ChannelInfo channelInfo;
 
     ENGINE(int N_nodes, int N_apps);
 
     void read_sensor();
-    void voter(int N_CRs, int N_apps);
     void pwm_send();
+
+    void voter(int N_CRs, int N_apps);
+    int error_detector(int* array);
+    double voter_mean(int* array, int err_detector_result, int N_apps_to_vote);
 };
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);

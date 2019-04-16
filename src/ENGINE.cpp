@@ -28,6 +28,8 @@ ENGINE::ENGINE(int N_CRs, int N_apps_to_vote)
     this->SensorSetup = 0;
 
     this->ch = NULL;
+
+    this->fault_from_voter = 0;
 }
 
 void ENGINE::read_sensor()
@@ -52,32 +54,6 @@ void ENGINE::read_sensor()
     }
 
 //    std::cout << "sensor: " << this->sensor_data << std::endl;
-}
-
-void ENGINE::voter(int N_CRs, int N_apps_to_vote)
-{
-    for (int i = 0; i < N_apps_to_vote; i++) {
-        this->PWM_for_Voter[i] = MIN_PWM;
-    }
-
-    int j = 0;
-    for (int i = 0; i < N_CRs; i++)
-    {
-//        std::cout << "PWM_" << i << ": " << PWM_in[i] << ", ";
-        if (this->PWM_in[i] > MIN_PWM)
-        {
-            this->PWM_for_Voter[j] = this->PWM_in[i];
-            j++;
-
-            if(j == N_apps_to_vote)
-            {
-                break;
-            }
-        }
-    }
-//    std::cout << std::endl;
-
-    this->PWM_to_Engine = this->PWM_for_Voter[0];
 }
 
 void ENGINE::pwm_send()
@@ -107,7 +83,62 @@ void ENGINE::pwm_send()
 
     std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
-//    pwmWrite(this->PWM_PIN, 120);
+}
+
+void ENGINE::voter(int N_CRs, int N_apps_to_vote)
+{
+    for (int i = 0; i < N_apps_to_vote; i++) {
+        this->PWM_for_Voter[i] = MIN_PWM;
+    }
+
+    int j = 0;
+    for (int i = 0; i < N_CRs; i++)
+    {
+        if (this->PWM_in[i] > MIN_PWM)
+        {
+            this->PWM_for_Voter[j] = this->PWM_in[i];
+            j++;
+
+            if(j == N_apps_to_vote)
+            {
+                break;
+            }
+        }
+    }
+
+    this->fault_from_voter = this->error_detector(this->PWM_for_Voter);
+    this->PWM_to_Engine = (int)this->voter_mean(this->PWM_for_Voter, this->fault_from_voter, N_apps_to_vote);
+}
+
+int ENGINE::error_detector(int* array){
+    int v1 = array[0];
+    int v2 = array[1];
+    int v3 = array[2];
+    /* Returns the number corresponding to the wrong value among three ones, 0 if they all match and 6 if they all mismatch
+     * get the values from the three redundant applications
+     */
+
+    int mismatch12 = ( abs(v1 - v2) > TOLERANCE );
+    int mismatch13 = ( abs(v1 - v3) > TOLERANCE );
+    int mismatch23 = ( abs(v2 - v3) > TOLERANCE );
+
+    return 1*mismatch12*mismatch13 + 2*mismatch12*mismatch23 + 3*mismatch13*mismatch23;
+}
+
+double ENGINE::voter_mean(int* array, int err_detector_result, int N_apps_to_vote){
+    if (err_detector_result == 6)
+    {
+        return 0;
+    }
+    else
+    {
+        double sum = 0;
+        for(int i = 0 ; i < N_apps_to_vote ; i++)
+        {
+            sum = sum + ((double) array[i])*(err_detector_result != i+1) / ( 3*(err_detector_result == 0) + 2*(err_detector_result != 0) );
+        }
+        return sum;
+    }
 }
 
 /** Phidget Functions **/
