@@ -30,12 +30,12 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         }
 #endif
 
-        std::cout << "All Nodes' Status: ";
-        for (int i = 0; i < NoC->N_CRs; i++)
-        {
-            std::cout << NoC->Fault_CRs[i];
-        }
-        std::cout << std::endl;
+//        std::cout << "All Nodes' Status: ";
+//        for (int i = 0; i < NoC->N_CRs; i++)
+//        {
+//            std::cout << NoC->Fault_CRs[i];
+//        }
+//        std::cout << std::endl;
 
         NoC->prev_N_Faults = NoC->N_Faults;
         NoC->N_Faults = 0;
@@ -49,19 +49,19 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {
-            std::cout << "No New Node Fails/Recovers, Do Nothing" << std::endl;
+//            std::cout << "No New Node Fails/Recovers, Do Nothing" << std::endl;
             return 0;
         }
         else
         {
             if(NoC->N_Faults == 0 && NoC->prev_N_Faults == -1)
             {
-                std::cout << "First Reallocation..." << std::endl;
+//                std::cout << "First Reallocation..." << std::endl;
                 return 1;
             }
             else
             {
-                std::cout << "A New Node Fails/Recovers, Reallocating..." << std::endl;
+//                std::cout << "A New Node Fails/Recovers, Reallocating..." << std::endl;
                 return 1;
             }
         }
@@ -93,5 +93,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             NoC->fault_status = 1;
         }
 #endif
+        return 1;
     }
+    return 1;
 }

@@ -29,12 +29,6 @@ void sighandler(int sig)
 
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
 {
-#ifndef __x86_64__
-    signal(SIGABRT, &sighandler);
-    signal(SIGTERM, &sighandler);
-    signal(SIGINT, &sighandler);
-#endif
-
     /** User-Initialized Parameters **/
 
     int N_Row_CRs = 3, N_Col_CRs = 4;
@@ -70,6 +64,13 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 #endif
     ENGINE Engine = ENGINE(NoC.N_CRs, NoC.N_apps);
+
+#ifndef __x86_64__
+    signal(SIGABRT, &sighandler);
+    signal(SIGTERM, &sighandler);
+    signal(SIGINT, &sighandler);
+    wiringPiSetup();
+#endif
 
     /** End of Initialization **/
 
@@ -107,24 +108,18 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
-#ifndef __x86_64__
-            wiringPiSetup(); // TODO somehow mess up glpk, still fine for centralized version
-#endif
-            cout << "I'm the jet engine!" << endl;
+//            cout << "I'm the jet engine!" << endl;
             Engine.read_sensor();
-            Engine.voter();
+//            Engine.voter();
             Engine.pwm_send();
         }
         else // computer resource node
         {
-#ifndef __x86_64__
-            wiringPiSetup(); // TODO somehow mess up glpk, still fine for centralized version
-#endif
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
-            cout << "My Rank: " << NoC_MPI.world_rank;
-            cout << ", My Fault: " << NoC.fault_status;
-            cout << ", My Sensor: " << Engine.sensor_data;
-            cout << ", My App: ";
+//            cout << "My Rank: " << NoC_MPI.world_rank;
+//            cout << ", My Fault: " << NoC.fault_status;
+//            cout << ", My Sensor: " << Engine.sensor_data;
+//            cout << ", My App: ";
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             app_ptr[0](NoC.app_to_run);
         }
@@ -137,7 +132,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC_MPI.Gather_Faults(&NoC);
         NoC_MPI.Barrier();
 #endif
-        delay(1000);
+//        delay(1000);
     }
 
     while (1){}; // does nothing, but smiling at you :)

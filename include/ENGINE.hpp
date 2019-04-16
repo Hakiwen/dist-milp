@@ -11,7 +11,7 @@
 
 #include <wiringPi.h>
 #include <phidget22.h>
-#include "PhidgetHelperFunctions.hpp" // TODO fix this lib using a clever way than manually changing from C to C++
+#include "PhidgetHelperFunctions.hpp" // Manually Modified
 
 class ENGINE
 {
@@ -29,7 +29,6 @@ public:
     int SensorSetup;
 
     PhidgetVoltageRatioInputHandle ch;
-    PhidgetReturnCode prc;
     ChannelInfo channelInfo;
 
     ENGINE(int N_nodes, int N_apps);

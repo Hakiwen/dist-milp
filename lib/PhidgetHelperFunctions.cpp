@@ -43,7 +43,7 @@ void DisplayError(PhidgetReturnCode returnCode, char* message) {
 
 	prc = Phidget_getErrorDescription(returnCode, &error);
 	if (prc != EPHIDGET_OK) {
-		DisplayError(prc, "Getting ErrorDescription");
+//		DisplayError(prc, "Getting ErrorDescription");
 		return;
 	}
 
@@ -97,23 +97,24 @@ void InitChannelInfo(ChannelInfo *channelInfoPtr) {
 
 void InputSerialNumber(ChannelInfo *channelInfoPtr) {
 	int deviceSerialNumber = 0;
-	char strvar[100];
+//	char strvar[100];
+    char strvar[] = "469851";
 
-	printf("\nFor all questions, enter the value, or press ENTER to select the [Default]\n");
-
-	printf("\n--------------------------------------\n");
-	printf("\n  | Some Phidgets have a unique serial number, printed on a white label on the device.\n"
-	  "  | For Phidgets and other devices plugged into a VINT Port, use the serial number of the VINT Hub.\n"
-	  "  | Specify the serial number to ensure you are only opening channels from that specific device.\n"
-	  "  | Otherwise, use -1 to open a channel on any device.\n");
+//	printf("\nFor all questions, enter the value, or press ENTER to select the [Default]\n");
+//
+//	printf("\n--------------------------------------\n");
+//	printf("\n  | Some Phidgets have a unique serial number, printed on a white label on the device.\n"
+//	  "  | For Phidgets and other devices plugged into a VINT Port, use the serial number of the VINT Hub.\n"
+//	  "  | Specify the serial number to ensure you are only opening channels from that specific device.\n"
+//	  "  | Otherwise, use -1 to open a channel on any device.\n");
 	while (1) {
-		printf("\nWhat is the Serial Number? [-1] ");
-		if (fgets(strvar, 100, stdin) == NULL)
-			continue;
-		if (strvar[0] == '\n') {
-			deviceSerialNumber = PHIDGET_SERIALNUMBER_ANY;
-			break;
-		}
+//		printf("\nWhat is the Serial Number? [-1] ");
+//		if (fgets(strvar, 100, stdin) == NULL)
+//			continue;
+//		if (strvar[0] == '\n') {
+//			deviceSerialNumber = PHIDGET_SERIALNUMBER_ANY;
+//			break;
+//		}
 		deviceSerialNumber = atoi(strvar);
 		if (deviceSerialNumber >= -1 && deviceSerialNumber != 0)
 			break;
@@ -139,7 +140,7 @@ void InputIsHubPortDevice(ChannelInfo *channelInfoPtr) {
 void InputVINTProperties(ChannelInfo *channelInfoPtr, PhidgetHandle *chptr) {
 	int canBeHubPortDevice = 0;
 	Phidget_ChannelClass pcc;
-	PhidgetReturnCode prc; //Used to catch error codes from each Phidget function call
+//	PhidgetReturnCode prc; //Used to catch error codes from each Phidget function call
 	char strvar[100];
 	int hubPort = -1;
 	int isVINT = 0;
@@ -179,8 +180,9 @@ void InputVINTProperties(ChannelInfo *channelInfoPtr, PhidgetHandle *chptr) {
 
 	channelInfoPtr->hubPort = hubPort;
 
-	prc = Phidget_getChannelClass(*chptr, &pcc);
-	CheckError(prc, "Getting ChannelClass", chptr);
+    Phidget_getChannelClass(*chptr, &pcc);
+//	prc = Phidget_getChannelClass(*chptr, &pcc);
+//	CheckError(prc, "Getting ChannelClass", chptr);
 
 	switch (pcc) {
 	case PHIDCHCLASS_VOLTAGEINPUT:
@@ -218,30 +220,31 @@ void InputVINTProperties(ChannelInfo *channelInfoPtr, PhidgetHandle *chptr) {
 }
 
 void InputChannel(ChannelInfo *channelInfoPtr) {
-	char strvar[100];
+//	char strvar[100];
 	int Channel = 0;
 
 	// Hub port devices only have a single channel, so don't ask for the channel
 	if (channelInfoPtr->isHubPortDevice)
 		return;
 
-	printf("\n--------------------------------------\n");
-	printf("\n  | Devices with multiple inputs or outputs of the same type will map them to channels.\n"
-	  "  | The API tab for the device on www.phidgets.com shows the channel breakdown.\n"
-	  "  | For example, a device with 4 DigitalInputs would use channels [0 - 3]\n"
-	  "  | A device with 1 VoltageInput would use channel 0\n");
-	while (1) {
-		printf("\nWhat channel# of the device do you want to open? [0] ");
-		if (fgets(strvar, 100, stdin) == NULL)
-			continue;
-		if (strvar[0] == '\n') {
-			Channel = 0;
-			break;
-		}
-		Channel = atoi(strvar);
-		if (Channel >= 0)
-			break;
-	}
+//	printf("\n--------------------------------------\n");
+//	printf("\n  | Devices with multiple inputs or outputs of the same type will map them to channels.\n"
+//	  "  | The API tab for the device on www.phidgets.com shows the channel breakdown.\n"
+//	  "  | For example, a device with 4 DigitalInputs would use channels [0 - 3]\n"
+//	  "  | A device with 1 VoltageInput would use channel 0\n");
+//	while (1) {
+//		printf("\nWhat channel# of the device do you want to open? [0] ");
+//		if (fgets(strvar, 100, stdin) == NULL)
+//			continue;
+//        strvar[0] = 0;
+//		if (strvar[0] == '\n') {
+//			Channel = 0;
+//			break;
+//		}
+//		Channel = atoi(strvar);
+//		if (Channel >= 0)
+//			break;
+//	}
 
 	channelInfoPtr->channel = Channel;
 
@@ -252,7 +255,7 @@ void SetupNetwork(ChannelInfo *channelInfoPtr) {
 	char strvar[100];
 	int discovery = 0;
 	int isRemote = 0;
-	char *pos;
+//	char *pos;
 	int port;
 
 	printf("\n--------------------------------------\n");
@@ -335,7 +338,7 @@ void SetupNetwork(ChannelInfo *channelInfoPtr) {
 }
 
 void CheckOpenError(PhidgetReturnCode e, PhidgetHandle *chptr) {
-	PhidgetReturnCode prc; //Used to catch error codes from each Phidget function call
+//	PhidgetReturnCode prc; //Used to catch error codes from each Phidget function call
 	Phidget_ChannelClass channelClass;
 	int isRemote;
 
@@ -347,8 +350,9 @@ void CheckOpenError(PhidgetReturnCode e, PhidgetHandle *chptr) {
 		fprintf(stderr, "\nThis error commonly occurs if your device is not connected as specified, "
 			"or if another program is using the device, such as the Phidget Control Panel.\n\n"
 			"If your Phidget has a plug or terminal block for external power, ensure it is plugged in and powered.\n");
-		
-		prc = Phidget_getChannelClass(*chptr, &channelClass);
+
+        Phidget_getChannelClass(*chptr, &channelClass);
+//		prc = Phidget_getChannelClass(*chptr, &channelClass);
 //		CheckError(prc, "Getting ChannelClass", chptr);
 
 		if (channelClass != PHIDCHCLASS_VOLTAGEINPUT
@@ -359,7 +363,8 @@ void CheckOpenError(PhidgetReturnCode e, PhidgetHandle *chptr) {
 				"corresponding VoltageInput or VoltageRatioInput API with the appropriate SensorType.\n");
 		}
 
-		prc = Phidget_getIsRemote(*chptr, &isRemote);
+        Phidget_getIsRemote(*chptr, &isRemote);
+//		prc = Phidget_getIsRemote(*chptr, &isRemote);
 //		CheckError(prc, "Getting IsRemote", chptr);
 
 		if (isRemote)
@@ -384,10 +389,10 @@ void CheckEnableServerDiscoveryError(PhidgetReturnCode e, PhidgetHandle *chptr) 
 }
 
 void AskForDeviceParameters(ChannelInfo *channelInfoPtr, PhidgetHandle *chptr) {
-	DisplayLocatePhidgetsLink();
+//	DisplayLocatePhidgetsLink();
 	InitChannelInfo(channelInfoPtr);
 	InputSerialNumber(channelInfoPtr);
-	InputVINTProperties(channelInfoPtr, chptr);
+//	InputVINTProperties(channelInfoPtr, chptr);
 	InputChannel(channelInfoPtr);
-	SetupNetwork(channelInfoPtr);
+//	SetupNetwork(channelInfoPtr);
 }
