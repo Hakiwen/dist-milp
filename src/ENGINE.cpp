@@ -105,7 +105,7 @@ void ENGINE::pwm_send()
         this->PWM_to_Engine = MAX_PWM;
     }
 
-    std::cout << "sensor: " << this->sensor_data << "PWM: " << this->PWM_to_Engine << std::endl;
+    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
 //    pwmWrite(this->PWM_PIN, 120);
 }

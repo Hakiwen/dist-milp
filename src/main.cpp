@@ -24,6 +24,7 @@ using namespace std;
 void sighandler(int signal)
 {
     APP_LED_OFF();
+    APP_PWM_OFF();
     exit(1);
 }
 
