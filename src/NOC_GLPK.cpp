@@ -242,26 +242,48 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     }
 
     // Priorities
-//    for (int i = 1; i <= NoC->N_apps; i++)
-//    {
-//        NoC->con_size += 1;
-//        std::string name = "Priority_" + std::to_string(i-1);
-//        glp_add_rows(this->model, 1);
-//        glp_set_row_name(this->model, NoC->con_size, name.c_str());
-//
-//        if(i == 1)
-//        {
+    for (int i = 1; i <= 2; i++)
+    {
+        NoC->con_size += 1;
+        std::string name = "Priority_" + std::to_string(i-1);
+        glp_add_rows(this->model, 1);
+        glp_set_row_name(this->model, NoC->con_size, name.c_str());
+
+        if(i == 1)
+        {
+            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
+
+            ind_count += 1;
+            ia[ind_count] = NoC->con_size;
+            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+            ar[ind_count] = 1;
+
+            ind_count += 1;
+            ia[ind_count] = NoC->con_size;
+            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links + 1;
+            ar[ind_count] = -1;
+
 //            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 1.0, 0.0);
 //
 //            ind_count += 1;
 //            ia[ind_count] = NoC->con_size;
 //            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
 //            ar[ind_count] = 1;
-//        }
-//        else
-//        {
-//            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 0.0, 0.0);
-//
+        }
+        else
+        {
+            glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, 0.0, 0.0);
+
+            ind_count += 1;
+            ia[ind_count] = NoC->con_size;
+            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
+            ar[ind_count] = 1;
+
+            ind_count += 1;
+            ia[ind_count] = NoC->con_size;
+            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links + 1;
+            ar[ind_count] = -1;
+
 //            ind_count += 1;
 //            ia[ind_count] = NoC->con_size;
 //            ja[ind_count] = i + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
@@ -271,8 +293,8 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 //            ia[ind_count] = NoC->con_size;
 //            ja[ind_count] = (i-1) + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links;
 //            ar[ind_count] = 1;
-//        }
-//    }
+        }
+    }
 
     // Spatial Orientation
     int sum_N_nodes_apps = 0;

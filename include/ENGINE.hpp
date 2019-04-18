@@ -18,6 +18,7 @@
 #define OPER_PWM 120
 
 #define TOLERANCE 5
+#define N_APP_TO_VOTE 3
 
 class ENGINE
 {
@@ -28,25 +29,27 @@ public:
     int *PWM_in; // PWM value the engine node receiving from controller nodes
 
     int *PWM_for_Voter; // for voter to choose and detecting faults
+    int *PWM_for_Voter_ind;
     int PWM_to_Engine; // actual PWM number to send to the engine
 
     int PWM_PIN; // 1 for wPI
     int EngineSetup;
     int SensorSetup;
 
+    int fault_detect;
     int fault_from_voter;
 
     PhidgetVoltageRatioInputHandle ch;
     ChannelInfo channelInfo;
 
-    ENGINE(int N_nodes, int N_apps);
+    ENGINE(int N_nodes);
 
     void read_sensor();
     void pwm_send();
 
-    void voter(int N_CRs, int N_apps);
+    void voter(int N_CRs);
     int error_detector(int* array);
-    double voter_mean(int* array, int err_detector_result, int N_apps_to_vote);
+    double voter_mean(int* array, int err_detector_result);
 };
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);

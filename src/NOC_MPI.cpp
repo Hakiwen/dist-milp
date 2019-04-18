@@ -38,7 +38,7 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
     MPI_Scatter(scatter_data_send, 1, MPI_INT, &NoC->node_to_run, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
-void NOC_MPI::Gather_Faults(NOC *NoC)
+void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
 {
     int *gather_data_receive = NULL;
     if(this->world_rank == 0)
@@ -53,6 +53,23 @@ void NOC_MPI::Gather_Faults(NOC *NoC)
         for (int i = 0; i < this->world_size - 2; i++)
         {
             NoC->Fault_Internal_CRs[i] = gather_data_receive[i + 1];
+        }
+    }
+}
+
+void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
+{
+    MPI_Bcast(&Engine->fault_from_voter, 1, MPI_FLOAT, this->world_size - 1, MPI_COMM_WORLD);
+    if (this->world_rank == 0)
+    {
+        for (int i = 0; i < NoC->N_CRs; i++)
+        {
+            NoC->Fault_External_CRs[i] = 0;
+        }
+
+        if (Engine->fault_from_voter > 0 && Engine->fault_from_voter <= NoC->N_CRs)
+        {
+            NoC->Fault_External_CRs[Engine->fault_from_voter - 1] = 1;
         }
     }
 }

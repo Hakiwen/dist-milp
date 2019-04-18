@@ -19,6 +19,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
 {
     if (rank == 0)
     {
+        NoC->prev_N_Faults = NoC->N_Faults;
 
 #ifndef USE_MPI
         if(NoC->prev_N_Faults != -1 || NoC->N_Faults == 0)
@@ -27,28 +28,28 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             int fault_node = 0;
             std::cout << "Please input the valid number of node you want to kill: ";
             std::cin >> fault_node;
-            NoC->Fault_CRs[fault_node - 1] = 1;
+            NoC->Fault_Internal_CRs[fault_node - 1] = 1;
             /* end */
+            NoC->prev_N_Faults = 0;
         }
 #endif
 
-//        std::cout << "All Nodes' Status: ";
-//        for (int i = 0; i < NoC->N_CRs; i++)
-//        {
-//            std::cout << NoC->Fault_CRs[i];
-//        }
-//        std::cout << std::endl;
-
-        NoC->prev_N_Faults = NoC->N_Faults;
         NoC->N_Faults = 0;
         for (int i = 0; i < NoC->N_CRs; i++)
         {
+            int prev_Fault = NoC->Fault_CRs[i];
             NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i];
-            if(NoC->Fault_CRs[i] == 1)
+//            std::cout << "Fault_CR_" << i+1 << ": " << NoC->Fault_CRs[i] << ", ";
+            if(NoC->Fault_CRs[i] != prev_Fault)
             {
+//                std::cout << "lol_" << i+1 << std::endl;
                 NoC->N_Faults += 1;
             }
         }
+//        std::cout << std::endl;
+
+//        std::cout << NoC->N_Faults << std::endl;
+//        std::cout << NoC->prev_N_Faults << std::endl;
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {
@@ -81,11 +82,8 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         delete[] buf;
 #else
         int switch_button_1 = 29;
-        int switch_button_2 = 25;
         pinMode (switch_button_1, INPUT);
-        pinMode (switch_button_2, INPUT);
         pullUpDnControl (switch_button_1, PUD_UP);
-        pullUpDnControl (switch_button_2, PUD_UP);
         if(digitalRead (switch_button_1) == 1)
         {
             NoC->fault_internal_status = 0;

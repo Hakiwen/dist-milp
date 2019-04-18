@@ -6,7 +6,7 @@
 
 void APP_LED(NOC *NoC, ENGINE *Engine)
 {
-    int color = NoC->get_app_from_node(NoC->node_to_run);
+    int color = NoC->app_to_run;
 #if defined(__x86_64__)
     if(color == LED_OFF)
     {
@@ -27,6 +27,18 @@ void APP_LED(NOC *NoC, ENGINE *Engine)
     else if(color == LED_BLUE)
     {
         std::cout << "BLUE" << std::endl;
+    }
+    else if(color == LED_CYAN)
+    {
+        std::cout << "CYAN" << std::endl;
+    }
+    else if(color == LED_MAGENTA)
+    {
+        std::cout << "MAGENTA" << std::endl;
+    }
+    else if(color == LED_YELLOW)
+    {
+        std::cout << "YELLOW" << std::endl;
     }
 #else
     int RED_LED   = 26;
@@ -64,6 +76,24 @@ void APP_LED(NOC *NoC, ENGINE *Engine)
         digitalWrite (RED_LED,  LOW);
         digitalWrite (GREEN_LED,  LOW);
         digitalWrite (BLUE_LED,  HIGH);
+    }
+    else if(color == LED_CYAN)
+    {
+        digitalWrite (RED_LED,  LOW);
+        digitalWrite (GREEN_LED,  HIGH);
+        digitalWrite (BLUE_LED,  HIGH);
+    }
+    else if(color == LED_MAGENTA)
+    {
+        digitalWrite (RED_LED,  HIGH);
+        digitalWrite (GREEN_LED,  LOW);
+        digitalWrite (BLUE_LED,  HIGH);
+    }
+    else if(color == LED_YELLOW)
+    {
+        digitalWrite (RED_LED,  HIGH);
+        digitalWrite (GREEN_LED,  HIGH);
+        digitalWrite (BLUE_LED,  LOW);
     }
 #endif
 }

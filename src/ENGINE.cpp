@@ -4,14 +4,15 @@
 
 #include "ENGINE.hpp"
 
-ENGINE::ENGINE(int N_CRs, int N_apps_to_vote)
+ENGINE::ENGINE(int N_CRs)
 {
     this->sensor_data = 0;
 
     this->PWM_out = 0;
     this->PWM_in = new int[N_CRs];
 
-    this->PWM_for_Voter = new int[N_apps_to_vote];
+    this->PWM_for_Voter = new int[N_APP_TO_VOTE];
+    this->PWM_for_Voter_ind = new int[N_APP_TO_VOTE];
     this->PWM_to_Engine = 0;
 
     for (int i = 0; i < N_CRs; i++)
@@ -19,9 +20,10 @@ ENGINE::ENGINE(int N_CRs, int N_apps_to_vote)
         this->PWM_in[i] = 0;
     }
 
-    for (int i = 0; i < N_apps_to_vote; i++)
+    for (int i = 0; i < N_APP_TO_VOTE; i++)
     {
         this->PWM_for_Voter[i] = 0;
+        this->PWM_for_Voter_ind[i] = 0;
     }
 
     this->EngineSetup = 0;
@@ -29,6 +31,7 @@ ENGINE::ENGINE(int N_CRs, int N_apps_to_vote)
 
     this->ch = NULL;
 
+    this->fault_detect = 0;
     this->fault_from_voter = 0;
 }
 
@@ -69,7 +72,7 @@ void ENGINE::pwm_send()
 //        pwmWrite(this->PWM_PIN, 200); // for calibration only
 //        delay(10000);
         pwmWrite(this->PWM_PIN, 100);
-        delay(10000);
+        delay(5000); // uncommemt this when using the engine
     }
 
     if(this->PWM_to_Engine < MIN_PWM)
@@ -81,36 +84,65 @@ void ENGINE::pwm_send()
         this->PWM_to_Engine = MAX_PWM;
     }
 
-    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
+//    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
 }
 
-void ENGINE::voter(int N_CRs, int N_apps_to_vote)
+void ENGINE::voter(int N_CRs)
 {
-    for (int i = 0; i < N_apps_to_vote; i++) {
+    for (int i = 0; i < N_APP_TO_VOTE; i++)
+    {
         this->PWM_for_Voter[i] = MIN_PWM;
+        this->PWM_for_Voter_ind[i] = 0;
     }
 
     int j = 0;
     for (int i = 0; i < N_CRs; i++)
     {
+//        std::cout << "PWM_" << i+1 << ": " << PWM_in[i] << ", ";
         if (this->PWM_in[i] > MIN_PWM)
         {
             this->PWM_for_Voter[j] = this->PWM_in[i];
+            this->PWM_for_Voter_ind[j] = i + 1;
             j++;
-
-            if(j == N_apps_to_vote)
+            if(j == N_APP_TO_VOTE)
             {
                 break;
             }
         }
     }
 
-    this->fault_from_voter = this->error_detector(this->PWM_for_Voter);
-    this->PWM_to_Engine = (int)this->voter_mean(this->PWM_for_Voter, this->fault_from_voter, N_apps_to_vote);
+//    for (int i = 0; i < N_APP_TO_VOTE; i++) {
+//        std::cout << "PWM_" << PWM_for_Voter_ind[i] << ": " << PWM_for_Voter[i] << ", ";
+//    }
+//    std::cout << std::endl;
+
+    if(j > 1)
+    {
+        this->fault_detect = this->error_detector(this->PWM_for_Voter);
+        this->PWM_to_Engine = (int) this->voter_mean(this->PWM_for_Voter, this->fault_detect);
+
+        if (this->fault_detect > 0 && this->fault_detect <= N_APP_TO_VOTE)
+        {
+            this->fault_from_voter = this->PWM_for_Voter_ind[this->fault_detect - 1];
+        }
+        else if (this->fault_detect == 0 || this->fault_detect == 6)
+        {
+            this->fault_from_voter = 0;
+        }
+    }
+    else
+    {
+        this->fault_detect = 0;
+        this->fault_from_voter = 0;
+    }
+
+//    std::cout << "fault_detect: " << this->fault_detect << std::endl;
+//    std::cout << "fault_from_voter: " << this->fault_from_voter << std::endl;
 }
 
-int ENGINE::error_detector(int* array){
+int ENGINE::error_detector(int* array)
+{
     int v1 = array[0];
     int v2 = array[1];
     int v3 = array[2];
@@ -125,15 +157,16 @@ int ENGINE::error_detector(int* array){
     return 1*mismatch12*mismatch13 + 2*mismatch12*mismatch23 + 3*mismatch13*mismatch23;
 }
 
-double ENGINE::voter_mean(int* array, int err_detector_result, int N_apps_to_vote){
+double ENGINE::voter_mean(int* array, int err_detector_result)
+{
     if (err_detector_result == 6)
     {
-        return 0;
+        return MIN_PWM;
     }
     else
     {
         double sum = 0;
-        for(int i = 0 ; i < N_apps_to_vote ; i++)
+        for(int i = 0 ; i < N_APP_TO_VOTE ; i++)
         {
             sum = sum + ((double) array[i])*(err_detector_result != i+1) / ( 3*(err_detector_result == 0) + 2*(err_detector_result != 0) );
         }

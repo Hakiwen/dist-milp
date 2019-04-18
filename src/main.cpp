@@ -33,16 +33,31 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     /** User-Initialized Parameters **/
 
     int N_Row_CRs = 3, N_Col_CRs = 4;
-    int N_apps = 3;
+    int N_apps = 5;
     int N_Row_apps[N_apps], N_Col_apps[N_apps];
-    N_Row_apps[0] = 3;    N_Col_apps[0] = 1;
-    N_Row_apps[1] = 2;    N_Col_apps[1] = 1;
-    N_Row_apps[2] = 1;    N_Col_apps[2] = 2;
+    N_Row_apps[0] = 1;    N_Col_apps[0] = 1;
+    N_Row_apps[1] = 1;    N_Col_apps[1] = 1;
+    N_Row_apps[2] = 1;    N_Col_apps[2] = 1;
+    N_Row_apps[3] = 2;    N_Col_apps[3] = 1;
+    N_Row_apps[4] = 1;    N_Col_apps[4] = 2;
     void (*app_ptr[N_apps + 1])(NOC*, ENGINE*);
     app_ptr[0] = &APP_LED_WHITE; // IDLE
     app_ptr[1] = &APP_PID; // 1st priority app
-    app_ptr[2] = &APP_LED; // 2nd priority app
-    app_ptr[3] = &APP_LED; // 3rd priority app
+    app_ptr[2] = &APP_PID; // and so on...
+    app_ptr[3] = &APP_PID;
+    app_ptr[4] = &APP_LED;
+    app_ptr[5] = &APP_LED;
+
+//    int N_apps = 3;
+//    int N_Row_apps[N_apps], N_Col_apps[N_apps];
+//    N_Row_apps[0] = 3;    N_Col_apps[0] = 1;
+//    N_Row_apps[1] = 2;    N_Col_apps[1] = 1;
+//    N_Row_apps[2] = 1;    N_Col_apps[2] = 2;
+//    void (*app_ptr[N_apps + 1])(NOC*, ENGINE*);
+//    app_ptr[0] = &APP_LED_WHITE; // IDLE
+//    app_ptr[1] = &APP_PID; // 1st priority app
+//    app_ptr[2] = &APP_LED; // 2nd priority app
+//    app_ptr[3] = &APP_LED; // 3rd priority app
 
     const char* LP_file = "NoC.lp"; // problem file name
     const char* Sol_file = "sol.txt"; // solution file name
@@ -65,7 +80,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC_GLPK NoC_GLPK = NOC_GLPK(); // NoC to GLPK Object
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 #endif
-    ENGINE Engine = ENGINE(NoC.N_CRs, NoC.N_nodes_apps[0]); // Engine controller being the 1st priority app
+    ENGINE Engine = ENGINE(NoC.N_CRs); // Engine controller being the 1st priority app
 
 #ifndef __x86_64__
     signal(SIGABRT, &sighandler);
@@ -114,7 +129,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << "I'm the jet engine!" << endl;
 #ifndef __x86_64__
             Engine.read_sensor();
-            Engine.voter(NoC.N_CRs, NoC.N_nodes_apps[0]);
+            Engine.voter(NoC.N_CRs);
             Engine.pwm_send();
 #endif
         }
@@ -132,7 +147,9 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             }
             else
             {
+#ifndef __x86_64__
                 app_ptr[NoC.app_to_run](&NoC, &Engine);
+#endif
             }
         }
 
@@ -141,10 +158,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC_MPI.Broadcast_Sensor(&Engine);
         NoC_MPI.Gather_PWM(&Engine);
         NoC_MPI.Scatter_Apps(&NoC);
-        NoC_MPI.Gather_Faults(&NoC);
+        NoC_MPI.Gather_Internal_Faults(&NoC);
+        NoC_MPI.Broadcast_External_Fault(&Engine, &NoC);
         NoC_MPI.Barrier();
 #endif
-//        delay(1000);
+//        delay(500);
     }
 
     while (true){}; // does nothing, but smiling at you :)
