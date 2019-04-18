@@ -42,7 +42,6 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
 //            std::cout << "Fault_CR_" << i+1 << ": " << NoC->Fault_CRs[i] << ", ";
             if(NoC->Fault_CRs[i] != prev_Fault)
             {
-//                std::cout << "lol_" << i+1 << std::endl;
                 NoC->N_Faults += 1;
             }
         }

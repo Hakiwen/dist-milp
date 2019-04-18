@@ -33,6 +33,14 @@ ENGINE::ENGINE(int N_CRs)
 
     this->fault_detect = 0;
     this->fault_from_voter = 0;
+
+    this->voter_delay = 0;
+    this->write_delay = 0;
+
+    std::ofstream myfile;
+    myfile.open ("data.txt", std::ios::out);
+    myfile << "";
+    myfile.close();
 }
 
 void ENGINE::read_sensor()
@@ -122,19 +130,29 @@ void ENGINE::voter(int N_CRs)
         this->fault_detect = this->error_detector(this->PWM_for_Voter);
         this->PWM_to_Engine = (int) this->voter_mean(this->PWM_for_Voter, this->fault_detect);
 
-        if (this->fault_detect > 0 && this->fault_detect <= N_APP_TO_VOTE)
+        if(this->voter_delay >= MAX_VOTER_DELAY)
         {
-            this->fault_from_voter = this->PWM_for_Voter_ind[this->fault_detect - 1];
+            this->voter_delay = 0;
+            if (this->fault_detect > 0 && this->fault_detect <= N_APP_TO_VOTE)
+            {
+                this->fault_from_voter = this->PWM_for_Voter_ind[this->fault_detect - 1];
+            }
+            else if (this->fault_detect == 0 || this->fault_detect == 6)
+            {
+                this->fault_from_voter = 0;
+            }
         }
-        else if (this->fault_detect == 0 || this->fault_detect == 6)
+        else
         {
+            this->voter_delay += 1;
             this->fault_from_voter = 0;
         }
     }
-    else
+    else // only one signal left
     {
         this->fault_detect = 0;
         this->fault_from_voter = 0;
+        this->PWM_to_Engine = MIN_PWM;
     }
 
 //    std::cout << "fault_detect: " << this->fault_detect << std::endl;
@@ -161,7 +179,7 @@ double ENGINE::voter_mean(int* array, int err_detector_result)
 {
     if (err_detector_result == 6)
     {
-        return MIN_PWM;
+        return MIN_PWM; // all signals are different
     }
     else
     {
@@ -171,6 +189,27 @@ double ENGINE::voter_mean(int* array, int err_detector_result)
             sum = sum + ((double) array[i])*(err_detector_result != i+1) / ( 3*(err_detector_result == 0) + 2*(err_detector_result != 0) );
         }
         return sum;
+    }
+}
+
+void ENGINE::write_data()
+{
+    if (this->write_delay >= MAX_WRITE_DELAY)
+    {
+        this->write_delay = 0;
+        std::ofstream myfile;
+        myfile.open ("data.txt", std::ios::out | std::ios::app);
+        for (int i = 0; i < N_APP_TO_VOTE; i++)
+        {
+            myfile << this->PWM_for_Voter[i] << ",";
+        }
+        myfile << this->PWM_to_Engine << ",";
+        myfile << this->sensor_data << "\n";
+        myfile.close();
+    }
+    else
+    {
+        this->write_delay += 1;
     }
 }
 

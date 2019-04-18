@@ -62,10 +62,10 @@ void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
     MPI_Bcast(&Engine->fault_from_voter, 1, MPI_FLOAT, this->world_size - 1, MPI_COMM_WORLD);
     if (this->world_rank == 0)
     {
-        for (int i = 0; i < NoC->N_CRs; i++)
-        {
-            NoC->Fault_External_CRs[i] = 0;
-        }
+//        for (int i = 0; i < NoC->N_CRs; i++)
+//        {
+//            NoC->Fault_External_CRs[i] = 0;
+//        }
 
         if (Engine->fault_from_voter > 0 && Engine->fault_from_voter <= NoC->N_CRs)
         {

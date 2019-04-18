@@ -17,15 +17,15 @@
 
 #define LED_GREEN 2
 #define LED_BLUE 3
-#define LED_CYAN 4
-#define LED_MAGENTA 5
-#define LED_YELLOW 6
+#define LED_CYAN 6
+#define LED_MAGENTA 4
+#define LED_YELLOW 5
 
 //#define LED_GREEN 4
 //#define LED_BLUE 5
 //#define LED_CYAN 2
 //#define LED_MAGENTA 3
-//#define LED_YELLOW 7
+//#define LED_YELLOW 6
 
 void APP_LED(NOC *NoC, ENGINE *Engine);
 void APP_LED_WHITE(NOC *NoC, ENGINE *Engine);

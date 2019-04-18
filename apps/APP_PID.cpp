@@ -9,6 +9,7 @@ void APP_PID(NOC* NoC, ENGINE* Engine)
     float setpoint = 90.0;
     float Kp = 0.5;
 
+#ifndef __x86_64__
     int switch_button_2 = 25;
     pinMode (switch_button_2, INPUT);
     pullUpDnControl (switch_button_2, PUD_UP);
@@ -16,13 +17,33 @@ void APP_PID(NOC* NoC, ENGINE* Engine)
     if(digitalRead (switch_button_2) == 0)
     {
         Kp *= (NoC->node_to_run + 1);
-        NoC->app_to_run = LED_YELLOW;
+        NoC->app_to_run = LED_CYAN;
     }
+//    else
+//    {
+//        NoC->app_to_run = LED_RED;
+//    }
+#endif
 
     APP_LED(NoC, Engine);
 
-    float error = setpoint - Engine->sensor_data;
-    Engine->PWM_out = (int)(OPER_PWM + Kp*error);
+    int sum_node_to_run = 1;
+    for (int i = 0; i < NoC->N_apps; i++)
+    {
+        if(NoC->node_to_run == sum_node_to_run)
+        {
+            float error = setpoint - Engine->sensor_data;
+            Engine->PWM_out = (int)(OPER_PWM + Kp*error);
+            break;
+        }
+        else
+        {
+            sum_node_to_run += NoC->N_nodes_apps[i];
+        }
+    }
+
+//    float error = setpoint - Engine->sensor_data;
+//    Engine->PWM_out = (int)(OPER_PWM + Kp*error);
 
     //    std::cout << error << std::endl;
 }

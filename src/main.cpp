@@ -35,10 +35,10 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     int N_Row_CRs = 3, N_Col_CRs = 4;
     int N_apps = 5;
     int N_Row_apps[N_apps], N_Col_apps[N_apps];
-    N_Row_apps[0] = 1;    N_Col_apps[0] = 1;
-    N_Row_apps[1] = 1;    N_Col_apps[1] = 1;
-    N_Row_apps[2] = 1;    N_Col_apps[2] = 1;
-    N_Row_apps[3] = 2;    N_Col_apps[3] = 1;
+    N_Row_apps[0] = 2;    N_Col_apps[0] = 1;
+    N_Row_apps[1] = 2;    N_Col_apps[1] = 1;
+    N_Row_apps[2] = 2;    N_Col_apps[2] = 1;
+    N_Row_apps[3] = 1;    N_Col_apps[3] = 2;
     N_Row_apps[4] = 1;    N_Col_apps[4] = 2;
     void (*app_ptr[N_apps + 1])(NOC*, ENGINE*);
     app_ptr[0] = &APP_LED_WHITE; // IDLE
@@ -122,7 +122,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                 }
                 NoC.Update_State();
             }
-//            NoC.Disp();
+            NoC.Disp();
         }
         else if (NoC_MPI.world_rank == (NoC_MPI.world_size - 1)) // jet engine node (the last one)
         {
@@ -131,6 +131,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             Engine.read_sensor();
             Engine.voter(NoC.N_CRs);
             Engine.pwm_send();
+            Engine.write_data();
 #endif
         }
         else // computer resource nodes
@@ -147,9 +148,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             }
             else
             {
-#ifndef __x86_64__
                 app_ptr[NoC.app_to_run](&NoC, &Engine);
-#endif
             }
         }
 

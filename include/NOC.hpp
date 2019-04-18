@@ -46,6 +46,7 @@ public:
     int *Fault_Internal_CRs;
     int fault_internal_status; // faulty status of each node, each node sends
     int *Fault_External_CRs;
+    int fault_external_status;
     int solver_status;
 
     int obj_val;

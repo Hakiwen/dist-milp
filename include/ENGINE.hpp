@@ -7,6 +7,7 @@
 
 #include "MY_MACROS.hpp"
 #include <iostream>
+#include <fstream>
 #include <cstring>
 
 #include <wiringPi.h>
@@ -19,6 +20,9 @@
 
 #define TOLERANCE 5
 #define N_APP_TO_VOTE 3
+
+#define MAX_VOTER_DELAY 1000
+#define MAX_WRITE_DELAY 100
 
 class ENGINE
 {
@@ -39,6 +43,9 @@ public:
     int fault_detect;
     int fault_from_voter;
 
+    int voter_delay;
+    int write_delay;
+
     PhidgetVoltageRatioInputHandle ch;
     ChannelInfo channelInfo;
 
@@ -50,6 +57,8 @@ public:
     void voter(int N_CRs);
     int error_detector(int* array);
     double voter_mean(int* array, int err_detector_result);
+
+    void write_data();
 };
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);
