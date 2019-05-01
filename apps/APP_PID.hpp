@@ -12,7 +12,7 @@
 #include "APP_LED.hpp"
 #include "wiringPi.h"
 
-void APP_PID(NOC *NoC, ENGINE *Engine);
+void APP_PID(NOC *NoC, ENGINE *Engine, int color);
 void APP_PWM_OFF();
 
 #endif //DIST_MILP_APP_PID_HPP

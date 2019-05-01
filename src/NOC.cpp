@@ -3,7 +3,7 @@
 //
 #include "NOC.hpp"
 
-NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[])
+NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[], int app_color[], int allocator_app_ind, int allocator_app_num)
 {
     // From user's inputs
     this->N_Row_CRs = N_Row_CRs;
@@ -49,6 +49,14 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->fault_external_status = 0;
 
     this->solver_status = 1; // 1 feasible, 0 infeasible
+
+    // Color assigned to each app
+    this->app_color = new int[N_apps];
+    this->app_color = app_color;
+
+    // Allocator
+    this->allocator_app_ind = allocator_app_ind;
+    this->allocator_app_num = allocator_app_num;
 }
 
 void NOC::CreateTopology(const char *topo)

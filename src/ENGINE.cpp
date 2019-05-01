@@ -213,6 +213,17 @@ void ENGINE::write_data()
     }
 }
 
+void ENGINE::run(int N_CRs)
+{
+    std::cout << "I'm the jet engine!" << std::endl;
+    #ifndef __x86_64__
+        this->read_sensor();
+        this->voter(N_CRs);
+        this->pwm_send();
+        this->write_data();
+    #endif
+}
+
 /** Phidget Functions **/
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx)

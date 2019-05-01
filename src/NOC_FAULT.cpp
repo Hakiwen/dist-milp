@@ -15,9 +15,9 @@ NOC_FAULT::NOC_FAULT(NOC *NoC, int rank)
 #endif
 }
 
-int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
+int NOC_FAULT::Fault_Gathering(NOC *NoC)
 {
-    if (rank == 0)
+    if (NoC->app_to_run >= NoC->allocator_app_ind && NoC->app_to_run < NoC->allocator_app_ind + NoC->allocator_app_num)
     {
         NoC->prev_N_Faults = NoC->N_Faults;
 
@@ -39,16 +39,11 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         {
             int prev_Fault = NoC->Fault_CRs[i];
             NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i];
-//            std::cout << "Fault_CR_" << i+1 << ": " << NoC->Fault_CRs[i] << ", ";
             if(NoC->Fault_CRs[i] != prev_Fault)
             {
                 NoC->N_Faults += 1;
             }
         }
-//        std::cout << std::endl;
-
-//        std::cout << NoC->N_Faults << std::endl;
-//        std::cout << NoC->prev_N_Faults << std::endl;
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {
@@ -68,7 +63,11 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             return 1;
         }
     }
-    else
+}
+
+int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
+{
+    if (rank >= 1 && rank <= NoC->N_CRs)
     {
 #if defined(__x86_64__)
         // Read file instead of user input so that the loop can keep running

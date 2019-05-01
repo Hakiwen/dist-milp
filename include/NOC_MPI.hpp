@@ -20,13 +20,14 @@ public:
     int world_rank;
 
     void Barrier(); // control barrier function
-    void Finalize(); // for deleting MPI object
 
     void Scatter_Apps(NOC *NoC);
     void Gather_Internal_Faults(NOC *NoC);
     void Broadcast_External_Fault(ENGINE *Engine, NOC *NoC);
     void Broadcast_Sensor(ENGINE *Engine);
     void Gather_PWM(ENGINE *Engine);
+
+    void run(NOC *NoC, ENGINE *Engine);
 };
 
 #endif //DIST_MILP_NOC_MPI_HPP

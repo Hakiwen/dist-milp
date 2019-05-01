@@ -19,7 +19,8 @@ public:
 
     NOC_FAULT(NOC *NoC, int rank);
 
-    int Fault_Detection(NOC *NoC, int rank);// user input for now
+    int Fault_Gathering(NOC *NoC); // allocators nodes
+    int Fault_Detection(NOC *NoC, int rank); // all CRs
 };
 
 #endif //DIST_MILP_NOC_FAULT_HPP

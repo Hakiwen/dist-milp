@@ -16,12 +16,7 @@ void NOC_MPI::Barrier()
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
-void NOC_MPI::Finalize()
-{
-    MPI_Finalize();
-}
-
-void NOC_MPI::Scatter_Apps(NOC *NoC)
+void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
 {
     int *scatter_data_send = NULL;
     if(this->world_rank == 0)
@@ -38,7 +33,7 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
     MPI_Scatter(scatter_data_send, 1, MPI_INT, &NoC->node_to_run, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
-void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
+void NOC_MPI::Gather_Internal_Faults(NOC *NoC) // TODO change to Allgather
 {
     int *gather_data_receive = NULL;
     if(this->world_rank == 0)
@@ -59,8 +54,8 @@ void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
 
 void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
 {
-    MPI_Bcast(&Engine->fault_from_voter, 1, MPI_FLOAT, this->world_size - 1, MPI_COMM_WORLD);
-    if (this->world_rank == 0)
+    MPI_Bcast(&Engine->fault_from_voter, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    if (NoC->app_to_run >= NoC->allocator_app_ind && NoC->app_to_run < NoC->allocator_app_ind + NoC->allocator_app_num)
     {
 //        for (int i = 0; i < NoC->N_CRs; i++)
 //        {
@@ -72,30 +67,50 @@ void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
             NoC->Fault_External_CRs[Engine->fault_from_voter - 1] = 1;
         }
     }
+    else
+    {
+        for (int i = 0; i < NoC->N_CRs; i++)
+        {
+            NoC->Fault_External_CRs[i] = 0;
+        }
+    }
 }
 
 void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
 {
-    MPI_Bcast(&Engine->sensor_data, 1, MPI_FLOAT, this->world_size - 1, MPI_COMM_WORLD);
+    MPI_Bcast(&Engine->sensor_data, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
 }
 
 void NOC_MPI::Gather_PWM(ENGINE *Engine)
 {
     int *gather_data_receive = NULL;
-    if(this->world_rank == this->world_size - 1)
+    if(this->world_rank == 0)
     {
         gather_data_receive = new int[this->world_size];
     }
 
-    MPI_Gather(&Engine->PWM_out, 1, MPI_INT, gather_data_receive, 1, MPI_INT, this->world_size - 1, MPI_COMM_WORLD);
+    MPI_Gather(&Engine->PWM_out, 1, MPI_INT, gather_data_receive, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    if(this->world_rank == this->world_size - 1)
+    if(this->world_rank == 0)
     {
-        for (int i = 0; i < this->world_size - 2; i++)
+        for (int i = 1; i < this->world_size - 1; i++)
         {
             Engine->PWM_in[i] = gather_data_receive[i + 1];
         }
     }
 
     Engine->PWM_out = 0;
+}
+
+void NOC_MPI::run(NOC *NoC, ENGINE *Engine)
+{
+#ifdef USE_MPI // TODO should be non-blocking
+    this->Barrier();
+    this->Broadcast_Sensor(Engine);
+    this->Gather_PWM(Engine);
+    this->Scatter_Apps(NoC);
+    this->Gather_Internal_Faults(NoC);
+    this->Broadcast_External_Fault(Engine, NoC);
+    this->Barrier();
+#endif
 }

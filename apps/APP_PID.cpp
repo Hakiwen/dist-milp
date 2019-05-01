@@ -4,7 +4,7 @@
 
 #include "APP_PID.hpp"
 
-void APP_PID(NOC* NoC, ENGINE* Engine)
+void APP_PID(NOC* NoC, ENGINE* Engine, int color)
 {
     float setpoint = 90.0;
     float Kp = 0.5;
@@ -17,15 +17,11 @@ void APP_PID(NOC* NoC, ENGINE* Engine)
     if(digitalRead (switch_button_2) == 0)
     {
         Kp *= (NoC->node_to_run + 1);
-        NoC->app_to_run = LED_CYAN;
+        color = LED_CYAN;
     }
-//    else
-//    {
-//        NoC->app_to_run = LED_RED;
-//    }
 #endif
 
-    APP_LED(NoC, Engine);
+    APP_LED(NoC, Engine, color);
 
     int sum_node_to_run = 1;
     for (int i = 0; i < NoC->N_apps; i++)
@@ -44,8 +40,7 @@ void APP_PID(NOC* NoC, ENGINE* Engine)
 
 //    float error = setpoint - Engine->sensor_data;
 //    Engine->PWM_out = (int)(OPER_PWM + Kp*error);
-
-    //    std::cout << error << std::endl;
+//    std::cout << error << std::endl;
 }
 
 void APP_PWM_OFF()

@@ -53,7 +53,11 @@ public:
     int var_size;
     int con_size;
 
-    NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[]);
+    int *app_color;
+    int allocator_app_ind;
+    int allocator_app_num;
+
+    NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[], int app_color[], int allocator_app_ind, int allocator_app_num);
 
     void CreateTopology(const char* topo);
     void CreateSquareTopology();

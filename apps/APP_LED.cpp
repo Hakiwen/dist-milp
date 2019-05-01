@@ -4,9 +4,8 @@
 
 #include "APP_LED.hpp"
 
-void APP_LED(NOC *NoC, ENGINE *Engine)
+void APP_LED(NOC *NoC, ENGINE *Engine, int color)
 {
-    int color = NoC->app_to_run;
 #if defined(__x86_64__)
     if(color == LED_OFF)
     {
@@ -98,7 +97,7 @@ void APP_LED(NOC *NoC, ENGINE *Engine)
 #endif
 }
 
-void APP_LED_WHITE(NOC *NoC, ENGINE *Engine)
+void APP_LED_WHITE(NOC *NoC, ENGINE *Engine, int color)
 {
 #if defined(__x86_64__)
     std::cout << "WHITE" << std::endl;

@@ -59,6 +59,8 @@ public:
     double voter_mean(int* array, int err_detector_result);
 
     void write_data();
+
+    void run(int N_CRs);
 };
 
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);
