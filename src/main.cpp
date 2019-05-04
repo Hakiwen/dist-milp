@@ -26,8 +26,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 {
     /** User-Initialized Parameters **/
 
-    int N_Row_CRs = 3, N_Col_CRs = 4;
-    int N_apps = 5;
+    int N_Row_CRs = 4, N_Col_CRs = 4;
+    int N_apps = 7;
 
     int N_Row_apps[N_apps], N_Col_apps[N_apps], app_color[N_apps];
     N_Row_apps[0] = 2;    N_Col_apps[0] = 1;
