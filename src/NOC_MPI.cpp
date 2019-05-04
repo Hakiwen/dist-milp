@@ -32,10 +32,10 @@ void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
 
     MPI_Allgather(scatter_data_send, NoC->N_CRs, MPI_INT, gather_data_receive, NoC->N_CRs, MPI_INT, MPI_COMM_WORLD);
 
-    for (int i = 0; i < NoC->N_CRs; i++)
-    {
-        NoC->nodes_on_CRs[i] = 0;
-    }
+//    for (int i = 0; i < NoC->N_CRs; i++)
+//    {
+//        NoC->nodes_on_CRs[i] = 0;
+//    }
 
     int allocator_ind[NoC->allocator_app_num];
     for (int i = 0; i < NoC->allocator_app_num; i++)
@@ -55,8 +55,23 @@ void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
         {
             allocator_ind[ind] = k;
             ind++;
+
+            std::cout << " , " << allocator_ind[ind-1] << std::endl;
         }
         k++;
+    }
+
+    for (int i = 0; i < NoC->N_CRs; i++)
+    {
+        for (int j = 0; j < NoC->allocator_app_num; j++)
+        {
+            NoC->nodes_on_CRs_received(i,j) = gather_data_receive[allocator_ind[j]*NoC->N_CRs+i];
+        }
+    }
+
+    if(world_rank > 0)
+    {
+        NoC->node_to_run = NoC->nodes_on_CRs_received(world_rank-1,0);
     }
 }
 

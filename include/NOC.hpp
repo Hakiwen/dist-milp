@@ -36,6 +36,7 @@ public:
     Eigen::MatrixXi X_CRs_nodes_old;
 
     int *nodes_on_CRs; // node to run on each CR, solver sends
+    Eigen::MatrixXi nodes_on_CRs_received; // node to run on each CR, receives from multiple allocators
     int *apps_on_CRs; // app to run on each CR
     int node_to_run; // node to run on each CR, each node receives
     int app_to_run; // app to run on each CR

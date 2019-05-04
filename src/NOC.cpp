@@ -57,6 +57,7 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     // Allocator
     this->allocator_app_ind = allocator_app_ind;
     this->allocator_app_num = allocator_app_num;
+    this->nodes_on_CRs_received.resize(this->N_CRs, this->allocator_app_num);
 }
 
 void NOC::CreateTopology(const char *topo)

@@ -82,8 +82,22 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     /*
      * Main Loop
      */
-    while (true)
+    if (NoC_MPI.world_rank == 1)
     {
+        NoC_GLPK.write_LP(&NoC, LP_file);
+        prob_GLPK.solve(&NoC_GLPK);
+        NoC_GLPK.read_Sol(&NoC, Sol_file);
+        NoC.Update_State();
+        NoC.Disp();
+    }
+    NoC_MPI.run(&NoC, &Engine);
+    delay(100);
+
+    int step = 0;
+    while (true)
+//    while (step < 5)
+    {
+        cout << "Step: " << step << ", ";
         if (NoC_MPI.world_rank == 0)
         {
             Engine.run(NoC.N_CRs);
@@ -91,10 +105,12 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         else // computer resource nodes
         {
             NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch
-//            cout << "My Rank: " << NoC_MPI.world_rank;
-//            cout << ", My Fault: " << NoC.fault_status;
+            cout << "My Rank: " << NoC_MPI.world_rank;
+//            cout << ", My Fault: " << NoC.fault_internal_status;
+            cout << ", My Node: " << NoC.node_to_run;
 //            cout << ", My Sensor: " << Engine.sensor_data;
 //            cout << ", My App: ";
+            cout << endl;
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             if(NoC.app_to_run == -1) // dead
             {
@@ -102,7 +118,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             }
             else
             {
-                app_ptr[NoC.app_to_run](&NoC, &Engine, NoC.app_color[NoC.app_to_run]);
+//                app_ptr[NoC.app_to_run](&NoC, &Engine, NoC.app_color[NoC.app_to_run]);
 
                 // Allocators
                 if(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num)
@@ -124,14 +140,22 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                     }
                     NoC.Disp();
                 }
+                else
+                {
+                    for (int i = 0; i < NoC.N_CRs; i++)
+                    {
+                        NoC.nodes_on_CRs[i] = 0;
+                    }
+                }
             }
         }
 
         NoC_MPI.run(&NoC, &Engine);
-//        delay(500);
+        delay(1000);
+        step++;
     }
 
-    while (true){}; // does nothing, but smiling at you :)
+    while (true){delay(1);}; // does nothing, but smiling at you :)
 
     return 0;
 
