@@ -364,7 +364,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
-
 //    int sum_N_nodes_apps = 0;
 //    int spatial_nodes_ind[3]; // indices of the interested spatial nodes
 //    for (int k = 1; k <= NoC->N_apps; k++)

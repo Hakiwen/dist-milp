@@ -47,19 +47,10 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {
-//            std::cout << "No New Node Fails/Recovers, Do Nothing" << std::endl;
             return 0;
         }
         else
         {
-//            if(NoC->N_Faults == 0 && NoC->prev_N_Faults == -1)
-//            {
-//                std::cout << "First Reallocation..." << std::endl;
-//            }
-//            else
-//            {
-//                std::cout << "A New Node Fails/Recovers, Reallocating..." << std::endl;
-//            }
             return 1;
         }
     }

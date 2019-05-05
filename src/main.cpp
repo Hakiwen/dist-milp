@@ -40,13 +40,13 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 
     void (*app_ptr[N_apps + 1])(NOC*, ENGINE*, int);
     app_ptr[0] = &APP_LED;    app_color[0] = LED_WHITE;   // IDLE
-    app_ptr[1] = &APP_PID;    app_color[0] = LED_RED;     // 1st priority app
-    app_ptr[2] = &APP_PID;    app_color[1] = LED_GREEN;   // and so on...
-    app_ptr[3] = &APP_PID;    app_color[2] = LED_BLUE;
-    app_ptr[4] = &APP_LED;    app_color[3] = LED_YELLOW;
-    app_ptr[5] = &APP_LED;    app_color[4] = LED_YELLOW;
-    app_ptr[6] = &APP_LED;    app_color[5] = LED_YELLOW;
-    app_ptr[7] = &APP_LED;    app_color[6] = LED_MAGENTA;
+    app_ptr[1] = &APP_PID;    app_color[1] = LED_RED;     // 1st priority app
+    app_ptr[2] = &APP_PID;    app_color[2] = LED_GREEN;   // and so on...
+    app_ptr[3] = &APP_PID;    app_color[3] = LED_BLUE;
+    app_ptr[4] = &APP_LED;    app_color[4] = LED_YELLOW;
+    app_ptr[5] = &APP_LED;    app_color[5] = LED_YELLOW;
+    app_ptr[6] = &APP_LED;    app_color[6] = LED_YELLOW;
+    app_ptr[7] = &APP_LED;    app_color[7] = LED_MAGENTA;
 
     int allocator_app_ind = 4, allocator_app_num = 3;
 
@@ -109,16 +109,20 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << ", My Fault: " << NoC.fault_internal_status;
             cout << ", My Node: " << NoC.node_to_run;
 //            cout << ", My Sensor: " << Engine.sensor_data;
-//            cout << ", My App: ";
-            cout << endl;
+//            cout << endl;
             NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
+            cout << ", My App: " << NoC.app_to_run << ", ";
             if(NoC.app_to_run == -1) // dead
             {
                 APP_LED_OFF();
+                for (int i = 0; i < NoC.N_CRs; i++)
+                {
+                    NoC.nodes_on_CRs[i] = 0;
+                }
             }
             else
             {
-//                app_ptr[NoC.app_to_run](&NoC, &Engine, NoC.app_color[NoC.app_to_run]);
+                app_ptr[NoC.app_to_run](&NoC, &Engine, NoC.app_color[NoC.app_to_run]);
 
                 // Allocators
                 if(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num)

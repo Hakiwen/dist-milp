@@ -25,17 +25,10 @@ void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
         scatter_data_send[i] = NoC->nodes_on_CRs[i];
     }
 
-//    MPI_Scatter(scatter_data_send, 1, MPI_INT, &NoC->node_to_run, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
     int *gather_data_receive = NULL;
     gather_data_receive = new int[this->world_size*NoC->N_CRs];
 
     MPI_Allgather(scatter_data_send, NoC->N_CRs, MPI_INT, gather_data_receive, NoC->N_CRs, MPI_INT, MPI_COMM_WORLD);
-
-//    for (int i = 0; i < NoC->N_CRs; i++)
-//    {
-//        NoC->nodes_on_CRs[i] = 0;
-//    }
 
     int allocator_ind[NoC->allocator_app_num];
     for (int i = 0; i < NoC->allocator_app_num; i++)
@@ -55,8 +48,6 @@ void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
         {
             allocator_ind[ind] = k;
             ind++;
-
-            std::cout << " , " << allocator_ind[ind-1] << std::endl;
         }
         k++;
     }
@@ -69,9 +60,24 @@ void NOC_MPI::Scatter_Apps(NOC *NoC) // TODO change to Allgather
         }
     }
 
-    if(world_rank > 0)
+    if(world_rank > 0) // TODO voter
     {
         NoC->node_to_run = NoC->nodes_on_CRs_received(world_rank-1,0);
+
+        if(NoC->app_to_run >= NoC->allocator_app_ind && NoC->app_to_run < NoC->allocator_app_ind + NoC->allocator_app_num)
+        {
+            for (int i = 0; i < NoC->N_CRs; i++)
+            {
+                for (int j = 0; j < NoC->N_nodes; j++)
+                {
+                    NoC->X_CRs_nodes_old(i, j) = 0;
+                }
+                if(NoC->nodes_on_CRs_received(i,0) > 0)
+                {
+                    NoC->X_CRs_nodes_old(i, NoC->nodes_on_CRs_received(i, 0) - 1) = 1;
+                }
+            }
+        }
     }
 }
 
@@ -83,7 +89,7 @@ void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
 
     if(NoC->app_to_run >= NoC->allocator_app_ind && NoC->app_to_run < NoC->allocator_app_ind + NoC->allocator_app_num)
     {
-        for (int i = 1; i < this->world_size - 1; i++)
+        for (int i = 0; i < this->world_size - 1; i++)
         {
             NoC->Fault_Internal_CRs[i] = gather_data_receive[i + 1];
         }
