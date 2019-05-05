@@ -5,18 +5,19 @@
 #include "NOC_GLPK.hpp"
 
 #ifdef GLPK_AS_SOLVER
-NOC_GLPK::NOC_GLPK()
+NOC_GLPK::NOC_GLPK(const char* LP_file, const char* Sol_file)
 {
-
+    this->LP_file = LP_file;
+    this->Sol_file = Sol_file;
 }
 
-void NOC_GLPK::write_LP(NOC *NoC, const char* LP_file)
+void NOC_GLPK::write_LP(NOC *NoC)
 {
     this->model = glp_create_prob();
     glp_set_prob_name(this->model, "NoC");
 
     CreateModel(NoC);
-    glp_write_lp(this->model, NULL, LP_file);
+    glp_write_lp(this->model, NULL, this->LP_file);
 }
 
 void NOC_GLPK::CreateModel(NOC *NoC)
@@ -428,7 +429,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
 
-void NOC_GLPK::read_Sol(NOC *NoC, const char* Sol_file)
+void NOC_GLPK::read_Sol(NOC *NoC)
 {
 //    glp_prob *mip = glp_create_prob();
 //    glp_read_mip(mip, Sol_file);

@@ -277,6 +277,14 @@ void NOC::Update_State()
     }
 }
 
+void NOC::Clear_State()
+{
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        this->nodes_on_CRs[i] = 0;
+    }
+}
+
 void NOC::Disp()
 {
     if(VERBOSE)

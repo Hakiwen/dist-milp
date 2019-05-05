@@ -4,7 +4,7 @@
 
 #include "APP_PID.hpp"
 
-void APP_PID(NOC* NoC, ENGINE* Engine, int color)
+void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *prob_GLPK, ENGINE* Engine, int color)
 {
     float setpoint = 90.0;
     float Kp = 0.5;
@@ -21,7 +21,7 @@ void APP_PID(NOC* NoC, ENGINE* Engine, int color)
     }
 #endif
 
-    APP_LED(NoC, Engine, color);
+    APP_LED(NoC, NoC_Fault, NoC_GLPK, prob_GLPK, Engine, color);
 
     int sum_node_to_run = 1;
     for (int i = 0; i < NoC->N_apps; i++)

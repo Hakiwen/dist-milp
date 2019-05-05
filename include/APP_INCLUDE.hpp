@@ -7,5 +7,6 @@
 
 #include "APP_LED.hpp"
 #include "APP_PID.hpp"
+#include "APP_REALLOCATOR.hpp"
 
 #endif //DIST_MILP_APP_INCLUDE_HPP

@@ -18,12 +18,14 @@ class NOC_GLPK {
 
 public:
     glp_prob *model;
+    const char* LP_file; // problem file name
+    const char* Sol_file;
 
-    NOC_GLPK();
+    NOC_GLPK(const char* LP_file, const char* Sol_file);
 
-    void write_LP(NOC *NoC, const char* LP_file);
+    void write_LP(NOC *NoC);
     void CreateModel(NOC *NoC);
-    void read_Sol(NOC *NoC, const char* Sol_file);
+    void read_Sol(NOC *NoC);
     void DeleteModel(NOC *NoC);
 };
 #endif

@@ -38,16 +38,17 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     N_Row_apps[5] = 1;    N_Col_apps[5] = 1;
     N_Row_apps[6] = 1;    N_Col_apps[6] = 2;
 
-    void (*app_ptr[N_apps + 1])(NOC*, ENGINE*, int);
-    app_ptr[0] = &APP_LED;    app_color[0] = LED_WHITE;   // IDLE
-    app_ptr[1] = &APP_PID;    app_color[1] = LED_RED;     // 1st priority app
-    app_ptr[2] = &APP_PID;    app_color[2] = LED_GREEN;   // and so on...
-    app_ptr[3] = &APP_PID;    app_color[3] = LED_BLUE;
-    app_ptr[4] = &APP_LED;    app_color[4] = LED_YELLOW;
-    app_ptr[5] = &APP_LED;    app_color[5] = LED_YELLOW;
-    app_ptr[6] = &APP_LED;    app_color[6] = LED_YELLOW;
-    app_ptr[7] = &APP_LED;    app_color[7] = LED_MAGENTA;
+    void (*app_ptr[N_apps + 1])(NOC*, NOC_FAULT*, NOC_GLPK*, GLPK_SOLVER*, ENGINE*, int);
+    app_ptr[0] = &APP_LED;          app_color[0] = LED_WHITE;   // IDLE
+    app_ptr[1] = &APP_PID;          app_color[1] = LED_RED;     // 1st priority app
+    app_ptr[2] = &APP_PID;          app_color[2] = LED_GREEN;   // and so on...
+    app_ptr[3] = &APP_PID;          app_color[3] = LED_BLUE;
+    app_ptr[4] = &APP_REALLOCATOR;  app_color[4] = LED_YELLOW;
+    app_ptr[5] = &APP_REALLOCATOR;  app_color[5] = LED_YELLOW;
+    app_ptr[6] = &APP_REALLOCATOR;  app_color[6] = LED_YELLOW;
+    app_ptr[7] = &APP_LED;          app_color[7] = LED_MAGENTA;
 
+    // index of app where the first allocator starts, and the total number allocators
     int allocator_app_ind = 4, allocator_app_num = 3;
 
     const char* LP_file = "NoC.lp"; // problem file name
@@ -65,7 +66,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
     NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
 
-    NOC_GLPK NoC_GLPK = NOC_GLPK(); // NoC to GLPK Object
+    NOC_GLPK NoC_GLPK = NOC_GLPK(LP_file, Sol_file); // NoC to GLPK Object
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 
     ENGINE Engine = ENGINE(NoC.N_CRs); // Engine controller being the 1st priority app
@@ -77,25 +78,24 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     wiringPiSetup();
 #endif
 
+    if (NoC_MPI.world_rank == 1) // first allocation
+    {
+        NoC_GLPK.write_LP(&NoC);
+        prob_GLPK.solve(&NoC_GLPK);
+        NoC_GLPK.read_Sol(&NoC);
+        NoC.Update_State();
+        NoC.Disp();
+    }
+    NoC_MPI.run(&NoC, &Engine);
+
     /** End of Initialization **/
 
     /*
      * Main Loop
      */
-    if (NoC_MPI.world_rank == 1)
-    {
-        NoC_GLPK.write_LP(&NoC, LP_file);
-        prob_GLPK.solve(&NoC_GLPK);
-        NoC_GLPK.read_Sol(&NoC, Sol_file);
-        NoC.Update_State();
-        NoC.Disp();
-    }
-    NoC_MPI.run(&NoC, &Engine);
-    delay(100);
 
     int step = 0;
     while (true)
-//    while (step < 5)
     {
         cout << "Step: " << step << ", ";
         if (NoC_MPI.world_rank == 0)
@@ -104,52 +104,29 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else // computer resource nodes
         {
-            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch
+            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
+            NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run); // mapping from node to app
+
+#ifdef __x86_64__ // print for simulation
             cout << "My Rank: " << NoC_MPI.world_rank;
 //            cout << ", My Fault: " << NoC.fault_internal_status;
             cout << ", My Node: " << NoC.node_to_run;
 //            cout << ", My Sensor: " << Engine.sensor_data;
-//            cout << endl;
-            NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run);
             cout << ", My App: " << NoC.app_to_run << ", ";
+#endif
+
             if(NoC.app_to_run == -1) // dead
             {
+                NoC.Clear_State();
                 APP_LED_OFF();
-                for (int i = 0; i < NoC.N_CRs; i++)
-                {
-                    NoC.nodes_on_CRs[i] = 0;
-                }
             }
             else
             {
-                app_ptr[NoC.app_to_run](&NoC, &Engine, NoC.app_color[NoC.app_to_run]);
+                app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine, NoC.app_color[NoC.app_to_run]);
 
-                // Allocators
-                if(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num)
+                if(!(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
                 {
-                    if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
-                    {
-                        NoC_GLPK.write_LP(&NoC, LP_file);
-                        if(prob_GLPK.solve(&NoC_GLPK))
-                        {
-                            NoC_GLPK.read_Sol(&NoC, Sol_file);
-                            NoC.solver_status = 1;
-                        }
-                        else
-                        {
-                            cout << "Infeasible Solution" << endl;
-                            NoC.solver_status = 0;
-                        }
-                        NoC.Update_State();
-                    }
-                    NoC.Disp();
-                }
-                else
-                {
-                    for (int i = 0; i < NoC.N_CRs; i++)
-                    {
-                        NoC.nodes_on_CRs[i] = 0;
-                    }
+                    NoC.Clear_State(); // not the allocator
                 }
             }
         }

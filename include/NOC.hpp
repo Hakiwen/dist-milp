@@ -68,6 +68,7 @@ public:
     int get_app_from_node(int node);
     int get_app_from_link(int node);
     void Update_State();
+    void Clear_State();
     void Disp();
 };
 
