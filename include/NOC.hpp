@@ -65,10 +65,14 @@ public:
     void CreateIncidentMatrices(const char* topo);
     Eigen::MatrixXi CreateIncidentMatrixSquareTopology(int N_Row, int N_Col);
     void CreateDecisionMatrices();
+
     int get_app_from_node(int node);
     int get_app_from_link(int node);
+
     void Update_State();
     void Clear_State();
+
+    void App_Voter(int rank);
     void Disp();
 };
 

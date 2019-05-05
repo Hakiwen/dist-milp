@@ -6,6 +6,7 @@
 #define DIST_MILP_NOC_MPI_HPP
 
 #include "MY_MACROS.hpp"
+#include <Eigen/Dense>
 #include <iostream>
 #include <mpi.h>
 #include "NOC.hpp"

@@ -19,14 +19,4 @@
 #include "GLPK_SOLVER.hpp"
 #include "ENGINE.hpp"
 
-typedef struct
-{
-    NOC NoC;
-    NOC_MPI NoC_MPI;
-    NOC_FAULT NoC_Fault;
-    NOC_GLPK NoC_GLPK;
-    GLPK_SOLVER prob_GLPK;
-    ENGINE Engine;
-} NOC_TYPE;
-
 #endif //DIST_MILP_MY_INCLUDE_HPP

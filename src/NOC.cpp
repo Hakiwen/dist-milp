@@ -285,6 +285,27 @@ void NOC::Clear_State()
     }
 }
 
+void NOC::App_Voter(int rank)
+{
+    this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+    this->app_to_run = this->get_app_from_node(this->node_to_run); // mapping from node to app
+
+    if(this->app_to_run >= this->allocator_app_ind && this->app_to_run < this->allocator_app_ind + this->allocator_app_num)
+    {
+        for (int i = 0; i < this->N_CRs; i++)
+        {
+            for (int j = 0; j < this->N_nodes; j++)
+            {
+                this->X_CRs_nodes_old(i, j) = 0;
+            }
+            if(this->nodes_on_CRs_received(i,0) > 0)
+            {
+                this->X_CRs_nodes_old(i, this->nodes_on_CRs_received(i, 0) - 1) = 1;
+            }
+        }
+    }
+}
+
 void NOC::Disp()
 {
     if(VERBOSE)

@@ -93,10 +93,9 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else // computer resource nodes
         {
-            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
-            NoC.app_to_run = NoC.get_app_from_node(NoC.node_to_run); // mapping from node to app
+            NoC.App_Voter(NoC_MPI.world_rank); // TODO voter, right now it's just pick the first one
 
-#ifdef __x86_64__ // print for simulation
+#ifdef __x86_64__ // print the simulation
             cout << "My Rank: " << NoC_MPI.world_rank;
 //            cout << ", My Fault: " << NoC.fault_internal_status;
             cout << ", My Node: " << NoC.node_to_run;
@@ -106,8 +105,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 
             if(NoC.app_to_run == -1) // dead
             {
-                NoC.Clear_State();
                 APP_LED_OFF();
+                NoC.Clear_State();
             }
             else
             {
@@ -118,11 +117,13 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                     NoC.Clear_State(); // not the allocator
                 }
             }
+
+            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
         }
 
         NoC_MPI.run(&NoC, &Engine); // Communication Scheme
-        delay(1000);
         step++;
+        delay(1000);
     }
 
     while (true){delay(1);}; // does nothing, but smiling at you :)

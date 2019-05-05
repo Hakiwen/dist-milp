@@ -50,7 +50,7 @@ void ENGINE::read_sensor()
         this->SensorSetup = 1;
 
         PhidgetVoltageRatioInput_create(&this->ch);
-        AskForDeviceParameters(&this->channelInfo, (PhidgetHandle *)&this->ch); // TODO manually set phidget parameters
+        AskForDeviceParameters(&this->channelInfo, (PhidgetHandle *)&this->ch);
         Phidget_setDeviceSerialNumber((PhidgetHandle)this->ch, this->channelInfo.deviceSerialNumber);
         Phidget_setHubPort((PhidgetHandle)this->ch, this->channelInfo.hubPort);
         Phidget_setIsHubPortDevice((PhidgetHandle)ch, this->channelInfo.isHubPortDevice);
