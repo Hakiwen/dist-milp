@@ -1,16 +1,5 @@
-#include <csignal>
-#include <fstream>
-
 #include "MY_MACROS.hpp"
-
-#include "NOC.hpp"
-#include "NOC_FAULT.hpp"
-#include "NOC_MPI.hpp"
-
-#include "NOC_GLPK.hpp"
-#include "GLPK_SOLVER.hpp"
-
-#include "ENGINE.hpp"
+#include "MY_INCLUDE.hpp"
 #include "APP_INCLUDE.hpp"
 
 using namespace std;
@@ -131,7 +120,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             }
         }
 
-        NoC_MPI.run(&NoC, &Engine);
+        NoC_MPI.run(&NoC, &Engine); // Communication Scheme
         delay(1000);
         step++;
     }

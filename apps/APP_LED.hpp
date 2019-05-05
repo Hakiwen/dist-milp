@@ -6,13 +6,7 @@
 #define DIST_MILP_APP_LED_HPP
 
 #include "MY_MACROS.hpp"
-#include <iostream>
-#include <wiringPi.h>
-#include "NOC.hpp"
-#include "NOC_FAULT.hpp"
-#include "NOC_GLPK.hpp"
-#include "GLPK_SOLVER.hpp"
-#include "ENGINE.hpp"
+#include "MY_INCLUDE.hpp"
 
 #define LED_OFF -1
 #define LED_WHITE 0

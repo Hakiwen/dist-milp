@@ -8,7 +8,6 @@
 #include <iostream>
 #include "MY_MACROS.hpp"
 
-#ifdef GLPK_AS_SOLVER
 #include <glpk.h>
 #include "NOC_GLPK.hpp"
 
@@ -24,6 +23,5 @@ public:
     int solve(NOC_GLPK *NoC_GLPK);
 
 };
-#endif
 
 #endif //DIST_MILP_GLPK_SOLVER_HPP
