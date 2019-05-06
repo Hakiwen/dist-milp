@@ -285,9 +285,53 @@ void NOC::Clear_State()
     }
 }
 
-void NOC::App_Voter(int rank)
+int NOC::norm_of_difference(int i, int j) // computes the norm (can be any one) of [ nodes_on_CRs_received(:, i) - nodes_on_CRs_received(:, j) ]
 {
-    this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+    int norm = 0;
+    for(int k = 0 ; k < this->N_CRs ; k++)
+    {
+        norm += ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) ) * ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) );
+        // here, the result of 'norm' will be the 2-normed squared (ensures integer result and avoid using other libraries)
+    }
+    return norm;
+}
+
+void NOC::App_Voter(int rank, int step)
+{
+    if(step == 0)
+    {
+        this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+    }
+    else
+    {
+        int mismatch_1_2 = this->norm_of_difference(1, 2); // = 0 if values matches, != 0 otherwise
+        int mismatch_2_3 = this->norm_of_difference(2, 3);
+        int mismatch_3_1 = this->norm_of_difference(3, 1);
+
+        if(mismatch_1_2 == 0) // values match
+        {
+            this->node_to_run = this->nodes_on_CRs_received(rank-1, 0); // allocators 1 and 2 agree, listen to one of them, here 1
+            std::cout << "allocators 1 and 2 match" << std::endl;
+        }
+        else if(mismatch_2_3 == 0)
+        {
+            this->node_to_run = this->nodes_on_CRs_received(rank-1, 1); // allocators 2 and 3 agree, listen to one of them, here 2
+            std::cout << "allocators 2 and 3 match" << std::endl;
+        }
+        else if(mismatch_3_1 == 0)
+        {
+            this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
+            std::cout << "allocators 3 and 1 match" << std::endl;
+        }
+        else // all allocators give different results
+        {
+            // appropriate error action
+            //this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+            std::cout << "no allocators match" << std::endl;
+        }
+    }
+
+
     this->app_to_run = this->get_app_from_node(this->node_to_run); // mapping from node to app
 
     if(this->app_to_run >= this->allocator_app_ind && this->app_to_run < this->allocator_app_ind + this->allocator_app_num)

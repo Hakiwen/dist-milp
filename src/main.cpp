@@ -93,7 +93,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else // computer resource nodes
         {
-            NoC.App_Voter(NoC_MPI.world_rank); // TODO voter, right now it's just pick the first one
+            NoC.App_Voter(NoC_MPI.world_rank, step); // TODO voter, right now it's just pick the first one
 
 #ifdef __x86_64__ // print the simulation
             cout << "My Rank: " << NoC_MPI.world_rank;

@@ -72,7 +72,8 @@ public:
     void Update_State();
     void Clear_State();
 
-    void App_Voter(int rank);
+    int norm_of_difference(int i, int j);
+    void App_Voter(int rank, int step);
     void Disp();
 };
 
