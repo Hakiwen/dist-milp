@@ -110,15 +110,18 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             }
             else
             {
-                app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine, NoC.app_color[NoC.app_to_run]);
-
-                if(!(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
+                if(!NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank)) // read switch or text file
                 {
-                    NoC.Clear_State(); // not the allocator
+                    app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine,
+                                            NoC.app_color[NoC.app_to_run]);
+
+                    if (!(NoC.app_to_run >= NoC.allocator_app_ind &&
+                          NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
+                    {
+                        NoC.Clear_State(); // not the allocator
+                    }
                 }
             }
-
-            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
         }
 
         NoC_MPI.run(&NoC, &Engine); // Communication Scheme

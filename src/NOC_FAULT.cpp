@@ -82,7 +82,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             NoC->fault_internal_status = 1;
         }
 #endif
-        return 1;
+        return NoC->fault_internal_status;
     }
-    return 1;
+    return 0;
 }
