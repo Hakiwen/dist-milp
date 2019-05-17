@@ -287,13 +287,22 @@ void NOC::Clear_State()
 
 int NOC::norm_of_difference(int i, int j) // computes the norm (can be any one) of [ nodes_on_CRs_received(:, i) - nodes_on_CRs_received(:, j) ]
 {
-    int norm = 0;
+    int norm = 0, norm_i = 0, norm_j = 0;
     for(int k = 0 ; k < this->N_CRs ; k++)
     {
         norm += ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) ) * ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) );
         // here, the result of 'norm' will be the 2-normed squared (ensures integer result and avoid using other libraries)
+        norm_i += ( nodes_on_CRs_received(k, i-1) ) * ( nodes_on_CRs_received(k, i-1) );
+        norm_j += ( nodes_on_CRs_received(k, j-1) ) * ( nodes_on_CRs_received(k, j-1) );
     }
-    return norm;
+    if (norm_i == 0 && norm_j == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return norm;
+    }
 }
 
 void NOC::App_Voter(int rank, int step)
@@ -311,23 +320,31 @@ void NOC::App_Voter(int rank, int step)
         if(mismatch_1_2 == 0) // values match
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 0); // allocators 1 and 2 agree, listen to one of them, here 1
+#if defined(__x86_64__)
             std::cout << "allocators 1 and 2 match" << std::endl;
+#endif
         }
         else if(mismatch_2_3 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 1); // allocators 2 and 3 agree, listen to one of them, here 2
+#if defined(__x86_64__)
             std::cout << "allocators 2 and 3 match" << std::endl;
+#endif
         }
         else if(mismatch_3_1 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
+#if defined(__x86_64__)
             std::cout << "allocators 3 and 1 match" << std::endl;
+#endif
         }
         else // all allocators give different results
         {
             // appropriate error action
-            //this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+            // this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+#if defined(__x86_64__)
             std::cout << "no allocators match" << std::endl;
+#endif
         }
     }
 

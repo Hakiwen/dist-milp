@@ -51,7 +51,14 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
     {
         for (int j = 0; j < NoC->allocator_app_num; j++)
         {
-            NoC->nodes_on_CRs_received(i,j) = gather_data_receive[int(allocator_ind(j))*NoC->N_CRs + i];
+            if (allocator_ind(j) == -1)
+            {
+                NoC->nodes_on_CRs_received(i,j) = 0;
+            }
+            else
+            {
+                NoC->nodes_on_CRs_received(i, j) = gather_data_receive[int(allocator_ind(j)) * NoC->N_CRs + i];
+            }
         }
     }
 }

@@ -86,14 +86,16 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     int step = 0;
     while (true)
     {
+#ifdef __x86_64__
         cout << "Step: " << step << ", ";
+#endif
         if (NoC_MPI.world_rank == 0)
         {
             Engine.run(NoC.N_CRs);
         }
         else // computer resource nodes
         {
-            NoC.App_Voter(NoC_MPI.world_rank, step); // TODO voter, right now it's just pick the first one
+            NoC.App_Voter(NoC_MPI.world_rank, step);
 
 #ifdef __x86_64__ // print the simulation
             cout << "My Rank: " << NoC_MPI.world_rank;
@@ -102,31 +104,33 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
 //            cout << ", My Sensor: " << Engine.sensor_data;
             cout << ", My App: " << NoC.app_to_run << ", ";
 #endif
+            int fault_internal_status = NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
 
-            if(NoC.app_to_run == -1) // dead
+            if(NoC.app_to_run == -1 || fault_internal_status == 1) // dead
             {
                 APP_LED_OFF();
                 NoC.Clear_State();
+                NoC.node_to_run = 0; // The dead won't remember anything
             }
             else
             {
-                if(!NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank)) // read switch or text file
-                {
-                    app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine,
-                                            NoC.app_color[NoC.app_to_run]);
+                app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine, NoC.app_color[NoC.app_to_run]);
 
-                    if (!(NoC.app_to_run >= NoC.allocator_app_ind &&
-                          NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
-                    {
-                        NoC.Clear_State(); // not the allocator
-                    }
+                if(!(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
+                {
+                    NoC.Clear_State(); // not the allocator
                 }
             }
+
+//            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
         }
 
         NoC_MPI.run(&NoC, &Engine); // Communication Scheme
         step++;
+
+#ifdef __x86_64__ // only put the delay on the simulation
         delay(1000);
+#endif
     }
 
     while (true){delay(1);}; // does nothing, but smiling at you :)
