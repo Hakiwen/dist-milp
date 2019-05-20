@@ -121,8 +121,6 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
                     NoC.Clear_State(); // not the allocator
                 }
             }
-
-//            NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank); // read switch or text file
         }
 
         NoC_MPI.run(&NoC, &Engine); // Communication Scheme

@@ -22,7 +22,7 @@
 #define N_APP_TO_VOTE 3
 
 #define MAX_VOTER_DELAY 1000
-#define MAX_WRITE_DELAY 100
+#define MAX_WRITE_DELAY 10
 
 class ENGINE
 {
