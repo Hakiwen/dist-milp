@@ -21,8 +21,8 @@ public:
 
     int N_CRs;
     int N_paths;
-    int *N_nodes_apps;
-    int *N_links_apps;
+    int *N_nodes_apps; // # of nodes corresponds to a given app
+    int *N_links_apps; // # of links corresponds to a given app
     int N_nodes;
     int N_links;
 

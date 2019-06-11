@@ -215,7 +215,7 @@ void ENGINE::write_data()
 
 void ENGINE::run(int N_CRs)
 {
-    std::cout << "I'm the jet engine!" << std::endl;
+//    std::cout << "I'm the jet engine!" << std::endl;
     #ifndef __x86_64__
         this->read_sensor();
         this->voter(N_CRs);

@@ -23,5 +23,5 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
         }
         NoC->Update_State();
     }
-    NoC->Disp();
+//    NoC->Disp();
 }

@@ -101,7 +101,7 @@ void NOC_MPI::Gather_PWM(ENGINE *Engine)
 
     if(this->world_rank == 0)
     {
-        for (int i = 1; i < this->world_size - 1; i++)
+        for (int i = 0; i < this->world_size - 1; i++)
         {
             Engine->PWM_in[i] = gather_data_receive[i + 1];
         }

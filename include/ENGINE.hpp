@@ -18,10 +18,10 @@
 #define MAX_PWM 200
 #define OPER_PWM 120
 
-#define TOLERANCE 5
+#define TOLERANCE 1
 #define N_APP_TO_VOTE 3
 
-#define MAX_VOTER_DELAY 1000
+#define MAX_VOTER_DELAY 0 // 1000
 #define MAX_WRITE_DELAY 10
 
 class ENGINE
