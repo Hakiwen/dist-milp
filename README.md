@@ -1,7 +1,7 @@
 # Decentralized Safety-Critical Task Allocation
 
 To execute you need three libraries: Eigen3, MPICH3, and GLPK.
-I will write the details later.
+I will write the details later. TK
 
 ## Getting Started
 
