@@ -8,6 +8,7 @@
 #include <iostream>
 #include <csignal>
 #include <fstream>
+#include <unistd.h>
 
 #include <wiringPi.h>
 #include <Eigen/Dense>

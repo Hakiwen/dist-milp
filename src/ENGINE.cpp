@@ -29,7 +29,9 @@ ENGINE::ENGINE(int N_CRs)
     this->EngineSetup = 0;
     this->SensorSetup = 0;
 
+#ifndef __x86_64__
     this->ch = NULL;
+#endif
 
     this->fault_detect = 0;
     this->fault_from_voter = 0;
@@ -49,6 +51,7 @@ void ENGINE::read_sensor()
     {
         this->SensorSetup = 1;
 
+#ifndef __x86_64__
         PhidgetVoltageRatioInput_create(&this->ch);
         AskForDeviceParameters(&this->channelInfo, (PhidgetHandle *)&this->ch);
         Phidget_setDeviceSerialNumber((PhidgetHandle)this->ch, this->channelInfo.deviceSerialNumber);
@@ -62,6 +65,8 @@ void ENGINE::read_sensor()
         PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(ch, onVoltageRatioChangeHandler, this);
 
         Phidget_openWaitForAttachment((PhidgetHandle)ch, 5000);
+#endif
+
     }
 
 //    std::cout << "sensor: " << this->sensor_data << std::endl;
@@ -72,6 +77,8 @@ void ENGINE::pwm_send()
     if(!this->EngineSetup)
     {
         this->EngineSetup = 1;
+
+#ifndef __x86_64__
         this->PWM_PIN = 1;
         pinMode(this->PWM_PIN, PWM_OUTPUT);
         pwmSetMode (PWM_MODE_MS);
@@ -81,6 +88,8 @@ void ENGINE::pwm_send()
 //        delay(10000);
         pwmWrite(this->PWM_PIN, 100);
         delay(5000); // uncommemt this when using the engine
+#endif
+
     }
 
     if(this->PWM_to_Engine < MIN_PWM)
@@ -93,7 +102,10 @@ void ENGINE::pwm_send()
     }
 
 //    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
+
+#ifndef __x86_64__
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
+#endif
 }
 
 void ENGINE::voter(int N_CRs)
@@ -226,6 +238,8 @@ void ENGINE::run(int N_CRs)
 
 /** Phidget Functions **/
 
+#ifndef __x86_64__
+
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx)
 {
     Phidget_ChannelSubclass channelSubclass;
@@ -280,3 +294,5 @@ static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph,
     ENGINE *Engine = (ENGINE *)ctx;
     Engine->sensor_data = voltageRatio*1000000.0; // TODO Calibrate Sensor
 }
+
+#endif

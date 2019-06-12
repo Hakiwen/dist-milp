@@ -11,8 +11,11 @@
 #include <cstring>
 
 #include <wiringPi.h>
+
+#ifndef __x86_64__
 #include <phidget22.h>
 #include "PhidgetHelperFunctions.hpp" // Manually Modified
+#endif
 
 #define MIN_PWM 100
 #define MAX_PWM 200
@@ -46,8 +49,10 @@ public:
     int voter_delay;
     int write_delay;
 
+#ifndef __x86_64__
     PhidgetVoltageRatioInputHandle ch;
     ChannelInfo channelInfo;
+#endif
 
     ENGINE(int N_nodes);
 
@@ -63,8 +68,10 @@ public:
     void run(int N_CRs);
 };
 
+#ifndef __x86_64__
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);
 static void CCONV onDetachHandler(PhidgetHandle ph, void *ctx);
 static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph, void *ctx, double voltageRatio);
+#endif
 
 #endif //DIST_MILP_ENGINE_HPP

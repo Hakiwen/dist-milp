@@ -26,15 +26,20 @@ set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m T
 
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB APPS "apps/*.cpp")
-file(GLOB LIBS "lib/*.cpp")
+
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+else()
+	file(GLOB LIBS "lib/*.cpp")
+endif ()
+
+list(REMOVE_ITEM src "CPLEX_SOLVER.cpp" "NOC_CPLEX.cpp") # not using CPLEX for now
 
 add_definitions(-DIL_STD)
 add_executable(${PROJECT_NAME} ${SOURCES} ${APPS} ${LIBS})
+
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
-	target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt -lglpk -lphidget22)
+#	target_link_libraries(${PROJECT_NAME} ${CPLEX_LINK_LIBS} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} libpugixml.a ${wiringPi_LIB} -lrt -lcrypt -lglpk -lphidget22)
+	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} -lglpk)
 else()
 	target_link_libraries(${PROJECT_NAME} ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS} ${wiringPi_LIB} -lrt -lcrypt -lglpk -lphidget22)
 endif ()
-
-#add_executable(get_test_cut "src/wrtnode.c")
-#target_link_libraries(get_test_cut ${CPLEX_LINK_LIBS})

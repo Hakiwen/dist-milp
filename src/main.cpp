@@ -127,7 +127,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         step++;
 
 #ifdef __x86_64__ // only put the delay on the simulation
-        delay(1000);
+//        delay(1000);
+        usleep(1000000);
 #endif
     }
 

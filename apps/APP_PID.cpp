@@ -45,10 +45,14 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
 
 void APP_PWM_OFF()
 {
+
+#ifndef __x86_64__
     int PWM_PIN = 1;
     pinMode(PWM_PIN, PWM_OUTPUT);
     pwmSetMode (PWM_MODE_MS);
     pwmSetRange (2000);
     pwmSetClock (192);
     pwmWrite(PWM_PIN, 100);
+#endif
+
 }
