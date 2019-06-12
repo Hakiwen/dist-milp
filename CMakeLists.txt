@@ -10,19 +10,24 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(MPI REQUIRED)
-find_library(wiringPi_LIB wiringPi)
+
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+else()
+	find_library(wiringPi_LIB wiringPi)
+endif ()
 
 include_directories(include
 			apps
 			lib
 		    ${EIGEN3_INCLUDE_DIRS}
 			${MPI_INCLUDE_PATH}
-		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
-		    "/opt/ibm/ILOG/CPLEX_Studio129/concert/include")
+#		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
+#		    "/opt/ibm/ILOG/CPLEX_Studio129/concert/include"
+			)
 
-link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pic"
-		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/lib/x86-64_linux/static_pic")
-set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
+#link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pic"
+#		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/lib/x86-64_linux/static_pic")
+#set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB APPS "apps/*.cpp")
