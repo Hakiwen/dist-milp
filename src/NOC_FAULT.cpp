@@ -44,6 +44,7 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
                 NoC->N_Faults += 1;
             }
         }
+        NoC->D = NoC->CreateDegreeMatrixSquareTopology(); // update a Degree Matrix
 
         if(NoC->N_Faults == NoC->prev_N_Faults)
         {

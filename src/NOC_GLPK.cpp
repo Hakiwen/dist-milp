@@ -113,7 +113,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-        if(NoC->Fault_CRs[i-1] == 0)
+        if(NoC->Fault_CRs[i-1] == 0 && NoC->D(i-1, i-1) > 0)
         {
             glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 1.0);
         }
@@ -444,7 +444,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 
     // Communication Constraint
     int allocator_node_ind = 0;
-    NoC->D = NoC->CreateDegreeMatrixSquareTopology();
     std::cout << NoC->D << std::endl;
     for (int i = 0; i < NoC->allocator_app_ind; i++)
     {
