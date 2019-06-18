@@ -18,6 +18,9 @@ int GLPK_SOLVER::solve()
     glp_iocp parm;
     glp_init_iocp(&parm);
     parm.presolve = GLP_ON;
+#ifndef __x86_64__
+    parm.msg_lev = GLP_MSG_OFF;
+#endif
     int status_relax = glp_intopt(model, &parm);
     int status_MIP = glp_mip_status(model);
 

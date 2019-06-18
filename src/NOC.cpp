@@ -64,7 +64,7 @@ void NOC::CreateTopology(const char *topo)
     // TODO Other topologies
     // Only Square Topology for NOW!
     this->CreateSquareTopology();
-    this->CreateIncidentMatrices(topo);
+    this->CreateAuxMatrices(topo);
     this->CreateDecisionMatrices();
 }
 
@@ -93,7 +93,14 @@ void NOC::CreateSquareTopology()
     }
 }
 
-void NOC::CreateIncidentMatrices(const char* topo){
+void NOC::CreateAuxMatrices(const char* topo){
+    /* construct Degree Matrix */
+    this->D = this->CreateDegreeMatrixSquareTopology();
+    if(VERBOSE)
+    {
+        std::cout << "D: \n" << D << std::endl;
+    }
+
     /* construct G matrix */
     this->G = this->CreateIncidentMatrixSquareTopology(this->N_Row_CRs, this->N_Col_CRs);
     if(VERBOSE)
@@ -168,7 +175,9 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
                 }
             }
         }
-        if(N_Col > 1) {
+
+        if(N_Col > 1)
+        {
             if ((i + 1) % N_Col == 1) // first column
             {
                 if (path_ind[LEFT_IND] > 0 && path_ind[LEFT_IND] <= N_joint)
@@ -185,6 +194,66 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
             }
         }
     }
+    return M;
+}
+
+Eigen::MatrixXi NOC::CreateDegreeMatrixSquareTopology()
+{
+    int Neighbor_NUM = 4; // UP, DOWN, LEFT, RIGHT
+    int neighbor_ind[Neighbor_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
+
+    Eigen::MatrixXi M = Eigen::MatrixXi::Zero(this->N_CRs, this->N_CRs);
+
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        neighbor_ind[LEFT_IND] = (i+1) - 1;
+        neighbor_ind[RIGHT_IND] = (i+1) + 1;
+        neighbor_ind[UP_IND] = (i+1) - this->N_Col_CRs;
+        neighbor_ind[DOWN_IND] = (i+1) + this->N_Col_CRs;
+
+        for(int j = 0; j < Neighbor_NUM; j++)
+        {
+            if(neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
+            {
+                if(this->Fault_CRs[neighbor_ind[j] - 1] == 0)
+                {
+                    M(i, i) += 1;
+                }
+            }
+        }
+
+        if(this->N_Col_CRs > 1)
+        {
+            if ((i + 1) % this->N_Col_CRs == 1) // first column
+            {
+                if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
+                {
+                    M(i,i) -= 1;
+                    if(this->Fault_CRs[neighbor_ind[LEFT_IND] - 1] == 1)
+                    {
+                        M(i, i) += 1;
+                    }
+                }
+            }
+            else if ((i + 1) % this->N_Col_CRs == 0) // last column
+            {
+                if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
+                {
+                    M(i,i) -= 1;
+                    if(this->Fault_CRs[neighbor_ind[RIGHT_IND] - 1] == 1)
+                    {
+                        M(i, i) += 1;
+                    }
+                }
+            }
+        }
+
+        if(this->Fault_CRs[i] == 1)
+        {
+            M(i,i) = -1;
+        }
+    }
+
     return M;
 }
 

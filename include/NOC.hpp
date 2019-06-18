@@ -27,9 +27,9 @@ public:
     int N_nodes;
     int N_links;
 
-    Eigen::MatrixXi G;
-    Eigen::MatrixXi A;
-    Eigen::MatrixXi S;
+    Eigen::MatrixXi G; // incident matrix of the network
+    Eigen::MatrixXi A; // incident matrix of the application
+    Eigen::MatrixXi D; // degree matrix of the network
 
     Eigen::MatrixXi X_CRs_nodes;
     Eigen::MatrixXi X_paths_links;
@@ -64,8 +64,9 @@ public:
 
     void CreateTopology(const char* topo);
     void CreateSquareTopology();
-    void CreateIncidentMatrices(const char* topo);
+    void CreateAuxMatrices(const char* topo);
     Eigen::MatrixXi CreateIncidentMatrixSquareTopology(int N_Row, int N_Col);
+    Eigen::MatrixXi CreateDegreeMatrixSquareTopology();
     void CreateDecisionMatrices();
 
     int get_app_from_node(int node);

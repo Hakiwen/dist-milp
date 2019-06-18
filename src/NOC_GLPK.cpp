@@ -444,46 +444,74 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 
     // Communication Constraint
     int allocator_node_ind = 0;
+    NoC->D = NoC->CreateDegreeMatrixSquareTopology();
+    std::cout << NoC->D << std::endl;
     for (int i = 0; i < NoC->allocator_app_ind; i++)
     {
         allocator_node_ind += NoC->N_nodes_apps[i];
     }
     for (int k = 0; k < NoC->allocator_app_num; k++)
     {
-        for (int i = 1; i <= NoC->N_CRs; i++)
+        for (int i = 1; i <= NoC->N_CRs; i++) // sum of all paths passing through i^th CR
         {
-            for (int j = 1; j <= NoC->N_CRs; j++)
+            if(NoC->D(i-1, i-1) > 0)
             {
-                NoC->con_size += 1;
-                std::string name = "Comm_from_" + std::to_string(i - 1) + "_to_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
-                glp_add_rows(this->model, 1);
-                glp_set_row_name(this->model, NoC->con_size, name.c_str());
-                if (i == j)
+                for (int j = 1; j <= NoC->N_CRs; j++) // when j^th CR being a sink CR
                 {
-                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
-                }
-                else
-                {
-                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
-                }
+                    if(NoC->D(j-1, j-1) > 0) // sink has to be alive; otherwise, don't draw a path
+                    {
+                        NoC->con_size += 1;
+                        std::string name = "Comm_from_" + std::to_string(i - 1) + "_to_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
+                        glp_add_rows(this->model, 1);
+                        glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-                for (int l = 1; l <= NoC->N_paths; l++)
+                        if (i == j)
+                        {
+                            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
+                        }
+                        else
+                        {
+                            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
+                        }
+
+                        for (int l = 1; l <= NoC->N_paths; l++)
+                        {
+                            ind_count += 1;
+                            ia[ind_count] = NoC->con_size;
+                            ja[ind_count] =
+                                    j + NoC->N_CRs * (l - 1) + NoC->N_paths * NoC->N_CRs * k +
+                                    NoC->N_CRs * NoC->N_nodes +
+                                    NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+                            ar[ind_count] = NoC->G(i - 1, l - 1);
+                        }
+
+                        ind_count += 1;
+                        ia[ind_count] = NoC->con_size;
+                        ja[ind_count] = NoC->N_nodes * (i - 1) + (allocator_node_ind + k);
+                        ar[ind_count] = 1;
+                    }
+                }
+            }
+            else // dead CRs or having no neighbors
+            {
+                for (int j = 1; j <= NoC->N_paths; j++) // not drawing a path to a faulty CR
                 {
+                    NoC->con_size += 1;
+                    std::string name = "No_Comm_passing_through_" + std::to_string(i - 1) + "_from_path_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
+                    glp_add_rows(this->model, 1);
+                    glp_set_row_name(this->model, NoC->con_size, name.c_str());
+                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
+
                     ind_count += 1;
                     ia[ind_count] = NoC->con_size;
-                    ja[ind_count] = j + NoC->N_CRs * (l - 1) + NoC->N_paths*NoC->N_CRs * k + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links + NoC->N_apps + NoC->N_nodes;
-                    ar[ind_count] = NoC->G(i - 1, l - 1);
+                    ja[ind_count] = i + NoC->N_CRs * (j - 1) + NoC->N_paths * NoC->N_CRs * k + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+                    ar[ind_count] = 1;
                 }
-
-                ind_count += 1;
-                ia[ind_count] = NoC->con_size;
-                ja[ind_count] = NoC->N_nodes * (i - 1) + (allocator_node_ind + k);
-                ar[ind_count] = 1;
             }
         }
     }
 
-    std::cout << ind_count << std::endl;
+//    std::cout << ind_count << std::endl;
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
 

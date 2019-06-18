@@ -2,14 +2,14 @@
 #include "MY_INCLUDE.hpp"
 #include "APP_INCLUDE.hpp"
 
-using namespace std;
-
+#ifndef __x86_64__
 void sighandler(int signal)
 {
     APP_LED_OFF();
     APP_PWM_OFF();
     exit(1);
 }
+#endif
 
 int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
 {
@@ -58,6 +58,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     NOC_GLPK NoC_GLPK = NOC_GLPK(LP_file, Sol_file); // NoC to GLPK Object
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 
+#ifdef USE_MPI
     ENGINE Engine = ENGINE(NoC.N_CRs); // Engine controller being the 1st priority app
 
 #ifndef __x86_64__
@@ -67,7 +68,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     wiringPiSetup();
 #endif
 
-    if (NoC_MPI.world_rank == 0) // first allocation
+    if (NoC_MPI.world_rank == 1) // first allocation
     {
         NoC_GLPK.write_LP(&NoC);
         prob_GLPK.solve(&NoC_GLPK);
@@ -89,7 +90,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     while (true)
     {
 #ifdef __x86_64__
-        cout << "Step: " << step << ", ";
+        std::cout << "Step: " << step << ", ";
 #endif
         if (NoC_MPI.world_rank == 0)
         {
@@ -100,11 +101,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             NoC.App_Voter(NoC_MPI.world_rank, step);
 
 #ifdef __x86_64__ // print the simulation
-            cout << "My Rank: " << NoC_MPI.world_rank;
-//            cout << ", My Fault: " << NoC.fault_internal_status;
-            cout << ", My Node: " << NoC.node_to_run;
-//            cout << ", My Sensor: " << Engine.sensor_data;
-            cout << ", My App: " << NoC.app_to_run << ", ";
+            std::cout << "My Rank: " << NoC_MPI.world_rank;
+//            std::cout << ", My Fault: " << NoC.fault_internal_status;
+            std::cout << ", My Node: " << NoC.node_to_run;
+//            std::cout << ", My Sensor: " << Engine.sensor_data;
+            std::cout << ", My App: " << NoC.app_to_run << ", ";
 #endif
             int fault_internal_status = NoC_Fault.Fault_Detection(&NoC, NoC_MPI.world_rank);
 
@@ -132,6 +133,28 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         usleep(1000000);
 #endif
     }
+#else
+    NoC.app_to_run = NoC.allocator_app_ind; // always runs the allocator for debugging optimization problem
+    while (true)
+    {
+        if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
+        {
+            NoC_GLPK.write_LP(&NoC);
+            if(prob_GLPK.solve(&NoC_GLPK))
+            {
+                NoC_GLPK.read_Sol(&NoC);
+                NoC.solver_status = 1;
+            }
+            else
+            {
+                std::cout << "Infeasible Solution" << std::endl;
+                NoC.solver_status = 0;
+            }
+            NoC.Update_State();
+        }
+        NoC.Disp();
+    }
+#endif
 
     while (true){usleep(1000000);} // does nothing, but smiling at you :)
 
