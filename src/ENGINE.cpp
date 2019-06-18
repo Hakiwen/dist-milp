@@ -227,13 +227,15 @@ void ENGINE::write_data()
 
 void ENGINE::run(int N_CRs)
 {
-//    std::cout << "I'm the jet engine!" << std::endl;
-    #ifndef __x86_64__
+
+#ifdef __x86_64__
+    std::cout << "I'm the jet engine!" << std::endl;
+#else
         this->read_sensor();
         this->voter(N_CRs);
         this->pwm_send();
         this->write_data();
-    #endif
+#endif
 }
 
 /** Phidget Functions **/

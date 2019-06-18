@@ -54,6 +54,7 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
             return 1;
         }
     }
+    return 0;
 }
 
 int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)

@@ -67,7 +67,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
     wiringPiSetup();
 #endif
 
-    if (NoC_MPI.world_rank == 1) // first allocation
+    if (NoC_MPI.world_rank == 0) // first allocation
     {
         NoC_GLPK.write_LP(&NoC);
         prob_GLPK.solve(&NoC_GLPK);
@@ -76,6 +76,8 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         NoC.Disp();
     }
     NoC_MPI.run(&NoC, &Engine);
+
+    while (true){usleep(1000000);}
 
     /** End of Initialization **/
 
@@ -127,12 +129,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         step++;
 
 #ifdef __x86_64__ // only put the delay on the simulation
-//        delay(1000);
         usleep(1000000);
 #endif
     }
 
-    while (true){delay(1);}; // does nothing, but smiling at you :)
+    while (true){usleep(1000000);} // does nothing, but smiling at you :)
 
     return 0;
 

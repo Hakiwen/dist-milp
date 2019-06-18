@@ -46,7 +46,6 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
         this->Fault_External_CRs[i] = 0;
     }
     this->fault_internal_status = 0; // 0 no fault, 1 has fault (for each node)
-    this->fault_external_status = 0;
 
     this->solver_status = 1; // 1 feasible, 0 infeasible
 
@@ -131,6 +130,9 @@ void NOC::CreateIncidentMatrices(const char* topo){
 
 Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
 {
+    int PATH_NUM = 4; // UP, DOWN, LEFT, RIGHT
+    int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
+
     int N_elements = N_Row * N_Col;
     int N_joint = (N_Col - 1)*N_Row + (N_Row - 1)*N_Col;
     Eigen::MatrixXi M(N_elements, N_joint);
@@ -138,8 +140,6 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
     for (int i = 0; i < N_elements; i++)
     {
         int current_row = int(i / N_Col);
-        int PATH_NUM = 4; // UP, DOWN, LEFT, RIGHT
-        int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
         path_ind[UP_IND] = (i+1) - N_Col + (N_Col - 1)*current_row;
         path_ind[DOWN_IND] = (i+1) + (N_Col - 1)*(current_row + 1);
         path_ind[LEFT_IND] = (i+1) - N_Col + (N_Col - 1)*(current_row + 1);
@@ -158,7 +158,14 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
         {
             if(path_ind[j] > 0 && path_ind[j] <= N_joint)
             {
-                M(i, path_ind[j] - 1) = 1;
+                if (j == UP_IND || j == LEFT_IND)
+                {
+                    M(i, path_ind[j] - 1) = 1;
+                }
+                else if (j == DOWN_IND || j == RIGHT_IND)
+                {
+                    M(i, path_ind[j] - 1) = -1;
+                }
             }
         }
         if(N_Col > 1) {
@@ -187,6 +194,12 @@ void NOC::CreateDecisionMatrices()
     this->X_paths_links.resize(this->N_paths, this->N_links);
     this->R_apps.resize(this->N_apps, 1);
     this->M_apps.resize(this->N_nodes, 1);
+    Eigen::MatrixXi X_comm_paths_i;
+    X_comm_paths_i.resize(this->N_paths, this->N_CRs);
+    for (int i = 0; i < this->allocator_app_num; i++)
+    {
+        this->X_comm_paths.push_back(X_comm_paths_i);
+    }
 
     this->X_CRs_nodes_old.resize(this->N_CRs, this->N_nodes);
     for (int i = 0; i < this->N_apps; i++)

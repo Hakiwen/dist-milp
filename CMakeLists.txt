@@ -37,7 +37,7 @@ else()
 	file(GLOB LIBS "lib/*.cpp")
 endif ()
 
-list(REMOVE_ITEM src "CPLEX_SOLVER.cpp" "NOC_CPLEX.cpp") # not using CPLEX for now
+list(REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/CPLEX_SOLVER.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/NOC_CPLEX.cpp) # not using CPLEX for now
 
 add_definitions(-DIL_STD)
 add_executable(${PROJECT_NAME} ${SOURCES} ${APPS} ${LIBS})

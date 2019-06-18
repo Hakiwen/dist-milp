@@ -80,10 +80,27 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_set_obj_coef(model, NoC->var_size, -1.0);
     }
 
+    for(int k = 0; k < NoC->allocator_app_num; k++)
+    {
+        for (int i = 0; i < NoC->N_paths; i++)
+        {
+            for (int j = 0; j < NoC->N_CRs; j++)
+            {
+                NoC->var_size += 1;
+                std::string name = "X_comm_path_" + std::to_string(i) + "_CR_" + std::to_string(j) + "_alloc_" + std::to_string(k);
+                glp_add_cols(model, 1);
+                glp_set_col_name(model, NoC->var_size, name.c_str());
+                glp_set_col_kind(model, NoC->var_size, GLP_IV);
+                glp_set_obj_coef(model, NoC->var_size, 0.0);
+                glp_set_col_bnds(model, NoC->var_size, GLP_DB, -1.0, 1.0);
+            }
+        }
+    }
+
     /*
      * Create Constraints
      */
-    int max_size = 9999+1;
+    int max_size = 99999+1;
     int ia[max_size], ja[max_size];
     int ind_count = 0;
     double ar[max_size];
@@ -191,14 +208,14 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 ind_count += 1;
                 ia[ind_count] = NoC->con_size;
                 ja[ind_count] = k + NoC->N_nodes*(i-1);
-                ar[ind_count] = NoC->A(k-1,j-1);
+                ar[ind_count] = abs(NoC->A(k-1,j-1));
             }
             for (int k = 1; k <= NoC->N_paths; k++)
             {
                 ind_count += 1;
                 ia[ind_count] = NoC->con_size;
                 ja[ind_count] = j + NoC->N_links*(k-1) + NoC->N_CRs*NoC->N_nodes;
-                ar[ind_count] = -NoC->G(i-1,k-1);
+                ar[ind_count] = -abs(NoC->G(i-1,k-1));
             }
         }
     }
@@ -425,7 +442,48 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 //        }
 //    }
 
-//    std::cout << ind_count << std::endl;
+    // Communication Constraint
+    int allocator_node_ind = 0;
+    for (int i = 0; i < NoC->allocator_app_ind; i++)
+    {
+        allocator_node_ind += NoC->N_nodes_apps[i];
+    }
+    for (int k = 0; k < NoC->allocator_app_num; k++)
+    {
+        for (int i = 1; i <= NoC->N_CRs; i++)
+        {
+            for (int j = 1; j <= NoC->N_CRs; j++)
+            {
+                NoC->con_size += 1;
+                std::string name = "Comm_from_" + std::to_string(i - 1) + "_to_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
+                glp_add_rows(this->model, 1);
+                glp_set_row_name(this->model, NoC->con_size, name.c_str());
+                if (i == j)
+                {
+                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
+                }
+                else
+                {
+                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
+                }
+
+                for (int l = 1; l <= NoC->N_paths; l++)
+                {
+                    ind_count += 1;
+                    ia[ind_count] = NoC->con_size;
+                    ja[ind_count] = j + NoC->N_CRs * (l - 1) + NoC->N_paths*NoC->N_CRs * k + NoC->N_CRs*NoC->N_nodes + NoC->N_paths*NoC->N_links + NoC->N_apps + NoC->N_nodes;
+                    ar[ind_count] = NoC->G(i - 1, l - 1);
+                }
+
+                ind_count += 1;
+                ia[ind_count] = NoC->con_size;
+                ja[ind_count] = NoC->N_nodes * (i - 1) + (allocator_node_ind + k);
+                ar[ind_count] = 1;
+            }
+        }
+    }
+
+    std::cout << ind_count << std::endl;
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
 

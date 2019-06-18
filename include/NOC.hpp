@@ -7,6 +7,7 @@
 
 #include "MY_MACROS.hpp"
 #include <iostream>
+#include <vector>
 #include <Eigen/Dense>
 
 #define VERBOSE 0
@@ -28,11 +29,13 @@ public:
 
     Eigen::MatrixXi G;
     Eigen::MatrixXi A;
+    Eigen::MatrixXi S;
 
     Eigen::MatrixXi X_CRs_nodes;
     Eigen::MatrixXi X_paths_links;
     Eigen::MatrixXi R_apps;
     Eigen::MatrixXi M_apps;
+    std::vector<Eigen::MatrixXi> X_comm_paths;
     Eigen::MatrixXi X_CRs_nodes_old;
 
     int *nodes_on_CRs; // node to run on each CR, solver sends
@@ -47,7 +50,6 @@ public:
     int *Fault_Internal_CRs;
     int fault_internal_status; // faulty status of each node, each node sends
     int *Fault_External_CRs;
-    int fault_external_status;
     int solver_status;
 
     int obj_val;
