@@ -22,6 +22,7 @@ void NOC_GLPK::write_LP(NOC *NoC)
 
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
+    NoC->CreateTopologyMatrixSquare(); // update a Degree Matrix and Adjacency Matrix
     glp_set_obj_dir(this->model, GLP_MAX);
 
     /*
@@ -54,7 +55,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
-    int coeff = 0;
+    int *coeff = new int[NoC->N_apps];
     glp_add_cols(model, NoC->N_apps);
     NoC->var_size += NoC->N_apps;
     for (int i = NoC->N_apps; i > 0; i--)
@@ -62,12 +63,17 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "R_apps_" + std::to_string(i-1);
         glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
         glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
-        coeff += NoC->N_nodes + 1;
-        for (int j = NoC->N_apps; j >= i; j--)
+        coeff[i] = NoC->N_nodes + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
+        for (int j = i+1; j <= NoC->N_apps; j++)
         {
-            coeff += NoC->N_nodes_apps[j-1];
+            coeff[i] += coeff[j];
         }
-        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff);
+//        coeff += NoC->N_nodes + 1;
+//        for (int j = NoC->N_apps; j >= i; j--)
+//        {
+//            coeff += NoC->N_nodes_apps[j-1];
+//        }
+        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff[i]);
     }
 
     for (int i = 0; i < NoC->N_nodes; i++)
@@ -93,6 +99,23 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 glp_set_col_kind(model, NoC->var_size, GLP_IV);
                 glp_set_obj_coef(model, NoC->var_size, 0.0);
                 glp_set_col_bnds(model, NoC->var_size, GLP_DB, -1.0, 1.0);
+            }
+        }
+    }
+
+    for(int k = 0; k < NoC->allocator_app_num; k++)
+    {
+        for (int i = 0; i < NoC->N_paths; i++)
+        {
+            for (int j = 0; j < NoC->N_CRs; j++)
+            {
+                NoC->var_size += 1;
+                std::string name = "Dummy_X_comm_path_" + std::to_string(i) + "_CR_" + std::to_string(j) + "_alloc_" + std::to_string(k);
+                glp_add_cols(model, 1);
+                glp_set_col_name(model, NoC->var_size, name.c_str());
+                glp_set_col_kind(model, NoC->var_size, GLP_IV);
+                glp_set_obj_coef(model, NoC->var_size, -1.0);
+                glp_set_col_bnds(model, NoC->var_size, GLP_LO, 0.0, 0.0);
             }
         }
     }
@@ -208,7 +231,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 ind_count += 1;
                 ia[ind_count] = NoC->con_size;
                 ja[ind_count] = k + NoC->N_nodes*(i-1);
-                ar[ind_count] = abs(NoC->A(k-1,j-1));
+                ar[ind_count] = abs(NoC->H(k-1,j-1));
             }
             for (int k = 1; k <= NoC->N_paths; k++)
             {
@@ -444,7 +467,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 
     // Communication Constraint
     int allocator_node_ind = 0;
-    std::cout << NoC->D << std::endl;
     for (int i = 0; i < NoC->allocator_app_ind; i++)
     {
         allocator_node_ind += NoC->N_nodes_apps[i];
@@ -510,6 +532,45 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
+    // Dummy Constraints for Shortest Path
+    for (int i = 1; i <= NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num; i++)
+    {
+        NoC->con_size += 1;
+        std::string name = "Positive_Dummy" + std::to_string(i - 1);
+        glp_add_rows(this->model, 1);
+        glp_set_row_name(this->model, NoC->con_size, name.c_str());
+        glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 0.0);
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = i + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+        ar[ind_count] = 1;
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = i + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+        ar[ind_count] = -1;
+    }
+
+    for (int i = 1; i <= NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num; i++)
+    {
+        NoC->con_size += 1;
+        std::string name = "Negative_Dummy" + std::to_string(i - 1);
+        glp_add_rows(this->model, 1);
+        glp_set_row_name(this->model, NoC->con_size, name.c_str());
+        glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 0.0);
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = i + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+        ar[ind_count] = -1;
+
+        ind_count += 1;
+        ia[ind_count] = NoC->con_size;
+        ja[ind_count] = i + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+        ar[ind_count] = -1;
+    }
+
 //    std::cout << ind_count << std::endl;
     glp_load_matrix(this->model, ind_count, ia, ja, ar);
 }
@@ -552,6 +613,20 @@ void NOC_GLPK::read_Sol(NOC *NoC)
     {
         NoC->M_apps(i) = (int)glp_mip_col_val(this->model, k);
         k++;
+    }
+
+    for (int l = 0; l < NoC->allocator_app_num; l++)
+    {
+        Eigen::MatrixXi X_comm_paths_temp(NoC->N_paths, NoC->N_CRs);
+        for (int i = 0; i < NoC->N_paths; i++)
+        {
+            for (int j = 0; j < NoC->N_CRs; j++)
+            {
+                X_comm_paths_temp(i,j) = (int)glp_mip_col_val(this->model, k);
+                k++;
+            }
+        }
+        NoC->X_comm_paths[l] = X_comm_paths_temp;
     }
 
     DeleteModel(NoC);

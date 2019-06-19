@@ -94,31 +94,32 @@ void NOC::CreateSquareTopology()
 }
 
 void NOC::CreateAuxMatrices(const char* topo){
-    /* construct Degree Matrix */
-    this->D = this->CreateDegreeMatrixSquareTopology();
+    /* construct Degree Matrix and Adjacency*/
+    this->CreateTopologyMatrixSquare();
     if(VERBOSE)
     {
-        std::cout << "D: \n" << D << std::endl;
+        std::cout << "D: \n" << this->D << std::endl;
+        std::cout << "A: \n" << this->A << std::endl;
     }
 
     /* construct G matrix */
     this->G = this->CreateIncidentMatrixSquareTopology(this->N_Row_CRs, this->N_Col_CRs);
     if(VERBOSE)
     {
-        std::cout << "G: \n" << G << std::endl;
+        std::cout << "G: \n" << this->G << std::endl;
     }
 
-    /* construct A matrix */
-    this->A.resize(this->N_nodes, this->N_links);
+    /* construct H matrix */
+    this->H.resize(this->N_nodes, this->N_links);
     int sum_N_Row_apps = 0, sum_N_Col_apps = 0;
     for (int k = 0; k < this->N_apps; k++)
     {
-        Eigen::MatrixXi A_apps = this->CreateIncidentMatrixSquareTopology(this->N_Row_apps[k], this->N_Col_apps[k]);
+        Eigen::MatrixXi H_apps = this->CreateIncidentMatrixSquareTopology(this->N_Row_apps[k], this->N_Col_apps[k]);
         for (int i = sum_N_Row_apps; i < sum_N_Row_apps + this->N_nodes_apps[k]; i++)
         {
             for (int j = sum_N_Col_apps; j < sum_N_Col_apps + this->N_links_apps[k]; j++)
             {
-                this->A(i,j) = A_apps(i-sum_N_Row_apps,j-sum_N_Col_apps);
+                this->H(i,j) = H_apps(i-sum_N_Row_apps,j-sum_N_Col_apps);
             }
         }
         sum_N_Row_apps += this->N_nodes_apps[k];
@@ -126,12 +127,12 @@ void NOC::CreateAuxMatrices(const char* topo){
 
         if(VERBOSE)
         {
-            std::cout << "A_apps " << k+1 << ": \n" << A_apps << std::endl;
+            std::cout << "H_apps " << k+1 << ": \n" << H_apps << std::endl;
         }
     }
     if(VERBOSE)
     {
-        std::cout << "A: \n" << this->A << std::endl;
+        std::cout << "H: \n" << this->H << std::endl;
     }
 }
 
@@ -197,64 +198,67 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
     return M;
 }
 
-Eigen::MatrixXi NOC::CreateDegreeMatrixSquareTopology()
+void NOC::CreateTopologyMatrixSquare()
 {
     int Neighbor_NUM = 4; // UP, DOWN, LEFT, RIGHT
     int neighbor_ind[Neighbor_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
 
-    Eigen::MatrixXi M = Eigen::MatrixXi::Zero(this->N_CRs, this->N_CRs);
+    this->D = Eigen::MatrixXi::Zero(this->N_CRs, this->N_CRs);
+    this->A = Eigen::MatrixXi::Identity(this->N_CRs, this->N_CRs); // allow connecting to itself
 
     for (int i = 0; i < this->N_CRs; i++)
     {
-        neighbor_ind[LEFT_IND] = (i+1) - 1;
-        neighbor_ind[RIGHT_IND] = (i+1) + 1;
-        neighbor_ind[UP_IND] = (i+1) - this->N_Col_CRs;
-        neighbor_ind[DOWN_IND] = (i+1) + this->N_Col_CRs;
+        neighbor_ind[LEFT_IND] = (i + 1) - 1;
+        neighbor_ind[RIGHT_IND] = (i + 1) + 1;
+        neighbor_ind[UP_IND] = (i + 1) - this->N_Col_CRs;
+        neighbor_ind[DOWN_IND] = (i + 1) + this->N_Col_CRs;
 
-        for(int j = 0; j < Neighbor_NUM; j++)
+        for (int j = 0; j < Neighbor_NUM; j++)
         {
-            if(neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
+            if (neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
             {
-                if(this->Fault_CRs[neighbor_ind[j] - 1] == 0)
+                if (this->Fault_CRs[neighbor_ind[j] - 1] == 0 && this->Fault_CRs[i] == 0)
                 {
-                    M(i, i) += 1;
+                    this->D(i, i) += 1;
+                    this->A(i, neighbor_ind[j] - 1) = 1;
                 }
             }
         }
 
-        if(this->N_Col_CRs > 1)
+        if (this->N_Col_CRs > 1)
         {
             if ((i + 1) % this->N_Col_CRs == 1) // first column
             {
                 if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
                 {
-                    M(i,i) -= 1;
-                    if(this->Fault_CRs[neighbor_ind[LEFT_IND] - 1] == 1)
+                    this->D(i, i) -= 1;
+                    if (this->Fault_CRs[neighbor_ind[LEFT_IND] - 1] == 1)
                     {
-                        M(i, i) += 1;
+                        this->D(i, i) += 1;
                     }
+                    this->A(i, neighbor_ind[LEFT_IND] - 1) = 0;
                 }
             }
             else if ((i + 1) % this->N_Col_CRs == 0) // last column
             {
                 if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
                 {
-                    M(i,i) -= 1;
-                    if(this->Fault_CRs[neighbor_ind[RIGHT_IND] - 1] == 1)
+                    this->D(i, i) -= 1;
+                    if (this->Fault_CRs[neighbor_ind[RIGHT_IND] - 1] == 1)
                     {
-                        M(i, i) += 1;
+                        this->D(i, i) += 1;
                     }
+                    this->A(i, neighbor_ind[RIGHT_IND] - 1) = 0;
                 }
             }
         }
 
-        if(this->Fault_CRs[i] == 1)
+        if (this->Fault_CRs[i] == 1)
         {
-            M(i,i) = -1;
+            this->D(i, i) = -1;
+            this->A(i, i) = -1;
         }
     }
-
-    return M;
 }
 
 void NOC::CreateDecisionMatrices()
@@ -475,4 +479,9 @@ void NOC::Disp()
 //    std::cout << "status: " << this->solver_status << std::endl;
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
+
+    for (int k = 0; k < this->allocator_app_num; k++)
+    {
+        std::cout << "path from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+    }
 }
