@@ -17,14 +17,12 @@ void NOC_GLPK::write_LP(NOC *NoC)
     glp_set_prob_name(this->model, "NoC");
 
     CreateModel(NoC);
-    std::cout << "a" << std::endl;
     glp_write_lp(this->model, NULL, this->LP_file);
 }
 
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
     NoC->CreateTopologyMatrixSquare(); // update a Degree Matrix and Adjacency Matrix
-    std::cout << "b" << std::endl;
     glp_set_obj_dir(this->model, GLP_MAX);
 
     /*
@@ -65,17 +63,17 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "R_apps_" + std::to_string(i-1);
         glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
         glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
-        coeff[i] = NoC->N_nodes + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
-        for (int j = i+1; j <= NoC->N_apps; j++)
+        coeff[i-1] = NoC->N_nodes + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
+        for (int j = i; j < NoC->N_apps; j++)
         {
-            coeff[i] += coeff[j];
+            coeff[i-1] += coeff[j];
         }
 //        coeff += NoC->N_nodes + 1;
 //        for (int j = NoC->N_apps; j >= i; j--)
 //        {
 //            coeff += NoC->N_nodes_apps[j-1];
 //        }
-        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff[i]);
+        glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff[i-1]);
     }
 
     for (int i = 0; i < NoC->N_nodes; i++)
@@ -122,18 +120,13 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }
 
-    std::cout << "c" << std::endl;
-
     /*
      * Create Constraints
      */
     int max_size = 99999+1;
-//    int max_size = 19999+1;
     int ia[max_size], ja[max_size];
     int ind_count = 0;
     double ar[max_size];
-
-    std::cout << "f" << std::endl;
 
     // Resource allocation and partitioning
     for (int i = 1; i <= NoC->N_CRs; i++)
@@ -222,28 +215,17 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         ar[ind_count] = -1;
     }
 
-    std::cout << "j" << std::endl;
-
-//    std::cout << "num_row: " << glp_get_num_rows(this->model);
-
-    size_t count;
-    glp_mem_usage(NULL, NULL, &count, NULL);
-    printf("%d memory block(s) are still allocated\n", count);
-
     // Conformity to the architecture
     for (int i = 1; i <= NoC->N_CRs; i++)
     {
         for (int j = 1; j <= NoC->N_links; j++)
         {
-//            std::cout << "l" << std::endl;
-            NoC->con_size += 1; //std::cout << "l1" << std::endl;
-            std::string name = "Conformity_" + std::to_string(i-1) + "_" + std::to_string(j-1); std::cout << "l2" << std::endl;
-//            std::cout << "num_row: " << glp_get_num_rows(this->model);
-            glp_add_rows(this->model, 1); std::cout << "l3" << std::endl;
-            glp_set_row_name(this->model, NoC->con_size, name.c_str()); //std::cout << "l4" << std::endl;
-            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0); //std::cout << "l5" << std::endl;
+            NoC->con_size += 1;
+            std::string name = "Conformity_" + std::to_string(i-1) + "_" + std::to_string(j-1);
+            glp_add_rows(this->model, 1);
+            glp_set_row_name(this->model, NoC->con_size, name.c_str());
+            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
 
-//            std::cout << "jH" << std::endl;
             for (int k = 1; k <= NoC->N_nodes; k++)
             {
                 ind_count += 1;
@@ -251,7 +233,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 ja[ind_count] = k + NoC->N_nodes*(i-1);
                 ar[ind_count] = abs(NoC->H(k-1,j-1));
             }
-//            std::cout << "jG" << std::endl;
+
             for (int k = 1; k <= NoC->N_paths; k++)
             {
                 ind_count += 1;
@@ -259,11 +241,8 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 ja[ind_count] = j + NoC->N_links*(k-1) + NoC->N_CRs*NoC->N_nodes;
                 ar[ind_count] = -abs(NoC->G(i-1,k-1));
             }
-            std::cout << "I: " << i << ", J: " << j << std::endl;
         }
     }
-
-    std::cout << "i" << std::endl;
 
     // Reallocating several applications
     for (int i = 1; i <= NoC->N_CRs; i++)
@@ -303,8 +282,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
             }
         }
     }
-
-    std::cout << "h" << std::endl;
 
     // Priorities
     for (int i = 1; i <= 2; i++)
@@ -360,8 +337,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
 //            ar[ind_count] = 1;
         }
     }
-
-    std::cout << "g" << std::endl;
 
     // Spatial Orientation
     int sum_N_nodes_apps = 0;
@@ -491,8 +466,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         }
     }*/
 
-    std::cout << "e" << std::endl;
-
     // Communication Constraint
     int allocator_node_ind = 0;
     for (int i = 0; i < NoC->allocator_app_ind; i++)
@@ -598,8 +571,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         ja[ind_count] = i + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
         ar[ind_count] = -1;
     }
-
-    std::cout << "d" << std::endl;
 
 //    std::cout << ind_count << std::endl;
     glp_load_matrix(this->model, ind_count, ia, ja, ar);

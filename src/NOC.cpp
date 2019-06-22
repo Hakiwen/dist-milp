@@ -479,8 +479,8 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-    /*for (int k = 0; k < this->allocator_app_num; k++)
+    for (int k = 0; k < this->allocator_app_num; k++)
     {
         std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
-    }*/
+    }
 }
