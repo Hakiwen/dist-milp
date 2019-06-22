@@ -434,7 +434,6 @@ void NOC::App_Voter(int rank, int step)
         }
     }
 
-
     this->app_to_run = this->get_app_from_node(this->node_to_run); // mapping from node to app
 
     if(this->app_to_run >= this->allocator_app_ind && this->app_to_run < this->allocator_app_ind + this->allocator_app_num)
@@ -480,8 +479,8 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-    for (int k = 0; k < this->allocator_app_num; k++)
+    /*for (int k = 0; k < this->allocator_app_num; k++)
     {
-        std::cout << "path from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
-    }
+        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+    }*/
 }

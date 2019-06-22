@@ -32,7 +32,7 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
 
     Eigen::VectorXd allocator_ind = Eigen::VectorXd::Ones(NoC->allocator_app_num) * -1;
     int k = 0, ind = 0;
-    for (int i = 0; i < this->world_size*NoC->N_CRs; i+=NoC->N_CRs)
+    for (int i = 0; i < this->world_size*NoC->N_CRs; i += NoC->N_CRs)
     {
         int sum_nodes_on_CRs = 0;
         for (int j = 0; j < NoC->N_CRs; j++)

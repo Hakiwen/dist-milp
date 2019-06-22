@@ -74,11 +74,11 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         prob_GLPK.solve(&NoC_GLPK);
         NoC_GLPK.read_Sol(&NoC);
         NoC.Update_State();
+#ifdef __x86_64__
         NoC.Disp();
+#endif
     }
     NoC_MPI.run(&NoC, &Engine);
-
-    while (true){usleep(1000000);}
 
     /** End of Initialization **/
 
@@ -118,6 +118,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
             else
             {
                 app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine, NoC.app_color[NoC.app_to_run]);
+                //std::cout << "My Rank: " << NoC_MPI.world_rank << std::endl;
 
                 if(!(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
                 {
