@@ -61,7 +61,7 @@ sudo apt-get install -y xterm
 
 To be added ...
 
-### Installing
+### Installation
 
 To download and compile the project
 
