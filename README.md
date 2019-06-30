@@ -103,7 +103,7 @@ cd ../bin
 ./DIST_MILP
 ```
 
-## Deployment on the immobotarium
+## Deployment on the Immobotarium
 
 To deploy this on the immobotarium (Raspberry Pi cluster)
 
