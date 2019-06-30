@@ -8,7 +8,10 @@
 #include "MY_MACROS.hpp"
 #include <iostream>
 #include <fstream>
+
+#ifndef __x86_64__
 #include <wiringPi.h>
+#endif
 
 #include "NOC.hpp"
 

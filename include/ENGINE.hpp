@@ -10,9 +10,8 @@
 #include <fstream>
 #include <cstring>
 
-#include <wiringPi.h>
-
 #ifndef __x86_64__
+#include <wiringPi.h>
 #include <phidget22.h>
 #include "PhidgetHelperFunctions.hpp" // Manually Modified
 #endif

@@ -10,7 +10,7 @@
 #include <fstream>
 #include <unistd.h>
 
-#ifdef __x86_64__
+#ifndef __x86_64__
 #include <wiringPi.h>
 #endif
 
