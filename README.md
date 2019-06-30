@@ -100,7 +100,7 @@ Comment out `#define USE_MPI` line in `dist-milp/include/MY_MACROS.hpp`, then
 cd dist-milp/build
 make -j4
 cd ../bin
-/DIST_MILP
+./DIST_MILP
 ```
 
 ## Deployment on the immobotarium
