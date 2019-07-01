@@ -10,7 +10,7 @@ NOC_FAULT::NOC_FAULT(NOC *NoC, int rank)
     std::string name = "fault_file_" + std::to_string(rank) + ".txt";
     this->fault_file.open(name, std::fstream::out);
     this->fault_file.clear();
-    this->fault_file << std::to_string(NoC->fault_internal_status);
+    this->fault_file << std::to_string(NoC->fault_internal_status_CR);
     this->fault_file.close();
 #endif
 }
@@ -68,7 +68,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
         char *buf = new char[1];
         this->fault_file.read(buf, 1);
         this->fault_file.close();
-        NoC->fault_internal_status = (int)buf[0] - '0';
+        NoC->fault_internal_status_CR = (int)buf[0] - '0';
         delete[] buf;
 #else
         int switch_button_1 = 29;
@@ -83,7 +83,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank)
             NoC->fault_internal_status = 1;
         }
 #endif
-        return NoC->fault_internal_status;
+        return NoC->fault_internal_status_CR;
     }
     return 0;
 }

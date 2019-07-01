@@ -63,17 +63,11 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         std::string name = "R_apps_" + std::to_string(i-1);
         glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
         glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
-//        coeff[i-1] = NoC->N_nodes + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
         coeff[i-1] = NoC->N_nodes*(NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1) + 1;
         for (int j = i; j < NoC->N_apps; j++)
         {
             coeff[i-1] += coeff[j];
         }
-//        coeff += NoC->N_nodes + 1;
-//        for (int j = NoC->N_apps; j >= i; j--)
-//        {
-//            coeff += NoC->N_nodes_apps[j-1];
-//        }
         glp_set_obj_coef(model, NoC->var_size - (NoC->N_apps - i), coeff[i-1]);
     }
 
@@ -84,7 +78,6 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_cols(model, 1);
         glp_set_col_name(model, NoC->var_size, name.c_str());
         glp_set_col_kind(model, NoC->var_size, GLP_BV);
-//        glp_set_obj_coef(model, NoC->var_size, -1.0);
         glp_set_obj_coef(model, NoC->var_size, -(NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1));
     }
 

@@ -50,7 +50,7 @@ public:
     int prev_N_Faults;
     int *Fault_CRs; // faulty status of each node, solver receives
     int *Fault_Internal_CRs;
-    int fault_internal_status; // faulty status of each node, each node sends
+    int fault_internal_status_CR; // faulty status of each node, each node sends
     int *Fault_External_CRs;
     int solver_status;
 

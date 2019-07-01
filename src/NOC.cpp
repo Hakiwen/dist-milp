@@ -45,7 +45,7 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
         this->Fault_Internal_CRs[i] = 0;
         this->Fault_External_CRs[i] = 0;
     }
-    this->fault_internal_status = 0; // 0 no fault, 1 has fault (for each node)
+    this->fault_internal_status_CR = 0; // 0 no fault, 1 has fault (for each node)
 
     this->solver_status = 1; // 1 feasible, 0 infeasible
 

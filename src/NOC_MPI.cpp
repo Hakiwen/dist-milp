@@ -67,7 +67,7 @@ void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
 {
     int *gather_data_receive = NULL;
     gather_data_receive = new int[this->world_size];
-    MPI_Allgather(&NoC->fault_internal_status, 1, MPI_INT, gather_data_receive, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Allgather(&NoC->fault_internal_status_CR, 1, MPI_INT, gather_data_receive, 1, MPI_INT, MPI_COMM_WORLD);
 
     for (int i = 0; i < this->world_size - 1; i++)
     {
