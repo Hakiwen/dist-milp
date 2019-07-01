@@ -64,7 +64,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_set_col_name(model, NoC->var_size - (NoC->N_apps - i), name.c_str());
         glp_set_col_kind(model, NoC->var_size - (NoC->N_apps - i), GLP_BV);
 //        coeff[i-1] = NoC->N_nodes + NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
-        coeff[i-1] = NoC->N_nodes*NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1;
+        coeff[i-1] = NoC->N_nodes*(NoC->N_paths*NoC->N_CRs*NoC->allocator_app_num + 1) + 1;
         for (int j = i; j < NoC->N_apps; j++)
         {
             coeff[i-1] += coeff[j];
