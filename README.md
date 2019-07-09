@@ -14,8 +14,9 @@ What things you need to install the software and how to install them
 
 #### To run on Ubuntu
 
-* Install [gcc](https://gcc.gnu.org/) and [CMake](https://cmake.org/)
+* Install [git](https://git-scm.com/), [gcc](https://gcc.gnu.org/) and [CMake](https://cmake.org/)
 ```
+sudo apt-get install -y git
 sudo apt-get install -y build-essential
 sudo apt-get install -y cmake
 ```
@@ -57,15 +58,18 @@ sudo apt-get update -y
 sudo apt-get install -y xterm
 ```
 
-* Add Libraries to Path
+#### Add Libraries to Path
+
+* Open .bashrc file
 ```
+cd
 nano .bashrc
 ```
-Add the following line to the end of the find
+* Add the following line to the end of the file
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
-Then, reload .bashrc by
+* Reload .bashrc by
 ```
 source ~/.bashrc
 ```
@@ -80,9 +84,8 @@ To download and compile the project
 
 ```
 cd
-sudo apt-get install git
-git clone https://bitbucket.org/tkhamvilai/dist-milp/src/master/ dist-milp
-cd dist-milp
+git clone https://bitbucket.org/tkhamvilai/dist-milp/src/<name of the branch you want>/ my-dist-milp
+cd my-dist-milp
 mkdir build
 cd build
 cmake ..
@@ -101,7 +104,7 @@ The default setting is already set to use MPI
 
 ```
 cd
-cd dist-milp/bin
+cd my-dist-milp/bin
 mpiexec -np 17 xterm -e ./DIST_MILP
 ```
 
@@ -110,7 +113,8 @@ mpiexec -np 17 xterm -e ./DIST_MILP
 Comment out `#define USE_MPI` line in `dist-milp/include/MY_MACROS.hpp`, then
 
 ```
-cd dist-milp/build
+cd
+cd my-dist-milp/build
 make -j4
 cd ../bin
 ./DIST_MILP
