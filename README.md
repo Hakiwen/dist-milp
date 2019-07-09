@@ -57,6 +57,19 @@ sudo apt-get update -y
 sudo apt-get install -y xterm
 ```
 
+* Add Libraries to Path
+```
+nano .bashrc
+```
+Add the following line to the end of the find
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+```
+Then, reload .bashrc by
+```
+source ~/.bashrc
+```
+
 #### To run on Raspberry Pi
 
 To be added ...
