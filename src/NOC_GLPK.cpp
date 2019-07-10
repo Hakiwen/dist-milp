@@ -22,7 +22,7 @@ void NOC_GLPK::write_LP(NOC *NoC)
 
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
-    NoC->CreateTopologyMatrixSquare(); // update a Degree Matrix and Adjacency Matrix
+    NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
     glp_set_obj_dir(this->model, GLP_MAX);
 
     /*
@@ -251,7 +251,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                 glp_add_rows(this->model, 1);
                 glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-                if (NoC->N_Faults == 0)
+                if (NoC->N_Faults_CR == 0)
                 {
                     glp_set_row_bnds(this->model, NoC->con_size, GLP_LO, NoC->X_CRs_nodes_old(i-1, j-1) - 1.0, 0.0);
                 }

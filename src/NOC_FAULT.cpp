@@ -19,10 +19,10 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
 {
     if (NoC->app_to_run >= NoC->allocator_app_ind && NoC->app_to_run < NoC->allocator_app_ind + NoC->allocator_app_num)
     {
-        NoC->prev_N_Faults = NoC->N_Faults;
+        NoC->prev_N_Faults_CR = NoC->N_Faults_CR;
 
 #ifndef USE_MPI
-        if(NoC->prev_N_Faults != -1 || NoC->N_Faults == 0)
+        if(NoC->prev_N_Faults_CR != -1 || NoC->N_Faults_CR == 0)
         {
             /* user input for killing nodes */
             int fault_node = 0;
@@ -30,22 +30,22 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
             std::cin >> fault_node;
             NoC->Fault_Internal_CRs[fault_node - 1] = 1;
             /* end */
-            NoC->prev_N_Faults = 0;
+            NoC->prev_N_Faults_CR = 0;
         }
 #endif
 
-        NoC->N_Faults = 0;
+        NoC->N_Faults_CR = 0;
         for (int i = 0; i < NoC->N_CRs; i++)
         {
             int prev_Fault = NoC->Fault_CRs[i];
             NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i];
             if(NoC->Fault_CRs[i] != prev_Fault)
             {
-                NoC->N_Faults += 1;
+                NoC->N_Faults_CR += 1;
             }
         }
 
-        if(NoC->N_Faults == NoC->prev_N_Faults)
+        if(NoC->N_Faults_CR == NoC->prev_N_Faults_CR)
         {
             return 0;
         }

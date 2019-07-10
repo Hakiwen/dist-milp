@@ -33,9 +33,9 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->node_to_run = 0; // initially alive, but not running any apps
     this->app_to_run = 0; // initially alive, but not running any apps
 
-    // Fault Detection
-    this->N_Faults = -1;
-    this->prev_N_Faults = -1;
+    // Fault Detection on CRs
+    this->N_Faults_CR = -1;
+    this->prev_N_Faults_CR = -1;
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
     this->Fault_Internal_CRs = new int[this->N_CRs];
     this->Fault_External_CRs = new int[this->N_CRs];
@@ -70,6 +70,7 @@ void NOC::CreateTopology(const char *topo)
 
 void NOC::CreateSquareTopology()
 {
+    this->N_neighbors = 4; // UP, DOWN, LEFT, RIGHT
     this->N_paths =
             (this->N_Col_CRs - 1) * this->N_Row_CRs + (this->N_Row_CRs - 1) * this->N_Col_CRs; // square topology
     this->N_nodes_apps = new int[this->N_apps];
@@ -94,8 +95,9 @@ void NOC::CreateSquareTopology()
 }
 
 void NOC::CreateAuxMatrices(const char* topo){
+
     /* construct Degree Matrix and Adjacency*/
-    this->CreateTopologyMatrixSquare();
+    this->CreateNeighborMatrixSquareTopology();
     if(VERBOSE)
     {
         std::cout << "D: \n" << this->D << std::endl;
@@ -134,11 +136,26 @@ void NOC::CreateAuxMatrices(const char* topo){
     {
         std::cout << "H: \n" << this->H << std::endl;
     }
+
+    /* Other variables for communication paths and Fault Detection on Paths*/
+    this->comm_path_to_use = new int[this->N_paths];
+    this->N_Faults_Paths = -1;
+    this->prev_N_Faults_Paths = -1;
+    this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
+    for (int i = 0; i < this->N_paths; i++)
+    {
+        this->Fault_Paths[i] = 0;
+    }
+    this->fault_status_Paths = new int[this->N_neighbors];
+    for (int i = 0; i < this->N_neighbors; i++)
+    {
+        this->fault_status_Paths[i] = 0;
+    }
 }
 
 Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
 {
-    int PATH_NUM = 4; // UP, DOWN, LEFT, RIGHT
+    int PATH_NUM = this->N_neighbors; // UP, DOWN, LEFT, RIGHT
     int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
 
     int N_elements = N_Row * N_Col;
@@ -198,9 +215,9 @@ Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
     return M;
 }
 
-void NOC::CreateTopologyMatrixSquare()
+void NOC::CreateNeighborMatrixSquareTopology()
 {
-    int Neighbor_NUM = 4; // UP, DOWN, LEFT, RIGHT
+    int Neighbor_NUM = this->N_neighbors; // UP, DOWN, LEFT, RIGHT
     int neighbor_ind[Neighbor_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
 
     this->D = Eigen::MatrixXi::Zero(this->N_CRs, this->N_CRs);
@@ -479,8 +496,8 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-//    for (int k = 0; k < this->allocator_app_num; k++)
-//    {
-//        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
-//    }
+    for (int k = 0; k < this->allocator_app_num; k++)
+    {
+        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+    }
 }

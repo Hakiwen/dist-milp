@@ -26,6 +26,7 @@ public:
     int *N_links_apps; // # of links corresponds to a given app
     int N_nodes;
     int N_links;
+    int N_neighbors;
 
     Eigen::MatrixXi G; // Incident matrix of the network
     Eigen::MatrixXi H; // Incident matrix of the application
@@ -45,15 +46,21 @@ public:
     int *apps_on_CRs; // app to run on each CR
     int node_to_run; // node to run on each CR, each node receives
     int app_to_run; // app to run on each CR
+    int *comm_path_to_use; //communication path to use for communicating from the reallocators to others
 
-    int N_Faults;
-    int prev_N_Faults;
+    int N_Faults_CR;
+    int prev_N_Faults_CR;
     int *Fault_CRs; // faulty status of each node, solver receives
     int *Fault_Internal_CRs;
     int fault_internal_status_CR; // faulty status of each node, each node sends
     int *Fault_External_CRs;
-    int solver_status;
 
+    int N_Faults_Paths;
+    int prev_N_Faults_Paths;
+    int *Fault_Paths; // faulty status of each path, solver receives
+    int *fault_status_Paths; // faulty status of neigbor paths, each node sends
+
+    int solver_status;
     int obj_val;
     int var_size;
     int con_size;
@@ -68,7 +75,7 @@ public:
     void CreateSquareTopology();
     void CreateAuxMatrices(const char* topo);
     Eigen::MatrixXi CreateIncidentMatrixSquareTopology(int N_Row, int N_Col);
-    void CreateTopologyMatrixSquare();
+    void CreateNeighborMatrixSquareTopology();
     void CreateDecisionMatrices();
 
     int get_app_from_node(int node);
