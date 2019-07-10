@@ -378,6 +378,35 @@ void NOC::Update_State()
         }
         this->apps_on_CRs[i] = get_app_from_node(this->nodes_on_CRs[i]);
     }
+
+    for (int k = 0; k < this->allocator_app_num; k++)
+    {
+        for (int i = 0; i < this->N_paths; i++)
+        {
+            int sum_path_in_CRs = 0;
+            for (int j = 0; j < this->N_CRs; j++)
+            {
+                sum_path_in_CRs += abs(this->X_comm_paths[k](i, j));
+            }
+
+            if (this->Fault_Paths[i] == 1) // that node is faulty
+            {
+                this->comm_path_to_use[i] = -1;
+            }
+            else if (this->solver_status == 0) // infeasible solution, all alive paths run nothing
+            {
+                this->comm_path_to_use[i] = 0;
+            }
+            else if (sum_path_in_CRs > 0) // comm path is used, either -1 or 1
+            {
+                this->comm_path_to_use[i] |= (1 << k);
+            }
+            else
+            {
+                this->nodes_on_CRs[i] |= (0 << k);
+            }
+        }
+    }
 }
 
 void NOC::Clear_State()
@@ -385,6 +414,10 @@ void NOC::Clear_State()
     for (int i = 0; i < this->N_CRs; i++)
     {
         this->nodes_on_CRs[i] = 0;
+    }
+    for (int i = 0; i < this->N_paths; i++)
+    {
+        this->comm_path_to_use[i] = 0;
     }
 }
 
@@ -498,6 +531,13 @@ void NOC::Disp()
 
     for (int k = 0; k < this->allocator_app_num; k++)
     {
-        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+        std::cout << "paths from allocators: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+    }
+
+    constexpr int bit_size = 3;//this->allocator_app_num;
+    std::cout << "comm paths to use from allocators: " << std::endl;
+    for (int i = 0; i < this->N_paths; i++)
+    {
+        std::cout << std::bitset<bit_size>(this->comm_path_to_use[i]) << std::endl;
     }
 }
