@@ -153,68 +153,6 @@ void NOC::CreateAuxMatrices(const char* topo){
     }
 }
 
-Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
-{
-    int PATH_NUM = this->N_neighbors; // UP, DOWN, LEFT, RIGHT
-    int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
-
-    int N_elements = N_Row * N_Col;
-    int N_joint = (N_Col - 1)*N_Row + (N_Row - 1)*N_Col;
-    Eigen::MatrixXi M(N_elements, N_joint);
-
-    for (int i = 0; i < N_elements; i++)
-    {
-        int current_row = int(i / N_Col);
-        path_ind[UP_IND] = (i+1) - N_Col + (N_Col - 1)*current_row;
-        path_ind[DOWN_IND] = (i+1) + (N_Col - 1)*(current_row + 1);
-        path_ind[LEFT_IND] = (i+1) - N_Col + (N_Col - 1)*(current_row + 1);
-        path_ind[RIGHT_IND] = (i+1) + (N_Col - 1)*current_row;
-
-        if(VERBOSE)
-        {
-            std::cout << "Node: " << i + 1
-                      << ", up: " << path_ind[UP_IND]
-                      << ", down: " << path_ind[DOWN_IND]
-                      << ", left: " << path_ind[LEFT_IND]
-                      << ", right: " << path_ind[RIGHT_IND] << std::endl;
-        }
-
-        for(int j = 0; j < PATH_NUM; j++)
-        {
-            if(path_ind[j] > 0 && path_ind[j] <= N_joint)
-            {
-                if (j == UP_IND || j == LEFT_IND)
-                {
-                    M(i, path_ind[j] - 1) = 1;
-                }
-                else if (j == DOWN_IND || j == RIGHT_IND)
-                {
-                    M(i, path_ind[j] - 1) = -1;
-                }
-            }
-        }
-
-        if(N_Col > 1)
-        {
-            if ((i + 1) % N_Col == 1) // first column
-            {
-                if (path_ind[LEFT_IND] > 0 && path_ind[LEFT_IND] <= N_joint)
-                {
-                    M(i, path_ind[LEFT_IND] - 1) = 0;
-                }
-            }
-            else if ((i + 1) % N_Col == 0) // last column
-            {
-                if (path_ind[RIGHT_IND] > 0 && path_ind[RIGHT_IND] <= N_joint)
-                {
-                    M(i, path_ind[RIGHT_IND] - 1) = 0;
-                }
-            }
-        }
-    }
-    return M;
-}
-
 void NOC::CreateNeighborMatrixSquareTopology()
 {
     int Neighbor_NUM = this->N_neighbors; // UP, DOWN, LEFT, RIGHT
@@ -276,6 +214,68 @@ void NOC::CreateNeighborMatrixSquareTopology()
             this->A(i, i) = -1;
         }
     }
+}
+
+Eigen::MatrixXi NOC::CreateIncidentMatrixSquareTopology(int N_Row, int N_Col)
+{
+    int PATH_NUM = this->N_neighbors; // UP, DOWN, LEFT, RIGHT
+    int path_ind[PATH_NUM], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
+
+    int N_elements = N_Row * N_Col;
+    int N_joint = (N_Col - 1)*N_Row + (N_Row - 1)*N_Col;
+    Eigen::MatrixXi M(N_elements, N_joint);
+
+    for (int i = 0; i < N_elements; i++)
+    {
+        int current_row = int(i / N_Col);
+        path_ind[UP_IND] = (i+1) - N_Col + (N_Col - 1)*current_row;
+        path_ind[DOWN_IND] = (i+1) + (N_Col - 1)*(current_row + 1);
+        path_ind[LEFT_IND] = (i+1) - N_Col + (N_Col - 1)*(current_row + 1);
+        path_ind[RIGHT_IND] = (i+1) + (N_Col - 1)*current_row;
+
+        if(VERBOSE)
+        {
+            std::cout << "Node: " << i + 1
+                      << ", up: " << path_ind[UP_IND]
+                      << ", down: " << path_ind[DOWN_IND]
+                      << ", left: " << path_ind[LEFT_IND]
+                      << ", right: " << path_ind[RIGHT_IND] << std::endl;
+        }
+
+        for(int j = 0; j < PATH_NUM; j++)
+        {
+            if(path_ind[j] > 0 && path_ind[j] <= N_joint)
+            {
+                if (j == UP_IND || j == LEFT_IND)
+                {
+                    M(i, path_ind[j] - 1) = 1;
+                }
+                else if (j == DOWN_IND || j == RIGHT_IND)
+                {
+                    M(i, path_ind[j] - 1) = -1;
+                }
+            }
+        }
+
+        if(N_Col > 1)
+        {
+            if ((i + 1) % N_Col == 1) // first column
+            {
+                if (path_ind[LEFT_IND] > 0 && path_ind[LEFT_IND] <= N_joint)
+                {
+                    M(i, path_ind[LEFT_IND] - 1) = 0;
+                }
+            }
+            else if ((i + 1) % N_Col == 0) // last column
+            {
+                if (path_ind[RIGHT_IND] > 0 && path_ind[RIGHT_IND] <= N_joint)
+                {
+                    M(i, path_ind[RIGHT_IND] - 1) = 0;
+                }
+            }
+        }
+    }
+    return M;
 }
 
 void NOC::CreateDecisionMatrices()
@@ -529,15 +529,13 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-    for (int k = 0; k < this->allocator_app_num; k++)
+    for(int i = 0; i < this->N_paths; i ++)
     {
-        std::cout << "paths from allocators: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
-    }
-
-    constexpr int bit_size = 3;//this->allocator_app_num;
-    std::cout << "comm paths to use from allocators: " << std::endl;
-    for (int i = 0; i < this->N_paths; i++)
-    {
-        std::cout << std::bitset<bit_size>(this->comm_path_to_use[i]) << std::endl;
+        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
+        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
+        {
+            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
+        }
+        std::cout << std::endl;
     }
 }

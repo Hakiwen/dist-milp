@@ -9,7 +9,6 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Dense>
-#include <bitset>
 
 #define VERBOSE 0
 
