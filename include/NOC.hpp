@@ -56,15 +56,16 @@ public:
 
     int N_Faults_CR;
     int prev_N_Faults_CR;
-    int *Fault_CRs; // faulty status of each node, solver receives
-    int *Fault_Internal_CRs;
+    int *Fault_CRs;
+    int *Fault_Internal_CRs; // faulty status of each node, solver receives
     int fault_internal_status_CR; // faulty status of each node, each node sends
     int *Fault_External_CRs;
 
     int N_Faults_Paths;
     int prev_N_Faults_Paths;
-    int *Fault_Paths; // faulty status of each path, solver receives
-    int *fault_status_Paths; // faulty status of neigbor paths, each node sends
+    int *Fault_Paths; // overall fault paths due to both node failures and path failures
+    int *Fault_Paths_receive; // faulty status of each path, solver receives
+    int *fault_Paths_send; // faulty status of neigbor paths, each node sends
 
     int solver_status;
     int obj_val;

@@ -8,6 +8,7 @@
 #include "MY_MACROS.hpp"
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #ifndef __x86_64__
 #include <wiringPi.h>

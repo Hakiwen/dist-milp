@@ -470,7 +470,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     {
         for (int i = 1; i <= NoC->N_CRs; i++) // sum of all paths passing through i^th CR
         {
-            if(NoC->Fault_CRs[i-1] == 0)//(NoC->D(i-1, i-1) > 0)
+            if(NoC->Fault_CRs[i-1] == 0)//(NoC->D(i-1, i-1) > 0) // no faults
             {
                 for (int j = 1; j <= NoC->N_CRs; j++) // when j^th CR being a sink CR
                 {
@@ -508,12 +508,29 @@ void NOC_GLPK::CreateModel(NOC *NoC)
                     }
                 }
             }
-            else // dead CRs or having no neighbors
+            else // dead CRs or isolated
             {
                 for (int j = 1; j <= NoC->N_paths; j++) // not drawing a path to a faulty CR
                 {
                     NoC->con_size += 1;
                     std::string name = "No_Comm_passing_through_" + std::to_string(i - 1) + "_from_path_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
+                    glp_add_rows(this->model, 1);
+                    glp_set_row_name(this->model, NoC->con_size, name.c_str());
+                    glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
+
+                    ind_count += 1;
+                    ia[ind_count] = NoC->con_size;
+                    ja[ind_count] = i + NoC->N_CRs * (j - 1) + NoC->N_paths * NoC->N_CRs * k + NoC->N_CRs * NoC->N_nodes + NoC->N_paths * NoC->N_links + NoC->N_apps + NoC->N_nodes;
+                    ar[ind_count] = 1;
+                }
+            }
+
+            for (int j = 1; j <= NoC->N_paths; j++)
+            {
+                if(NoC->Fault_Paths[j-1] == 1)
+                {
+                    NoC->con_size += 1;
+                    std::string name = "No_Comm_from_path_" + std::to_string(j - 1) + "_to_CR_" + std::to_string(i - 1) + "_alloc_" + std::to_string(k);
                     glp_add_rows(this->model, 1);
                     glp_set_row_name(this->model, NoC->con_size, name.c_str());
                     glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);

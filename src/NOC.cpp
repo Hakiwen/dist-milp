@@ -143,14 +143,16 @@ void NOC::CreateAuxMatrices(const char* topo){
     this->N_Faults_Paths = -1;
     this->prev_N_Faults_Paths = -1;
     this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
+    this->Fault_Paths_receive = new int[this->N_paths];
     for (int i = 0; i < this->N_paths; i++)
     {
         this->Fault_Paths[i] = 0;
+        this->Fault_Paths_receive[i] = 0;
     }
-    this->fault_status_Paths = new int[this->N_neighbors];
+    this->fault_Paths_send = new int[this->N_neighbors];
     for (int i = 0; i < this->N_neighbors; i++)
     {
-        this->fault_status_Paths[i] = 0;
+        this->fault_Paths_send[i] = 0;
     }
 }
 
@@ -570,15 +572,15 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-//    for(int i = 0; i < this->N_paths; i ++)
-//    {
-//        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
-//        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
-//        {
-//            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
-//        }
-//        std::cout << std::endl;
-//    }
+    for(int i = 0; i < this->N_paths; i ++)
+    {
+        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
+        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
+        {
+            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
+        }
+        std::cout << std::endl;
+    }
 }
 
 void NOC::Find_Isolated_CRs()

@@ -26,3 +26,4 @@
 // TODO more than one isolated nodes (done?, test on the system)-> faulty on paths -> visualize paths on hardware
 // TODO computational faults on reallocators
 // TODO integrate with X-plane
+// TODO fault detection system
