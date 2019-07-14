@@ -11,7 +11,7 @@ void sighandler(int signal)
 }
 #endif
 
-int main (int argc, char* argv[]) // TODO try...catch... for checking if all arguments to all functions are valid
+int main (int argc, char* argv[])
 {
     /** User-Initialized Parameters **/
 

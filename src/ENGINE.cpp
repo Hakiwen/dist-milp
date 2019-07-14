@@ -294,7 +294,7 @@ static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph,
 {
 //    printf("[VoltageRatio Event] -> VoltageRatio: %.4g\n", voltageRatio);
     ENGINE *Engine = (ENGINE *)ctx;
-    Engine->sensor_data = voltageRatio*1000000.0; // TODO Calibrate Sensor
+    Engine->sensor_data = voltageRatio*1000000.0;
 }
 
 #endif

@@ -22,7 +22,6 @@ void NOC_GLPK::write_LP(NOC *NoC)
 
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
-    NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
     glp_set_obj_dir(this->model, GLP_MAX);
 
     /*
@@ -131,7 +130,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-        if(NoC->Fault_CRs[i-1] == 0 && NoC->D(i-1, i-1) > 0)
+        if(NoC->Fault_CRs[i-1] == 0) //&& NoC->D(i-1, i-1) > 0)
         {
             glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 1.0);
         }
@@ -471,11 +470,11 @@ void NOC_GLPK::CreateModel(NOC *NoC)
     {
         for (int i = 1; i <= NoC->N_CRs; i++) // sum of all paths passing through i^th CR
         {
-            if(NoC->D(i-1, i-1) > 0)
+            if(NoC->Fault_CRs[i-1] == 0)//(NoC->D(i-1, i-1) > 0)
             {
                 for (int j = 1; j <= NoC->N_CRs; j++) // when j^th CR being a sink CR
                 {
-                    if(NoC->D(j-1, j-1) > 0) // sink has to be alive; otherwise, don't draw a path
+                    if(NoC->Fault_CRs[j-1] == 0)//(NoC->D(j-1, j-1) > 0) // sink has to be alive; otherwise, don't draw a path
                     {
                         NoC->con_size += 1;
                         std::string name = "Comm_from_" + std::to_string(i - 1) + "_to_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);

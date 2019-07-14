@@ -40,9 +40,9 @@ void APP_LED(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
         std::cout << "YELLOW" << std::endl;
     }
 #else
-    int RED_LED   = 26;
-    int GREEN_LED = 27;
-    int BLUE_LED  = 28;
+    int RED_LED   = RED_LED_PIN;
+    int GREEN_LED = GREEN_LED_PIN;
+    int BLUE_LED  = BLUE_LED_PIN;
     pinMode (RED_LED, OUTPUT);
     pinMode (GREEN_LED, OUTPUT);
     pinMode (BLUE_LED, OUTPUT);
@@ -102,9 +102,9 @@ void APP_LED_OFF()
 #if defined(__x86_64__)
     std::cout << "OFF" << std::endl;
 #else
-    int RED_LED   = 26;
-    int GREEN_LED = 27;
-    int BLUE_LED  = 28;
+    int RED_LED = RED_LED_PIN;
+    int GREEN_LED = GREEN_LED_PIN;
+    int BLUE_LED  = BLUE_LED_PIN;
     pinMode (RED_LED, OUTPUT);
     pinMode (GREEN_LED, OUTPUT);
     pinMode (BLUE_LED, OUTPUT);

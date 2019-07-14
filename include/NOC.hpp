@@ -8,6 +8,8 @@
 #include "MY_MACROS.hpp"
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <list>
 #include <Eigen/Dense>
 
 #define VERBOSE 0
@@ -47,6 +49,10 @@ public:
     int node_to_run; // node to run on each CR, each node receives
     int app_to_run; // app to run on each CR
     int *comm_path_to_use; //communication path to use for communicating from the reallocators to others
+
+    std::vector<std::vector<int> > disconnected_sets;
+    std::vector<int> Fault_Isolated_CRs_ind;
+    int *Fault_Isolated_CRs;
 
     int N_Faults_CR;
     int prev_N_Faults_CR;
@@ -88,6 +94,9 @@ public:
     int norm_of_difference(int i, int j);
     void App_Voter(int rank, int step);
     void Disp();
+
+    void Find_Isolated_CRs();
+    bool isSubset(std::vector<int> arr1, std::vector<int> arr2);
 };
 
 #endif //DIST_MILP_NOC_HPP

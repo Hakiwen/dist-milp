@@ -10,7 +10,7 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
     float Kp = 0.5;
 
 #ifndef __x86_64__
-    int switch_button_2 = 25;
+    int switch_button_2 = COMPUTATIONAL_FAULT_PIN;
     pinMode (switch_button_2, INPUT);
     pullUpDnControl (switch_button_2, PUD_UP);
 
@@ -37,10 +37,6 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
             sum_node_to_run += NoC->N_nodes_apps[i];
         }
     }
-
-//    float error = setpoint - Engine->sensor_data;
-//    Engine->PWM_out = (int)(OPER_PWM + Kp*error);
-//    std::cout << error << std::endl;
 }
 
 void APP_PWM_OFF()

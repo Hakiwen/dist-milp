@@ -112,7 +112,7 @@ void NOC_MPI::Gather_PWM(ENGINE *Engine)
 
 void NOC_MPI::run(NOC *NoC, ENGINE *Engine)
 {
-#ifdef USE_MPI // TODO should be non-blocking
+#ifdef USE_MPI
     this->Barrier();
     this->Broadcast_Sensor(Engine);
     this->Gather_PWM(Engine);

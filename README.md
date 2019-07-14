@@ -58,18 +58,18 @@ sudo apt-get update -y
 sudo apt-get install -y xterm
 ```
 
-#### Add Libraries to Path
+* Add Libraries to Path
 
-* Open .bashrc file
+> Open .bashrc file
 ```
 cd
 nano .bashrc
 ```
-* Add the following line to the end of the file
+> Add the following line to the end of the file
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
-* Reload .bashrc by
+> Reload .bashrc by
 ```
 source ~/.bashrc
 ```
@@ -136,13 +136,15 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Thanakorn Khamvilai** - *Initial work* - [tkhamvilai](https://bitbucket.org/%7B4a87be9b-792a-4759-ae05-11dd497e257a%7D/)
+* **Thanakorn Khamvilai** - *Initial work* - [tkhamvilai](https://tkhamvilai.github.io/)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
+This project is licensed under the [MIT license](http://opensource.org/licenses/mit-license.php) - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 

@@ -39,11 +39,13 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->Fault_CRs = new int[this->N_CRs]; // 0 no fault, 1 has fault (for solver)
     this->Fault_Internal_CRs = new int[this->N_CRs];
     this->Fault_External_CRs = new int[this->N_CRs];
+    this->Fault_Isolated_CRs = new int[this->N_CRs];
     for (int i = 0; i < this->N_CRs; i++)
     {
         this->Fault_CRs[i] = 0;
         this->Fault_Internal_CRs[i] = 0;
         this->Fault_External_CRs[i] = 0;
+        this->Fault_Isolated_CRs[i] = 0;
     }
     this->fault_internal_status_CR = 0; // 0 no fault, 1 has fault (for each node)
 
@@ -61,7 +63,6 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
 
 void NOC::CreateTopology(const char *topo)
 {
-    // TODO Other topologies
     // Only Square Topology for NOW!
     this->CreateSquareTopology();
     this->CreateAuxMatrices(topo);
@@ -172,7 +173,7 @@ void NOC::CreateNeighborMatrixSquareTopology()
         {
             if (neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
             {
-                if (this->Fault_CRs[neighbor_ind[j] - 1] == 0 && this->Fault_CRs[i] == 0)
+                if ((this->Fault_Internal_CRs[neighbor_ind[j] - 1] || this->Fault_External_CRs[neighbor_ind[j] - 1]) == 0 && (this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0)
                 {
                     this->D(i, i) += 1;
                     this->A(i, neighbor_ind[j] - 1) = 1;
@@ -187,7 +188,7 @@ void NOC::CreateNeighborMatrixSquareTopology()
                 if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
                 {
                     this->D(i, i) -= 1;
-                    if (this->Fault_CRs[neighbor_ind[LEFT_IND] - 1] == 1)
+                    if ((this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1] || this->Fault_External_CRs[neighbor_ind[LEFT_IND] - 1]) == 1)
                     {
                         this->D(i, i) += 1;
                     }
@@ -199,7 +200,7 @@ void NOC::CreateNeighborMatrixSquareTopology()
                 if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
                 {
                     this->D(i, i) -= 1;
-                    if (this->Fault_CRs[neighbor_ind[RIGHT_IND] - 1] == 1)
+                    if ((this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1] || this->Fault_External_CRs[neighbor_ind[RIGHT_IND] - 1]) == 1)
                     {
                         this->D(i, i) += 1;
                     }
@@ -208,7 +209,7 @@ void NOC::CreateNeighborMatrixSquareTopology()
             }
         }
 
-        if (this->Fault_CRs[i] == 1)
+        if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 1)
         {
             this->D(i, i) = -1;
             this->A(i, i) = -1;
@@ -517,8 +518,7 @@ void NOC::App_Voter(int rank, int step)
         }
         else // all allocators give different results
         {
-            // appropriate error action
-            // this->node_to_run = this->nodes_on_CRs_received(rank-1, 0);
+            // trust no allocators, keep doing what's it doing
 #if defined(__x86_64__)
             std::cout << "no allocators match" << std::endl;
 #endif
@@ -579,4 +579,147 @@ void NOC::Disp()
 //        }
 //        std::cout << std::endl;
 //    }
+}
+
+void NOC::Find_Isolated_CRs()
+{
+//    std::cout << "Disconnected: " << std::endl;
+//    std::cout << A << std::endl;
+    std::vector<bool> visited(this->N_CRs, false);
+    std::vector<int> disconnected_set;
+
+    this->disconnected_sets.clear();
+    for (int i = 0; i < this->N_CRs; i++)
+    {
+        if (visited[i] == false && (this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0)
+        {
+            std::list<int> q;
+            visited[i] = true;
+            q.push_back(i);
+
+            while(!q.empty())
+            {
+                int j = q.front();
+                disconnected_set.push_back(j+1);
+                q.pop_front();
+
+                for (int k = 0; k < this->N_CRs; k++)
+                {
+                    if (visited[k] == false && this->A(j,k) == 1)
+                    {
+                        visited[k] = true;
+                        q.push_back(k);
+                    }
+                }
+            }
+
+            this->disconnected_sets.push_back(disconnected_set);
+            disconnected_set.clear();
+        }
+    }
+
+//    for (unsigned int i = 0; i < disconnected_sets.size(); i++)
+//    {
+//        for (unsigned int j = 0; j < disconnected_sets[i].size(); j++)
+//        {
+//            std::cout << disconnected_sets[i][j] << " ";
+//        }
+//        std::cout << std::endl;
+//    }
+
+    if (this->Fault_Isolated_CRs_ind.empty())
+    {
+        if (this->disconnected_sets.size() > 1)
+        {
+            int min_disconnected_set = 0;
+            for (unsigned int i = 1; i < this->disconnected_sets.size(); i++)
+            {
+                if (this->disconnected_sets[i].size() < this->disconnected_sets[min_disconnected_set].size())
+                {
+                    min_disconnected_set = i;
+                }
+            }
+            this->Fault_Isolated_CRs_ind = this->disconnected_sets[min_disconnected_set];
+        }
+    }
+    else if (this->disconnected_sets.size() >= 2)
+    {
+        std::cout << "disconnected_sets_size: " << this->disconnected_sets.size() << std::endl;
+        std::vector<int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size;
+        for (unsigned int i = 0; i < this->disconnected_sets.size(); i++)
+        {
+            if (!this->isSubset(this->Fault_Isolated_CRs_ind, this->disconnected_sets[i]))
+            {
+                disconnected_set_not_in_fault.push_back(i); // stores the indices for disconnected sets that are not in fault_isolated
+                disconnected_set_not_in_fault_size.push_back(this->disconnected_sets[i].size()); // stores size of that index
+            }
+        }
+
+        int max_val = *std::max_element(disconnected_set_not_in_fault_size.begin(), disconnected_set_not_in_fault_size.end());
+        int is_break_tie = 0;
+        for (unsigned int i = 0; i < disconnected_set_not_in_fault.size(); i++)
+        {
+            if(disconnected_set_not_in_fault_size[i] != max_val || is_break_tie == 1)
+            {
+                for (unsigned int j = 0; j < this->disconnected_sets[disconnected_set_not_in_fault[i]].size(); j++)
+                {
+                    this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[disconnected_set_not_in_fault[i]][j]);
+                }
+            }
+            else if(is_break_tie == 0)
+            {
+                is_break_tie = 1;
+            }
+        }
+
+        for (int i = 0; i < this->N_CRs; i++)
+        {
+            if(this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i])
+            {
+                this->Fault_Isolated_CRs_ind.erase(std::remove(this->Fault_Isolated_CRs_ind.begin(), this->Fault_Isolated_CRs_ind.end(), i+1), this->Fault_Isolated_CRs_ind.end());
+            }
+            this->Fault_Isolated_CRs[i] = 0;
+        }
+    }
+
+//    std::cout << "Fault_Isolated: " << std::endl;
+//    for (unsigned int i = 0; i < this->Fault_Isolated.size(); i++)
+//    {
+//        std::cout << this->Fault_Isolated[i] << " ";
+//    }
+//    std::cout << std::endl;
+
+    for (unsigned int i = 0; i < this->Fault_Isolated_CRs_ind.size(); i++)
+    {
+        this->Fault_Isolated_CRs[this->Fault_Isolated_CRs_ind[i] - 1] = 1;
+    }
+}
+
+bool NOC::isSubset(std::vector<int> arr1, std::vector<int> arr2)
+{
+    int i = 0, j = 0;
+    int m = arr1.size();
+    int n = arr2.size();
+
+    if (m < n)
+        return 0;
+
+    sort(arr1.begin(), arr1.end());
+    sort(arr2.begin(), arr2.end());
+
+    while (i < n && j < m )
+    {
+        if( arr1[j] <arr2[i] )
+            j++;
+        else if( arr1[j] == arr2[i] )
+        {
+            j++;
+            i++;
+        }
+
+        else if( arr1[j] > arr2[i] )
+            return 0;
+    }
+
+    return  (i < n)? false : true;
 }
