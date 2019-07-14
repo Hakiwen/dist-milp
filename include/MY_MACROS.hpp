@@ -11,7 +11,7 @@
 #define BLUE_LED_PIN 28
 #define NODE_FAULT_PIN 29 // internal fault , the node and its neighbor are completely fail
 
-//#define USE_MPI
+#define USE_MPI
 
 // Choose one, comment others
 //#define CPLEX_AS_SOLVER
