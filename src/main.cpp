@@ -96,7 +96,7 @@ int main (int argc, char* argv[]) // TODO try...catch... for checking if all arg
         }
         else // computer resource nodes
         {
-            NoC.App_Voter(NoC_MPI.world_rank, step);
+            NoC.App_Voter(NoC_MPI.world_rank, step); // vote on reallocator signals
 
 #ifdef __x86_64__ // print the simulation
             std::cout << "My Rank: " << NoC_MPI.world_rank;

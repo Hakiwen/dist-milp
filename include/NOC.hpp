@@ -78,6 +78,7 @@ public:
     void CreateNeighborMatrixSquareTopology();
     void CreateDecisionMatrices();
 
+    int get_last_node_from_app(int app);
     int get_app_from_node(int node);
     int get_app_from_link(int node);
 

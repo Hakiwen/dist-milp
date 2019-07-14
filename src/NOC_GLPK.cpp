@@ -23,7 +23,6 @@ void NOC_GLPK::write_LP(NOC *NoC)
 void NOC_GLPK::CreateModel(NOC *NoC)
 {
     NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
-    std::cout << "A: \n" << NoC->A << std::endl;
     glp_set_obj_dir(this->model, GLP_MAX);
 
     /*

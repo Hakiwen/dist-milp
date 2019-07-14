@@ -306,6 +306,28 @@ void NOC::CreateDecisionMatrices()
     }
 }
 
+int NOC::get_last_node_from_app(int app)
+{
+    int sum_N_app = 0, node = 0;
+    if(app == 0)
+    {
+        node = 0;
+    }
+    else if(app == -1)
+    {
+        node = -1;
+    }
+    else if(app <= this->N_apps)
+    {
+        for (int i = 0; i < app; i++)
+        {
+            sum_N_app += this->N_nodes_apps[i];
+        }
+        node = sum_N_app;
+    }
+    return node;
+}
+
 int NOC::get_app_from_node(int node)
 {
     int sum_N_nodes = 0, apps = 0;
@@ -433,7 +455,7 @@ int NOC::norm_of_difference(int i, int j) // computes the norm (can be any one) 
     }
     if (norm_i == 0 && norm_j == 0)
     {
-        return 1;
+        return -1;
     }
     else
     {
@@ -472,6 +494,25 @@ void NOC::App_Voter(int rank, int step)
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
 #if defined(__x86_64__)
             std::cout << "allocators 3 and 1 match" << std::endl;
+#endif
+        }
+        else if (mismatch_1_2 == -1 || mismatch_2_3 == -1 || mismatch_3_1 == -1)
+        {
+            if(mismatch_1_2 == -1 && this->nodes_on_CRs_received(rank-1, 2) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            {
+                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+            }
+            else if(mismatch_2_3 == -1 && this->nodes_on_CRs_received(rank-1, 0) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            {
+                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+            }
+            else if(mismatch_3_1 == -1 && this->nodes_on_CRs_received(rank-1, 1) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            {
+                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+            }
+
+#if defined(__x86_64__)
+            std::cout << "only one allocator left, I will be another allocator" << std::endl;
 #endif
         }
         else // all allocators give different results
@@ -529,13 +570,13 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-    for(int i = 0; i < this->N_paths; i ++)
-    {
-        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
-        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
-        {
-            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
-        }
-        std::cout << std::endl;
-    }
+//    for(int i = 0; i < this->N_paths; i ++)
+//    {
+//        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
+//        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
+//        {
+//            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
+//        }
+//        std::cout << std::endl;
+//    }
 }
