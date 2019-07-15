@@ -572,15 +572,15 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-    for(int i = 0; i < this->N_paths; i ++)
-    {
-        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
-        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
-        {
-            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
-        }
-        std::cout << std::endl;
-    }
+//    for(int i = 0; i < this->N_paths; i ++)
+//    {
+//        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
+//        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
+//        {
+//            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
+//        }
+//        std::cout << std::endl;
+//    }
 }
 
 void NOC::Find_Isolated_CRs()
@@ -646,7 +646,7 @@ void NOC::Find_Isolated_CRs()
     }
     else if (this->disconnected_sets.size() >= 2)
     {
-        std::cout << "disconnected_sets_size: " << this->disconnected_sets.size() << std::endl;
+//        std::cout << "disconnected_sets_size: " << this->disconnected_sets.size() << std::endl;
         std::vector<int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size;
         for (unsigned int i = 0; i < this->disconnected_sets.size(); i++)
         {
