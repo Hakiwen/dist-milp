@@ -474,21 +474,21 @@ void NOC_GLPK::CreateModel(NOC *NoC)
             {
                 for (int j = 1; j <= NoC->N_CRs; j++) // when j^th CR being a sink CR
                 {
-                    if(NoC->Fault_CRs[j-1] == 0)//(NoC->D(j-1, j-1) > 0) // sink has to be alive; otherwise, don't draw a path
+                    if(NoC->Fault_CRs[j-1] == 0 && i != j)//(NoC->D(j-1, j-1) > 0) // sink has to be alive; otherwise, don't draw a path
                     {
                         NoC->con_size += 1;
                         std::string name = "Comm_from_" + std::to_string(i - 1) + "_to_" + std::to_string(j - 1) + "_alloc_" + std::to_string(k);
                         glp_add_rows(this->model, 1);
                         glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-                        if (i == j)
-                        {
-                            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
-                        }
-                        else
-                        {
+//                        if (i == j)
+//                        {
+//                            glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 1.0, 1.0);
+//                        }
+//                        else
+//                        {
                             glp_set_row_bnds(this->model, NoC->con_size, GLP_FX, 0.0, 0.0);
-                        }
+//                        }
 
                         for (int l = 1; l <= NoC->N_paths; l++)
                         {

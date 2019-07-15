@@ -15,7 +15,6 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
         {
             NoC_GLPK->read_Sol(NoC);
             NoC->solver_status = 1;
-            NoC->Disp();
         }
         else
         {
@@ -24,4 +23,7 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
         }
         NoC->Update_State();
     }
+#ifdef __x86_64__
+    NoC->Disp();
+#endif
 }

@@ -27,15 +27,24 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
         {
             /* user input for killing nodes */
             int fault_node = 0;
-            std::cout << "Please input the valid number of node you want to kill: ";
+            std::cout << "Please input the valid (negative/positive) number of node to kill/recover: ";
             std::cin >> fault_node;
-            NoC->Fault_Internal_CRs[fault_node - 1] = 1;
+            if(fault_node > 0 && fault_node <= NoC->N_CRs)
+            {
+                NoC->Fault_Internal_CRs[abs(fault_node) - 1] = 0;
+            }
+            else if(fault_node < 0 && fault_node >= NoC->N_CRs*(-1))
+            {
+                NoC->Fault_Internal_CRs[abs(fault_node) - 1] = 1;
+            }
+            else
+            {
+                std::cout << "Invalid Number, Try again" << std::endl;
+            }
             /* end */
             NoC->prev_N_Faults_CR = 0;
         }
 #endif
-        NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
-        NoC->Find_Isolated_CRs(); // update Fault_Isolated
 
         std::vector<bool> path_to_fail(NoC->N_paths, false); // paths to fail from CRs
         std::vector<bool> CRs_to_fail(NoC->N_CRs, false); // CRs to fail from paths
@@ -128,6 +137,10 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank) // detect fault from the swit
             NoC->fault_internal_status_CR = 1;
         }
 #endif
+        // Two lines below are updated from both internal and external faults
+        NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
+        NoC->Find_Isolated_CRs(); // update Fault_Isolated
+
         return NoC->fault_internal_status_CR;
     }
     return 0;

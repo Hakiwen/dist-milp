@@ -12,8 +12,6 @@
 #include <list>
 #include <Eigen/Dense>
 
-#define VERBOSE 0
-
 class NOC{
 public:
     int N_Row_CRs;

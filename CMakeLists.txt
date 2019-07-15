@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 project(DIST_MILP)
 set (CMAKE_CXX_FLAGS "-ggdb3 -Wall -std=c++11")
 

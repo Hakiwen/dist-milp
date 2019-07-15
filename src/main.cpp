@@ -111,7 +111,7 @@ int main (int argc, char* argv[])
             {
                 APP_LED_OFF();
                 NoC.Clear_State();
-                NoC.node_to_run = 0; // The dead won't remember anything
+                NoC.node_to_run = -1; // The dead won't remember anything
             }
             else
             {

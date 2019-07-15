@@ -482,47 +482,68 @@ void NOC::App_Voter(int rank, int step)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 0); // allocators 1 and 2 agree, listen to one of them, here 1
 #if defined(__x86_64__)
-            std::cout << "allocators 1 and 2 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 1 and 2 match" << std::endl;
 #endif
         }
         else if(mismatch_2_3 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 1); // allocators 2 and 3 agree, listen to one of them, here 2
 #if defined(__x86_64__)
-            std::cout << "allocators 2 and 3 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 2 and 3 match" << std::endl;
 #endif
         }
         else if(mismatch_3_1 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
 #if defined(__x86_64__)
-            std::cout << "allocators 3 and 1 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 3 and 1 match" << std::endl;
 #endif
         }
         else if (mismatch_1_2 == -1 || mismatch_2_3 == -1 || mismatch_3_1 == -1)
         {
-            if(mismatch_1_2 == -1 && this->nodes_on_CRs_received(rank-1, 2) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            if(mismatch_1_2 == -1)
             {
-                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                if(this->nodes_on_CRs_received(rank-1, 2) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                {
+                    this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                }
+                else if(this->nodes_on_CRs_received(rank-1, 2) == -1)
+                {
+                    this->node_to_run = -1;
+                }
             }
-            else if(mismatch_2_3 == -1 && this->nodes_on_CRs_received(rank-1, 0) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            else if(mismatch_2_3 == -1)
             {
-                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                if(this->nodes_on_CRs_received(rank-1, 0) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                {
+                    this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                }
+                else if(this->nodes_on_CRs_received(rank-1, 0) == -1)
+                {
+                    this->node_to_run = -1;
+                }
             }
-            else if(mismatch_3_1 == -1 && this->nodes_on_CRs_received(rank-1, 1) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+            else if(mismatch_3_1 == -1)
             {
-                this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                if(this->nodes_on_CRs_received(rank-1, 1) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                {
+                    this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
+                }
+                else if(this->nodes_on_CRs_received(rank-1, 1) == -1)
+                {
+                    this->node_to_run = -1;
+                }
             }
 
 #if defined(__x86_64__)
-            std::cout << "only one allocator left, I will be another allocator" << std::endl;
+            if (VERBOSE) std::cout << "only one allocator left, I will be another allocator" << std::endl;
 #endif
         }
         else // all allocators give different results
         {
             // trust no allocators, keep doing what's it doing
 #if defined(__x86_64__)
-            std::cout << "no allocators match" << std::endl;
+            if (VERBOSE) std::cout << "no allocators match" << std::endl;
 #endif
         }
     }
@@ -581,6 +602,11 @@ void NOC::Disp()
 //        }
 //        std::cout << std::endl;
 //    }
+
+//    for (int k = 0; k < this->allocator_app_num; k++)
+//    {
+//        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
+//    }
 }
 
 void NOC::Find_Isolated_CRs()
@@ -633,18 +659,28 @@ void NOC::Find_Isolated_CRs()
     {
         if (this->disconnected_sets.size() > 1)
         {
-            int min_disconnected_set = 0;
+            int max_disconnected_set = 0;
             for (unsigned int i = 1; i < this->disconnected_sets.size(); i++)
             {
-                if (this->disconnected_sets[i].size() < this->disconnected_sets[min_disconnected_set].size())
+                if (this->disconnected_sets[i].size() > this->disconnected_sets[max_disconnected_set].size())
                 {
-                    min_disconnected_set = i;
+                    for (unsigned int j = 0; j < this->disconnected_sets[max_disconnected_set].size(); j++)
+                    {
+                        this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[max_disconnected_set][j]);
+                    }
+                    max_disconnected_set = i;
+                }
+                else
+                {
+                    for (unsigned int j = 0; j < this->disconnected_sets[i].size(); j++)
+                    {
+                        this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[i][j]);
+                    }
                 }
             }
-            this->Fault_Isolated_CRs_ind = this->disconnected_sets[min_disconnected_set];
         }
     }
-    else if (this->disconnected_sets.size() >= 2)
+    else //if (this->disconnected_sets.size() >= 2)
     {
 //        std::cout << "disconnected_sets_size: " << this->disconnected_sets.size() << std::endl;
         std::vector<int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size;
@@ -661,16 +697,20 @@ void NOC::Find_Isolated_CRs()
         int is_break_tie = 0;
         for (unsigned int i = 0; i < disconnected_set_not_in_fault.size(); i++)
         {
-            if(disconnected_set_not_in_fault_size[i] != max_val || is_break_tie == 1)
+            if(disconnected_set_not_in_fault_size[i] != max_val || is_break_tie == 1) // the isolated cases
             {
                 for (unsigned int j = 0; j < this->disconnected_sets[disconnected_set_not_in_fault[i]].size(); j++)
                 {
                     this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[disconnected_set_not_in_fault[i]][j]);
                 }
             }
-            else if(is_break_tie == 0)
+            else if(is_break_tie == 0) // the case we want to keep
             {
                 is_break_tie = 1;
+                for (int j = 0; j < disconnected_set_not_in_fault_size[i]; j++)
+                {
+                    this->Fault_Isolated_CRs_ind.erase(std::remove(this->Fault_Isolated_CRs_ind.begin(), this->Fault_Isolated_CRs_ind.end(), this->disconnected_sets[disconnected_set_not_in_fault[i]][j]), this->Fault_Isolated_CRs_ind.end());
+                }
             }
         }
 
@@ -685,9 +725,9 @@ void NOC::Find_Isolated_CRs()
     }
 
 //    std::cout << "Fault_Isolated: " << std::endl;
-//    for (unsigned int i = 0; i < this->Fault_Isolated.size(); i++)
+//    for (unsigned int i = 0; i < this->Fault_Isolated_CRs_ind.size(); i++)
 //    {
-//        std::cout << this->Fault_Isolated[i] << " ";
+//        std::cout << this->Fault_Isolated_CRs_ind[i] << " ";
 //    }
 //    std::cout << std::endl;
 
