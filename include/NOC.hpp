@@ -6,6 +6,7 @@
 #define DIST_MILP_NOC_HPP
 
 #include "MY_MACROS.hpp"
+#include "MathHelperFunctions.hpp"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -41,6 +42,8 @@ public:
     std::vector<Eigen::MatrixXi> X_comm_paths;
     Eigen::MatrixXi X_CRs_nodes_old;
 
+    Eigen::MatrixXi X_CRs_nodes_received;
+
     int *nodes_on_CRs; // node to run on each CR, solver sends
     Eigen::MatrixXi nodes_on_CRs_received; // node to run on each CR, receives from multiple allocators
     int *apps_on_CRs; // app to run on each CR
@@ -73,6 +76,7 @@ public:
     int *app_color;
     int allocator_app_ind;
     int allocator_app_num;
+    std::vector<int> allocator_nodes_ind;
 
     NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_apps[], int app_color[], int allocator_app_ind, int allocator_app_num);
 
@@ -90,12 +94,9 @@ public:
     void Update_State();
     void Clear_State();
 
-    int norm_of_difference(int i, int j);
     void App_Voter(int rank, int step);
+    Eigen::MatrixXi get_X_from_nodes(Eigen::MatrixXi nodes_on_CRs_received_voted, int N_rows, int N_cols);
     void Disp();
-
-    void Find_Isolated_CRs();
-    bool isSubset(std::vector<int> arr1, std::vector<int> arr2);
 };
 
 #endif //DIST_MILP_NOC_HPP

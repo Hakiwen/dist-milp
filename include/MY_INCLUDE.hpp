@@ -22,5 +22,6 @@
 #include "NOC_GLPK.hpp"
 #include "GLPK_SOLVER.hpp"
 #include "ENGINE.hpp"
+#include "MathHelperFunctions.hpp"
 
 #endif //DIST_MILP_MY_INCLUDE_HPP

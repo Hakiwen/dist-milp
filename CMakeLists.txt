@@ -31,10 +31,11 @@ include_directories(include
 
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB APPS "apps/*.cpp")
+file(GLOB LIBS "lib/*.cpp")
 
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+	list(REMOVE_ITEM LIBS ${CMAKE_CURRENT_SOURCE_DIR}/lib/PhidgetHelperFunctions.cpp ${CMAKE_CURRENT_SOURCE_DIR}/lib/PhidgetHelperFunctions.hpp)
 else()
-	file(GLOB LIBS "lib/*.cpp")
 endif ()
 
 list(REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/CPLEX_SOLVER.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/NOC_CPLEX.cpp) # not using CPLEX for now

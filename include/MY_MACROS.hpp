@@ -6,6 +6,7 @@
 #define DIST_MILP_MY_MACROS_HPP
 
 #define VERBOSE 0
+#define PRINT 0
 
 #define COMPUTATIONAL_FAULT_PIN 25 // external fault, only the node fails (running, but gives wrong results), its neighbor paths are still alive
 #define RED_LED_PIN 26

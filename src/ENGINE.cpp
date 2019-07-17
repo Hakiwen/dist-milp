@@ -228,7 +228,7 @@ void ENGINE::write_data()
 void ENGINE::run(int N_CRs)
 {
 
-#ifdef __x86_64__
+#if defined (__x86_64__) && ( PRINT )
     std::cout << "I'm the jet engine!" << std::endl;
 #else
         this->read_sensor();

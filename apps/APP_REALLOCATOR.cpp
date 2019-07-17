@@ -11,7 +11,7 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
     if (NoC_Fault->Fault_Gathering(NoC)) // get fault data from others
     {
         NoC_GLPK->write_LP(NoC);
-        if(prob_GLPK->solve(NoC_GLPK))
+        if (prob_GLPK->solve(NoC_GLPK))
         {
             NoC_GLPK->read_Sol(NoC);
             NoC->solver_status = 1;
@@ -22,8 +22,11 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
             NoC->solver_status = 0;
         }
         NoC->Update_State();
+#if defined (__x86_64__) && ( PRINT )
     }
-#ifdef __x86_64__
     NoC->Disp();
+#else
+        NoC->Disp();
+    }
 #endif
 }

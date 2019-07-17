@@ -87,7 +87,7 @@ int main (int argc, char* argv[])
     int step = 0;
     while (true)
     {
-#ifdef __x86_64__
+#if defined (__x86_64__) && ( PRINT )
         std::cout << "Step: " << step << ", ";
 #endif
         if (NoC_MPI.world_rank == 0)
@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
         {
             NoC.App_Voter(NoC_MPI.world_rank, step); // vote on reallocator signals
 
-#ifdef __x86_64__ // print the simulation
+#if defined (__x86_64__) && ( PRINT ) // print the simulation
             std::cout << "My Rank: " << NoC_MPI.world_rank;
 //            std::cout << ", My Fault: " << NoC.fault_internal_status;
             std::cout << ", My Node: " << NoC.node_to_run;

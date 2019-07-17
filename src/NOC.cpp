@@ -19,8 +19,15 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     this->var_size = 0;
     this->con_size = 0;
 
-    // Total Number of Computer Resources
+    // Total Number of Computer Resources and Nodes
     this->N_CRs = this->N_Row_CRs * this->N_Col_CRs;
+    this->N_nodes = 0;
+    this->N_nodes_apps = new int[this->N_apps];
+    for (int i = 0; i < this->N_apps; i++)
+    {
+        this->N_nodes_apps[i] = this->N_Row_apps[i] * this->N_Col_apps[i];
+        this->N_nodes += this->N_nodes_apps[i];
+    }
 
     // Node/App to Run on Each CR
     this->nodes_on_CRs = new int[this->N_CRs];
@@ -58,6 +65,10 @@ NOC::NOC(int N_Row_CRs, int N_Col_CRs, int N_apps, int N_Row_apps[], int N_Col_a
     // Allocator
     this->allocator_app_ind = allocator_app_ind;
     this->allocator_app_num = allocator_app_num;
+    for (int i = 0; i < this->allocator_app_num; i++)
+    {
+        this->allocator_nodes_ind.push_back(this->get_last_node_from_app(this->allocator_app_ind + i));
+    }
     this->nodes_on_CRs_received.resize(this->N_CRs, this->allocator_app_num);
 }
 
@@ -74,15 +85,11 @@ void NOC::CreateSquareTopology()
     this->N_neighbors = 4; // UP, DOWN, LEFT, RIGHT
     this->N_paths =
             (this->N_Col_CRs - 1) * this->N_Row_CRs + (this->N_Row_CRs - 1) * this->N_Col_CRs; // square topology
-    this->N_nodes_apps = new int[this->N_apps];
     this->N_links_apps = new int[this->N_apps];
-    this->N_nodes = 0;
     this->N_links = 0;
     for (int i = 0; i < this->N_apps; i++)
     {
-        this->N_nodes_apps[i] = this->N_Row_apps[i] * this->N_Col_apps[i];
         this->N_links_apps[i] = (this->N_Col_apps[i] - 1) * this->N_Row_apps[i] + (this->N_Row_apps[i] - 1) * this->N_Col_apps[i];
-        this->N_nodes += this->N_nodes_apps[i];
         this->N_links += this->N_links_apps[i];
     }
 
@@ -307,6 +314,8 @@ void NOC::CreateDecisionMatrices()
         std::cout << "R_apps: \n" << this->R_apps << std::endl;
         std::cout << "M_apps: \n" << this->M_apps << std::endl;
     }
+
+    this->X_CRs_nodes_received.resize(this->N_CRs, this->N_nodes);
 }
 
 int NOC::get_last_node_from_app(int app)
@@ -373,6 +382,21 @@ int NOC::get_app_from_link(int link)
         }
     }
     return apps;
+}
+
+Eigen::MatrixXi NOC::get_X_from_nodes(Eigen::MatrixXi nodes_on_CRs_received_voted, int N_rows, int N_cols)
+{
+    Eigen::MatrixXi X_matrix = Eigen::MatrixXi::Zero(N_rows, N_cols);
+
+    for (int i = 0; i < N_rows; i++)
+    {
+        if(nodes_on_CRs_received_voted(i,0) >= 1 && nodes_on_CRs_received_voted(i,0) <= N_cols)
+        {
+            X_matrix(i, nodes_on_CRs_received_voted(i,0)-1) = 1;
+        }
+    }
+
+    return X_matrix;
 }
 
 void NOC::Update_State()
@@ -446,26 +470,6 @@ void NOC::Clear_State()
     }
 }
 
-int NOC::norm_of_difference(int i, int j) // computes the norm (can be any one) of [ nodes_on_CRs_received(:, i) - nodes_on_CRs_received(:, j) ]
-{
-    int norm = 0, norm_i = 0, norm_j = 0;
-    for(int k = 0 ; k < this->N_CRs ; k++)
-    {
-        norm += ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) ) * ( nodes_on_CRs_received(k, i-1) - nodes_on_CRs_received(k, j-1) );
-        // here, the result of 'norm' will be the 2-normed squared (ensures integer result and avoid using other libraries)
-        norm_i += ( nodes_on_CRs_received(k, i-1) ) * ( nodes_on_CRs_received(k, i-1) );
-        norm_j += ( nodes_on_CRs_received(k, j-1) ) * ( nodes_on_CRs_received(k, j-1) );
-    }
-    if (norm_i == 0 && norm_j == 0)
-    {
-        return -1;
-    }
-    else
-    {
-        return norm;
-    }
-}
-
 void NOC::App_Voter(int rank, int step)
 {
     if(step == 0)
@@ -474,13 +478,14 @@ void NOC::App_Voter(int rank, int step)
     }
     else
     {
-        int mismatch_1_2 = this->norm_of_difference(1, 2); // = 0 if values matches, != 0 otherwise
-        int mismatch_2_3 = this->norm_of_difference(2, 3);
-        int mismatch_3_1 = this->norm_of_difference(3, 1);
+        int mismatch_1_2 = MathHelperFunctions_norm_of_difference(1, 2, this->nodes_on_CRs_received); // = 0 if values matches, != 0 otherwise
+        int mismatch_2_3 = MathHelperFunctions_norm_of_difference(2, 3, this->nodes_on_CRs_received);
+        int mismatch_3_1 = MathHelperFunctions_norm_of_difference(3, 1, this->nodes_on_CRs_received);
 
         if(mismatch_1_2 == 0) // values match
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 0); // allocators 1 and 2 agree, listen to one of them, here 1
+            this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(0), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
             if (VERBOSE) std::cout << "allocators 1 and 2 match" << std::endl;
 #endif
@@ -488,6 +493,7 @@ void NOC::App_Voter(int rank, int step)
         else if(mismatch_2_3 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 1); // allocators 2 and 3 agree, listen to one of them, here 2
+            this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(1), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
             if (VERBOSE) std::cout << "allocators 2 and 3 match" << std::endl;
 #endif
@@ -495,15 +501,26 @@ void NOC::App_Voter(int rank, int step)
         else if(mismatch_3_1 == 0)
         {
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
+            this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(2), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
             if (VERBOSE) std::cout << "allocators 3 and 1 match" << std::endl;
 #endif
         }
         else if (mismatch_1_2 == -1 || mismatch_2_3 == -1 || mismatch_3_1 == -1)
         {
+            bool is_alloc = false;
             if(mismatch_1_2 == -1)
             {
-                if(this->nodes_on_CRs_received(rank-1, 2) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                for (int i = 0; i < this->allocator_app_num; i++)
+                {
+                    is_alloc = is_alloc || (this->nodes_on_CRs_received(rank-1, 2) == this->allocator_nodes_ind[i]);
+                    if(is_alloc)
+                    {
+                        break;
+                    }
+                }
+
+                if(is_alloc)
                 {
                     this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
                 }
@@ -514,7 +531,16 @@ void NOC::App_Voter(int rank, int step)
             }
             else if(mismatch_2_3 == -1)
             {
-                if(this->nodes_on_CRs_received(rank-1, 0) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                for (int i = 0; i < this->allocator_app_num; i++)
+                {
+                    is_alloc = is_alloc || (this->nodes_on_CRs_received(rank-1, 0) == this->allocator_nodes_ind[i]);
+                    if(is_alloc)
+                    {
+                        break;
+                    }
+                }
+
+                if(is_alloc)
                 {
                     this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
                 }
@@ -525,7 +551,16 @@ void NOC::App_Voter(int rank, int step)
             }
             else if(mismatch_3_1 == -1)
             {
-                if(this->nodes_on_CRs_received(rank-1, 1) == this->get_last_node_from_app(this->allocator_app_ind + 1))
+                for (int i = 0; i < this->allocator_app_num; i++)
+                {
+                    is_alloc = is_alloc || (this->nodes_on_CRs_received(rank-1, 1) == this->allocator_nodes_ind[i]);
+                    if(is_alloc)
+                    {
+                        break;
+                    }
+                }
+
+                if(is_alloc)
                 {
                     this->node_to_run = this->get_last_node_from_app(this->allocator_app_ind);
                 }
@@ -607,161 +642,4 @@ void NOC::Disp()
 //    {
 //        std::cout << "paths from allocator: " <<  k+1 << "\n" << this->X_comm_paths[k] << std::endl;
 //    }
-}
-
-void NOC::Find_Isolated_CRs()
-{
-//    std::cout << "Disconnected: " << std::endl;
-//    std::cout << A << std::endl;
-    std::vector<bool> visited(this->N_CRs, false);
-    std::vector<int> disconnected_set;
-
-    this->disconnected_sets.clear();
-    for (int i = 0; i < this->N_CRs; i++)
-    {
-        if (visited[i] == false && (this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0)
-        {
-            std::list<int> q;
-            visited[i] = true;
-            q.push_back(i);
-
-            while(!q.empty())
-            {
-                int j = q.front();
-                disconnected_set.push_back(j+1);
-                q.pop_front();
-
-                for (int k = 0; k < this->N_CRs; k++)
-                {
-                    if (visited[k] == false && this->A(j,k) == 1)
-                    {
-                        visited[k] = true;
-                        q.push_back(k);
-                    }
-                }
-            }
-
-            this->disconnected_sets.push_back(disconnected_set);
-            disconnected_set.clear();
-        }
-    }
-
-//    for (unsigned int i = 0; i < disconnected_sets.size(); i++)
-//    {
-//        for (unsigned int j = 0; j < disconnected_sets[i].size(); j++)
-//        {
-//            std::cout << disconnected_sets[i][j] << " ";
-//        }
-//        std::cout << std::endl;
-//    }
-
-    if (this->Fault_Isolated_CRs_ind.empty())
-    {
-        if (this->disconnected_sets.size() > 1)
-        {
-            int max_disconnected_set = 0;
-            for (unsigned int i = 1; i < this->disconnected_sets.size(); i++)
-            {
-                if (this->disconnected_sets[i].size() > this->disconnected_sets[max_disconnected_set].size())
-                {
-                    for (unsigned int j = 0; j < this->disconnected_sets[max_disconnected_set].size(); j++)
-                    {
-                        this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[max_disconnected_set][j]);
-                    }
-                    max_disconnected_set = i;
-                }
-                else
-                {
-                    for (unsigned int j = 0; j < this->disconnected_sets[i].size(); j++)
-                    {
-                        this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[i][j]);
-                    }
-                }
-            }
-        }
-    }
-    else //if (this->disconnected_sets.size() >= 2)
-    {
-//        std::cout << "disconnected_sets_size: " << this->disconnected_sets.size() << std::endl;
-        std::vector<int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size;
-        for (unsigned int i = 0; i < this->disconnected_sets.size(); i++)
-        {
-            if (!this->isSubset(this->Fault_Isolated_CRs_ind, this->disconnected_sets[i]))
-            {
-                disconnected_set_not_in_fault.push_back(i); // stores the indices for disconnected sets that are not in fault_isolated
-                disconnected_set_not_in_fault_size.push_back(this->disconnected_sets[i].size()); // stores size of that index
-            }
-        }
-
-        int max_val = *std::max_element(disconnected_set_not_in_fault_size.begin(), disconnected_set_not_in_fault_size.end());
-        int is_break_tie = 0;
-        for (unsigned int i = 0; i < disconnected_set_not_in_fault.size(); i++)
-        {
-            if(disconnected_set_not_in_fault_size[i] != max_val || is_break_tie == 1) // the isolated cases
-            {
-                for (unsigned int j = 0; j < this->disconnected_sets[disconnected_set_not_in_fault[i]].size(); j++)
-                {
-                    this->Fault_Isolated_CRs_ind.push_back(this->disconnected_sets[disconnected_set_not_in_fault[i]][j]);
-                }
-            }
-            else if(is_break_tie == 0) // the case we want to keep
-            {
-                is_break_tie = 1;
-                for (int j = 0; j < disconnected_set_not_in_fault_size[i]; j++)
-                {
-                    this->Fault_Isolated_CRs_ind.erase(std::remove(this->Fault_Isolated_CRs_ind.begin(), this->Fault_Isolated_CRs_ind.end(), this->disconnected_sets[disconnected_set_not_in_fault[i]][j]), this->Fault_Isolated_CRs_ind.end());
-                }
-            }
-        }
-
-        for (int i = 0; i < this->N_CRs; i++)
-        {
-            if(this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i])
-            {
-                this->Fault_Isolated_CRs_ind.erase(std::remove(this->Fault_Isolated_CRs_ind.begin(), this->Fault_Isolated_CRs_ind.end(), i+1), this->Fault_Isolated_CRs_ind.end());
-            }
-            this->Fault_Isolated_CRs[i] = 0;
-        }
-    }
-
-//    std::cout << "Fault_Isolated: " << std::endl;
-//    for (unsigned int i = 0; i < this->Fault_Isolated_CRs_ind.size(); i++)
-//    {
-//        std::cout << this->Fault_Isolated_CRs_ind[i] << " ";
-//    }
-//    std::cout << std::endl;
-
-    for (unsigned int i = 0; i < this->Fault_Isolated_CRs_ind.size(); i++)
-    {
-        this->Fault_Isolated_CRs[this->Fault_Isolated_CRs_ind[i] - 1] = 1;
-    }
-}
-
-bool NOC::isSubset(std::vector<int> arr1, std::vector<int> arr2)
-{
-    int i = 0, j = 0;
-    int m = arr1.size();
-    int n = arr2.size();
-
-    if (m < n)
-        return 0;
-
-    sort(arr1.begin(), arr1.end());
-    sort(arr2.begin(), arr2.end());
-
-    while (i < n && j < m )
-    {
-        if( arr1[j] <arr2[i] )
-            j++;
-        else if( arr1[j] == arr2[i] )
-        {
-            j++;
-            i++;
-        }
-
-        else if( arr1[j] > arr2[i] )
-            return 0;
-    }
-
-    return  (i < n)? false : true;
 }
