@@ -228,8 +228,10 @@ void ENGINE::write_data()
 void ENGINE::run(int N_CRs)
 {
 
-#if defined (__x86_64__) && ( PRINT )
+#if defined (__x86_64__)
+#if ( PRINT )
     std::cout << "I'm the jet engine!" << std::endl;
+#endif
 #else
         this->read_sensor();
         this->voter(N_CRs);

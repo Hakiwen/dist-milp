@@ -6,7 +6,7 @@
 
 void APP_LED(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *prob_GLPK, ENGINE *Engine, int color)
 {
-#if defined (__x86_64__) && ( PRINT )
+#if defined (__x86_64__)// && ( PRINT )
     if(color == LED_OFF)
     {
         std::cout << "OFF" << std::endl;
@@ -99,8 +99,10 @@ void APP_LED(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
 
 void APP_LED_OFF()
 {
-#if defined(__x86_64__) && ( PRINT )
+#if defined(__x86_64__)
+#if ( PRINT )
     std::cout << "OFF" << std::endl;
+#endif
 #elif !defined(__x86_64__)
     int RED_LED = RED_LED_PIN;
     int GREEN_LED = GREEN_LED_PIN;
