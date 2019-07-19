@@ -29,7 +29,7 @@
 #define X_PLANE_IP_ADDRESS "192.168.0.99"
 #define X_PLANE_PORT 49000
 #define X_PLANE_MAX_BYTE 1024
-#define X_LANE BUFFER_SIZE 40
+#define X_LANE_BUFFER_SIZE 40
 #define X_PLANE_PACKET_BYTE 113 // dependong on what data you want to received
 #endif
 

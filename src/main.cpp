@@ -58,9 +58,9 @@ int main (int argc, char* argv[])
     NOC_GLPK NoC_GLPK = NOC_GLPK(LP_file, Sol_file); // NoC to GLPK Object
     GLPK_SOLVER prob_GLPK = GLPK_SOLVER(LP_file, Sol_file); // Solver Object
 
-#ifdef USE_MPI
     ENGINE Engine = ENGINE(NoC.N_CRs); // Engine controller being the 1st priority app
 
+#ifdef USE_MPI
 #ifndef __x86_64__
     signal(SIGABRT, &sighandler);
     signal(SIGTERM, &sighandler);
@@ -132,29 +132,46 @@ int main (int argc, char* argv[])
         step++;
 
 #ifdef __x86_64__ // only put the delay on the simulation
-        usleep(1000000);
+//        usleep(1000000);
 #endif
     }
 #else
+#ifdef USE_X_PLANE_SIMULATOR
+    Engine.udp.init(X_PLANE_IP_ADDRESS, "192.168.0.130", X_PLANE_PORT, X_PLANE_PORT);
+#endif
     NoC.app_to_run = NoC.allocator_app_ind; // always runs the allocator for debugging optimization problem
     while (true)
     {
-        if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
-        {
-            NoC_GLPK.write_LP(&NoC);
-            if(prob_GLPK.solve(&NoC_GLPK))
-            {
-                NoC_GLPK.read_Sol(&NoC);
-                NoC.solver_status = 1;
-            }
-            else
-            {
-                std::cout << "Infeasible Solution" << std::endl;
-                NoC.solver_status = 0;
-            }
-            NoC.Update_State();
-        }
-        NoC.Disp();
+#ifdef USE_X_PLANE_SIMULATOR
+        if(Engine.udp.initYet) Engine.udp.receivePacket(Engine.data, X_PLANE_PACKET_BYTE);
+        Engine.roll_deg = Decode_Roll_X_plane (Engine.data);
+        Engine.roll_dot = Decode_Roll_Dot_X_plane (Engine.data);
+        std::cout << "roll_deg = " << Engine.roll_deg << std::endl;
+        std::cout << "roll_dot = " << Engine.roll_dot << std::endl;
+        float setpoint = 10.0, del_a;
+        del_a = (setpoint - Engine.roll_deg)*40.2 - 22.5*Engine.roll_dot;
+        del_a = 0.5*0.011111*del_a;
+        Engine.delta_a_out = del_a;
+        std::cout << Engine.delta_a_out << std::endl;
+        Encode_Delta_to_X_plane(Engine.delta_a_out, Engine.buf);
+        Engine.udp.sendPacket(Engine.buf, 41);
+#endif
+//        if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
+//        {
+//            NoC_GLPK.write_LP(&NoC);
+//            if(prob_GLPK.solve(&NoC_GLPK))
+//            {
+//                NoC_GLPK.read_Sol(&NoC);
+//                NoC.solver_status = 1;
+//            }
+//            else
+//            {
+//                std::cout << "Infeasible Solution" << std::endl;
+//                NoC.solver_status = 0;
+//            }
+//            NoC.Update_State();
+//        }
+//        NoC.Disp();
     }
 #endif
 

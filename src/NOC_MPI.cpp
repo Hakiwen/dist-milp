@@ -86,11 +86,17 @@ void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
 
 void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
 {
+#if defined ( USE_ENGINE_W_FEEDBACK )
     MPI_Bcast(&Engine->sensor_data, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    MPI_Bcast(&Engine->roll_deg, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&Engine->roll_dot, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+#endif
 }
 
 void NOC_MPI::Gather_PWM(ENGINE *Engine)
 {
+#if defined ( USE_ENGINE_W_FEEDBACK )
     int *gather_data_receive = NULL;
     if(this->world_rank == 0)
     {
@@ -108,6 +114,25 @@ void NOC_MPI::Gather_PWM(ENGINE *Engine)
     }
 
     Engine->PWM_out = 0;
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    float *gather_data_receive = NULL;
+    if(this->world_rank == 0)
+    {
+        gather_data_receive = new float[this->world_size];
+    }
+
+    MPI_Gather(&Engine->delta_a_out, 1, MPI_FLOAT, gather_data_receive, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+    if(this->world_rank == 0)
+    {
+        for (int i = 0; i < this->world_size - 1; i++)
+        {
+            Engine->delta_a_in[i] = gather_data_receive[i + 1];
+        }
+    }
+
+    Engine->delta_a_out = 999;
+#endif
 }
 
 void NOC_MPI::run(NOC *NoC, ENGINE *Engine)

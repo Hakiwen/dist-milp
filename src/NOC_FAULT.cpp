@@ -211,7 +211,6 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
     }
     else //if (this->disconnected_sets.size() >= 2)
     {
-//        std::cout << NoC->disconnected_sets.size() << std::endl;
         std::vector<unsigned int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size, disconnected_set_not_in_alloc_num;
         for (unsigned int i = 0; i < NoC->disconnected_sets.size(); i++)
         {

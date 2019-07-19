@@ -6,6 +6,7 @@
 
 ENGINE::ENGINE(int N_CRs)
 {
+#if defined (USE_ENGINE_W_FEEDBACK)
     this->sensor_data = 0;
 
     this->PWM_out = 0;
@@ -25,6 +26,28 @@ ENGINE::ENGINE(int N_CRs)
         this->PWM_for_Voter[i] = 0;
         this->PWM_for_Voter_ind[i] = 0;
     }
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    this->delta_a_out = 999;
+    this->delta_a_in = new float[N_CRs];
+
+    this->delta_a_for_Voter = new float[N_APP_TO_VOTE];
+    this->delta_a_for_Voter_ind = new float[N_APP_TO_VOTE];
+    this->delta_a_to_X_plane = 0;
+
+    for (int i = 0; i < N_CRs; i++)
+    {
+        this->delta_a_in[i] = 999;
+    }
+
+    for (int i = 0; i < N_APP_TO_VOTE; i++)
+    {
+        this->delta_a_for_Voter[i] = 0;
+        this->delta_a_for_Voter_ind[i] = 0;
+    }
+
+    this->roll_deg = 0;
+    this->roll_dot = 0;
+#endif
 
     this->EngineSetup = 0;
     this->SensorSetup = 0;
@@ -52,7 +75,7 @@ void ENGINE::read_sensor()
         this->SensorSetup = 1;
 
 #ifdef USE_X_PLANE_SIMULATOR
-        this->udp.init(X_PLANE_IP_ADDRESS, "192.168.0.130", X_PLANE_PORT, X_PLANE_PORT);
+        this->udp.init(X_PLANE_IP_ADDRESS, "192.168.0.19", X_PLANE_PORT, X_PLANE_PORT);
 #else
 #ifndef __x86_64__
 #ifdef USE_ENGINE_W_FEEDBACK
@@ -78,13 +101,10 @@ void ENGINE::read_sensor()
 #ifdef USE_X_PLANE_SIMULATOR
 //    std::cout << "udp_init: " << this->udp.initYet << std::endl;
     if(this->udp.initYet) this->udp.receivePacket(this->data, X_PLANE_PACKET_BYTE);
-
     this->roll_deg = Decode_Roll_X_plane (data);
     this->roll_dot = Decode_Roll_Dot_X_plane (data);
-
-    std::cout << "roll_deg = " << roll_deg << std::endl;
-    std::cout << "roll_dot = " << roll_dot << std::endl;
-    std::cout << "sensor = " << sizeof(sensor_data) << std::endl;
+    std::cout << "roll_deg = " << this->roll_deg << std::endl;
+    std::cout << "roll_dot = " << this->roll_dot << std::endl;
 #endif
 
 //    std::cout << "sensor: " << this->sensor_data << std::endl;
@@ -92,6 +112,7 @@ void ENGINE::read_sensor()
 
 void ENGINE::pwm_send()
 {
+#if defined ( USE_ENGINE_W_FEEDBACK )
     if(!this->EngineSetup)
     {
         this->EngineSetup = 1;
@@ -119,13 +140,22 @@ void ENGINE::pwm_send()
         this->PWM_to_Engine = MAX_PWM;
     }
 
-//    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
+    //    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
 
 #ifndef __x86_64__
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
 #endif
+#endif
+
+#ifdef USE_X_PLANE_SIMULATOR
+    std::cout << this->delta_a_to_X_plane << std::endl;
+    Encode_Delta_to_X_plane(this->delta_a_to_X_plane, this->buf);
+    udp.sendPacket(this->buf, 41);
+#endif
 }
 
+
+#if defined (USE_ENGINE_W_FEEDBACK)
 void ENGINE::voter(int N_CRs)
 {
     for (int i = 0; i < N_APP_TO_VOTE; i++)
@@ -137,7 +167,7 @@ void ENGINE::voter(int N_CRs)
     int j = 0;
     for (int i = 0; i < N_CRs; i++)
     {
-//        std::cout << "PWM_" << i+1 << ": " << PWM_in[i] << ", ";
+        std::cout << "PWM_" << i+1 << ": " << PWM_in[i] << ", ";
         if (this->PWM_in[i] > MIN_PWM)
         {
             this->PWM_for_Voter[j] = this->PWM_in[i];
@@ -221,6 +251,103 @@ double ENGINE::voter_mean(int* array, int err_detector_result)
         return sum;
     }
 }
+#elif defined ( USE_X_PLANE_SIMULATOR )
+void ENGINE::voter(float N_CRs)
+{
+    for (int i = 0; i < N_APP_TO_VOTE; i++)
+    {
+        this->delta_a_for_Voter[i] = MIN_PWM;
+        this->delta_a_for_Voter_ind[i] = 0;
+    }
+
+    int j = 0;
+    for (int i = 0; i < N_CRs; i++)
+    {
+//        std::cout << "PWM_" << i+1 << ": " << delta_a_in[i] << ", ";
+        if (this->delta_a_in[i] != 999)
+        {
+            this->delta_a_for_Voter[j] = this->delta_a_in[i];
+            this->delta_a_for_Voter_ind[j] = i + 1;
+            j++;
+            if(j == N_APP_TO_VOTE)
+            {
+                break;
+            }
+        }
+    }
+
+//    for (int i = 0; i < N_APP_TO_VOTE; i++) {
+//        std::cout << "PWM_" << PWM_for_Voter_ind[i] << ": " << PWM_for_Voter[i] << ", ";
+//    }
+//    std::cout << std::endl;
+
+    if(j > 1)
+    {
+        this->fault_detect = this->error_detector(this->delta_a_for_Voter);
+        this->delta_a_to_X_plane = (float) this->voter_mean(this->delta_a_for_Voter, this->fault_detect);
+
+        if(this->voter_delay >= MAX_VOTER_DELAY)
+        {
+            this->voter_delay = 0;
+            if (this->fault_detect > 0 && this->fault_detect <= N_APP_TO_VOTE)
+            {
+                this->fault_from_voter = this->delta_a_for_Voter_ind[this->fault_detect - 1];
+            }
+            else if (this->fault_detect == 0 || this->fault_detect == 6)
+            {
+                this->fault_from_voter = 0;
+            }
+        }
+        else
+        {
+            this->voter_delay += 1;
+            this->fault_from_voter = 0;
+        }
+    }
+    else // only one signal left
+    {
+        this->fault_detect = 0;
+        this->fault_from_voter = 0;
+        this->delta_a_to_X_plane = 90;
+    }
+
+//    std::cout << "fault_detect: " << this->fault_detect << std::endl;
+//    std::cout << "fault_from_voter: " << this->fault_from_voter << std::endl;
+}
+
+int ENGINE::error_detector(float* array)
+{
+    int v1 = (int)array[0];
+    int v2 = (int)array[1];
+    int v3 = (int)array[2];
+    /* Returns the number corresponding to the wrong value among three ones, 0 if they all match and 6 if they all mismatch
+     * get the values from the three redundant applications
+     */
+
+    int mismatch12 = ( abs(v1 - v2) > TOLERANCE );
+    int mismatch13 = ( abs(v1 - v3) > TOLERANCE );
+    int mismatch23 = ( abs(v2 - v3) > TOLERANCE );
+
+    return 1*mismatch12*mismatch13 + 2*mismatch12*mismatch23 + 3*mismatch13*mismatch23;
+}
+
+double ENGINE::voter_mean(float* array, float err_detector_result)
+{
+    if (err_detector_result == 6)
+    {
+        return MIN_PWM; // all signals are different
+    }
+    else
+    {
+        double sum = 0;
+        for(int i = 0 ; i < N_APP_TO_VOTE ; i++)
+        {
+            sum = sum + ((double) array[i])*(err_detector_result != i+1) / ( 3*(err_detector_result == 0) + 2*(err_detector_result != 0) );
+        }
+        return sum;
+    }
+}
+#endif
 
 void ENGINE::write_data()
 {
@@ -231,10 +358,20 @@ void ENGINE::write_data()
         myfile.open ("data.txt", std::ios::out | std::ios::app);
         for (int i = 0; i < N_APP_TO_VOTE; i++)
         {
+#if defined (USE_ENGINE_W_FEEDBACK)
             myfile << this->PWM_for_Voter[i] << ",";
+#elif defined ( USE_X_PLANE_SIMULATOR )
+            myfile << this->delta_a_for_Voter[i] << ",";
+#endif
         }
+#if defined (USE_ENGINE_W_FEEDBACK)
         myfile << this->PWM_to_Engine << ",";
         myfile << this->sensor_data << "\n";
+#elif defined ( USE_X_PLANE_SIMULATOR )
+        myfile << this->delta_a_to_X_plane << ",";
+        myfile << this->roll_deg << ",";
+        myfile << this->roll_dot << "\n";
+#endif
         myfile.close();
     }
     else
@@ -248,9 +385,22 @@ void ENGINE::run(int N_CRs)
 #ifdef USE_X_PLANE_SIMULATOR
     std::cout << "I'm the X-plane!" << std::endl;
     this->read_sensor();
-    //this->voter(N_CRs);
-    //this->pwm_send();
-    //this->write_data();
+    this->voter(N_CRs);
+    this->pwm_send();
+    this->write_data();
+
+//    if(udp.initYet) udp.receivePacket(data, X_PLANE_PACKET_BYTE);
+//    roll_deg = Decode_Roll_X_plane (data);
+//    roll_dot = Decode_Roll_Dot_X_plane (data);
+//    std::cout << "roll_deg = " << roll_deg << std::endl;
+//    std::cout << "roll_dot = " << roll_dot << std::endl;
+//    float setpoint = 10.0, del_a;
+//    del_a = (setpoint - roll_deg)*40.2 - 22.5*roll_dot;
+//    del_a = 0.5*0.011111*del_a;
+//    delta_a_out = del_a;
+//    std::cout << delta_a_out << std::endl;
+//    Encode_Delta_to_X_plane(delta_a_out, buf);
+//    udp.sendPacket(buf, 41);
 #else
 #if defined (__x86_64__)
 #if ( PRINT )
@@ -380,5 +530,35 @@ float Decode_Roll_Dot_X_plane (uint8_t *data)
     roll_dot = *(float*)&roll_dot_temp;
 
     return roll_dot;
+}
+
+void Encode_Delta_to_X_plane (float del_a, uint8_t* buffer)
+{
+    uint8_t bytes_da[sizeof(float)];
+
+    buffer[0]=68;/*"D"*/  buffer[1]=65;/*"A"*/; buffer[2]=84;/*"T"*/  buffer[3]=65;/*"A"*/ 	buffer[4]=48;/*"0"*/
+
+    // Parameter YOKE
+    buffer[5] = 8; 	buffer[6] = 0;
+    buffer[7] = 0;	buffer[8] = 0;
+
+    // Elevator Values -  Do NOT change values
+    buffer[9] = 0; 	buffer[10] = 192; buffer[11] = 121; buffer[12] = 196;
+
+    *(float*)(bytes_da) = del_a; // Converting the float delta_a (32bits) in four bytes (8bits) to be transmmited
+
+    //Aileron - Send commands to YOKE
+    buffer[13] = bytes_da[0]; buffer[14] = bytes_da[1];
+    buffer[15] = bytes_da[2]; buffer[16] = bytes_da[3];
+
+    // Rudder
+    buffer[17] = 0;   buffer[18] = 192; buffer[19] = 121; buffer[20] = 196;
+
+    // NOT USED -  But according to XPlane manual we have to transmit these remaining bytes
+    buffer[21] = 0;   buffer[22] = 192; buffer[23] = 121; buffer[24] = 196;
+    buffer[25] = 0;   buffer[26] = 192; buffer[27] = 121; buffer[28] = 196;
+    buffer[29] = 0;   buffer[30] = 192; buffer[31] = 121; buffer[32] = 196;
+    buffer[33] = 0;   buffer[34] = 192; buffer[35] = 121; buffer[36] = 196;
+    buffer[37] = 0;   buffer[38] = 192; buffer[39] = 121; buffer[40] = 196;
 }
 #endif

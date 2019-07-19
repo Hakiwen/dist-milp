@@ -30,9 +30,13 @@
 #define MAX_VOTER_DELAY 0 // 1000
 #define MAX_WRITE_DELAY 10
 
+#include <mpi.h>
+
 class ENGINE
 {
 public:
+
+#if defined (USE_ENGINE_W_FEEDBACK)
     float sensor_data; // read sensor data from phidget and for broadcasting
 
     int PWM_out; // PWM value sending our from controller nodes to the engine
@@ -43,6 +47,19 @@ public:
     int PWM_to_Engine; // actual PWM number to send to the engine
 
     int PWM_PIN; // 1 for wPI
+
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    UDPSocket udp;
+    uint8_t buf[X_LANE_BUFFER_SIZE];
+    uint8_t data[X_PLANE_MAX_BYTE];
+    float roll_deg, roll_dot, delta_a_out;
+    float *delta_a_in;
+
+    float *delta_a_for_Voter; // for voter to choose and detecting faults
+    float *delta_a_for_Voter_ind;
+    float delta_a_to_X_plane; // actual PWM number to send to the engine
+#endif
+
     int EngineSetup;
     int SensorSetup;
 
@@ -51,13 +68,6 @@ public:
 
     int voter_delay;
     int write_delay;
-
-#ifdef USE_X_PLANE_SIMULATOR
-    UDPSocket udp;
-    uint8_t data[X_PLANE_MAX_BYTE];
-    uint8_t bytes_da[sizeof(float)];
-    float roll_deg, roll_dot, delta_a;
-#endif
 
 #ifndef __x86_64__
     PhidgetVoltageRatioInputHandle ch;
@@ -69,9 +79,15 @@ public:
     void read_sensor();
     void pwm_send();
 
+#if defined (USE_ENGINE_W_FEEDBACK)
     void voter(int N_CRs);
     int error_detector(int* array);
     double voter_mean(int* array, int err_detector_result);
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    void voter(float N_CRs);
+    int error_detector(float* array);
+    double voter_mean(float* array, float err_detector_result);
+#endif
 
     void write_data();
 
@@ -89,6 +105,7 @@ static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph,
 #ifdef USE_X_PLANE_SIMULATOR
 float Decode_Roll_X_plane (uint8_t *data);
 float Decode_Roll_Dot_X_plane (uint8_t *data);
+void Encode_Delta_to_X_plane (float del_a, uint8_t* buffer);
 #endif
 
 #endif //DIST_MILP_ENGINE_HPP

@@ -6,8 +6,6 @@
 
 void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *prob_GLPK, ENGINE* Engine, int color)
 {
-    float setpoint = 90.0;
-    float Kp = 0.5;
 
 #ifndef __x86_64__
     int switch_button_2 = COMPUTATIONAL_FAULT_PIN;
@@ -16,13 +14,18 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
 
     if(digitalRead (switch_button_2) == 0)
     {
+#if defined ( USE_ENGINE_W_FEEDBACK )
         Kp *= (NoC->node_to_run + 1);
+#endif
         color = LED_CYAN;
     }
 #endif
 
     APP_LED(NoC, NoC_Fault, NoC_GLPK, prob_GLPK, Engine, color);
 
+#if defined ( USE_ENGINE_W_FEEDBACK )
+    float setpoint = 90.0;
+    float Kp = 0.5;
     int sum_node_to_run = 1;
     for (int i = 0; i < NoC->N_apps; i++)
     {
@@ -37,6 +40,24 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
             sum_node_to_run += NoC->N_nodes_apps[i];
         }
     }
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    float setpoint = 15.0, del_a;
+    int sum_node_to_run = 1;
+    for (int i = 0; i < NoC->N_apps; i++)
+    {
+        if(NoC->node_to_run == sum_node_to_run)
+        {
+            del_a = (setpoint - Engine->roll_deg)*40.2 - 22.5*Engine->roll_dot;
+            del_a = 0.5*0.011111*del_a;
+            Engine->delta_a_out = del_a;
+            break;
+        }
+        else
+        {
+            sum_node_to_run += NoC->N_nodes_apps[i];
+        }
+    }
+#endif
 }
 
 void APP_PWM_OFF()
