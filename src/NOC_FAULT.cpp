@@ -211,6 +211,7 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
     }
     else //if (this->disconnected_sets.size() >= 2)
     {
+//        std::cout << NoC->disconnected_sets.size() << std::endl;
         std::vector<unsigned int> disconnected_set_not_in_fault, disconnected_set_not_in_fault_size, disconnected_set_not_in_alloc_num;
         for (unsigned int i = 0; i < NoC->disconnected_sets.size(); i++)
         {
@@ -218,23 +219,21 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
             {
                 disconnected_set_not_in_fault.push_back(i); // stores the indices for disconnected sets that are not in fault_isolated
                 disconnected_set_not_in_alloc_num.push_back(Find_Alloc_Num_in_Set(NoC, NoC->disconnected_sets[i])); // stores alloc num of that index
+                disconnected_set_not_in_fault_size.push_back(0);
             }
         }
 
         unsigned int is_break_tie = 0;
         unsigned int max_alloc = *std::max_element(disconnected_set_not_in_alloc_num.begin(), disconnected_set_not_in_alloc_num.end());
-//        std::cout << max_alloc << std::endl;
-//        std::cout << disconnected_set_not_in_fault.size() << std::endl;
 
         for (unsigned int i = 0; i < disconnected_set_not_in_fault.size(); i++)
         {
             if (disconnected_set_not_in_alloc_num[i] == max_alloc)
             {
-                disconnected_set_not_in_fault_size.push_back(NoC->disconnected_sets[disconnected_set_not_in_fault[i]].size()); // stores size of the tied allocs
+                disconnected_set_not_in_fault_size.at(i) = (NoC->disconnected_sets[disconnected_set_not_in_fault[i]].size()); // stores size of the tied allocs
             }
         }
         unsigned int max_size = *std::max_element(disconnected_set_not_in_fault_size.begin(), disconnected_set_not_in_fault_size.end()); // max size among tied allocs
-//        std::cout << max_size << std::endl;
 
         for (unsigned int i = 0; i < disconnected_set_not_in_fault.size(); i++)
         {
@@ -242,6 +241,7 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
             {
                 for (unsigned int j = 0; j < NoC->disconnected_sets[disconnected_set_not_in_fault[i]].size(); j++)
                 {
+
                     NoC->Fault_Isolated_CRs_ind.push_back(NoC->disconnected_sets[disconnected_set_not_in_fault[i]][j]);
                 }
             }

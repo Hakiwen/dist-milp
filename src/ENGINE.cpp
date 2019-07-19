@@ -51,7 +51,11 @@ void ENGINE::read_sensor()
     {
         this->SensorSetup = 1;
 
+#ifdef USE_X_PLANE_SIMULATOR
+        this->udp.init(X_PLANE_IP_ADDRESS, "192.168.0.130", X_PLANE_PORT, X_PLANE_PORT);
+#else
 #ifndef __x86_64__
+#ifdef USE_ENGINE_W_FEEDBACK
         PhidgetVoltageRatioInput_create(&this->ch);
         AskForDeviceParameters(&this->channelInfo, (PhidgetHandle *)&this->ch);
         Phidget_setDeviceSerialNumber((PhidgetHandle)this->ch, this->channelInfo.deviceSerialNumber);
@@ -66,8 +70,22 @@ void ENGINE::read_sensor()
 
         Phidget_openWaitForAttachment((PhidgetHandle)ch, 5000);
 #endif
+#endif
+#endif
 
     }
+
+#ifdef USE_X_PLANE_SIMULATOR
+//    std::cout << "udp_init: " << this->udp.initYet << std::endl;
+    if(this->udp.initYet) this->udp.receivePacket(this->data, X_PLANE_PACKET_BYTE);
+
+    this->roll_deg = Decode_Roll_X_plane (data);
+    this->roll_dot = Decode_Roll_Dot_X_plane (data);
+
+    std::cout << "roll_deg = " << roll_deg << std::endl;
+    std::cout << "roll_dot = " << roll_dot << std::endl;
+    std::cout << "sensor = " << sizeof(sensor_data) << std::endl;
+#endif
 
 //    std::cout << "sensor: " << this->sensor_data << std::endl;
 }
@@ -227,7 +245,13 @@ void ENGINE::write_data()
 
 void ENGINE::run(int N_CRs)
 {
-
+#ifdef USE_X_PLANE_SIMULATOR
+    std::cout << "I'm the X-plane!" << std::endl;
+    this->read_sensor();
+    //this->voter(N_CRs);
+    //this->pwm_send();
+    //this->write_data();
+#else
 #if defined (__x86_64__)
 #if ( PRINT )
     std::cout << "I'm the jet engine!" << std::endl;
@@ -238,12 +262,13 @@ void ENGINE::run(int N_CRs)
         this->pwm_send();
         this->write_data();
 #endif
+#endif
 }
 
 /** Phidget Functions **/
 
 #ifndef __x86_64__
-
+#ifdef USE_ENGINE_W_FEEDBACK
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx)
 {
     Phidget_ChannelSubclass channelSubclass;
@@ -298,5 +323,62 @@ static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph,
     ENGINE *Engine = (ENGINE *)ctx;
     Engine->sensor_data = voltageRatio*1000000.0;
 }
+#endif
+#endif
 
+/** X-plane Functions **/
+#ifdef USE_X_PLANE_SIMULATOR
+float Decode_Roll_X_plane (uint8_t *data)
+{
+    uint32_t roll1, roll2, roll3, roll4, roll_temp, yy=255;
+    float roll_deg;
+
+    // Calculating the Roll Angle of the Airplane
+    roll1 = (data[85]);//^xx); Transforming 8bits representation to 32bits representation
+    roll1 = (roll1&yy); // And with yy to ensure that the first bits are 0's
+
+    roll2 = (data[86]);//^xx);Transforming 8bits representation to 32bits representation
+    roll2 = (roll2&yy);// And with yy to ensure that the first bits are 0's
+
+    roll3 = (data[87]);//^xx);Transforming 8bits representation to 32bits representation
+    roll3 = (roll3&yy);// And with yy to ensure that the first bits are 0's
+
+    roll4 = (data[88]);//^xx);Transforming 8bits representation to 32bits representation
+    roll4 = (roll4&yy);// And with yy to ensure that the first bits are 0's
+
+    // Concatenate the 4 bytes
+    roll_temp = (roll4<<24)|(roll3<<16);
+    roll_temp = roll_temp|(roll2<<8);
+    roll_temp = roll_temp|(roll1);
+    roll_deg = *(float*)&roll_temp; //X-Plane uses single-precision floating-point to represent angles
+
+    return roll_deg;
+}
+
+float Decode_Roll_Dot_X_plane (uint8_t *data)
+{
+    uint32_t roll_dot1, roll_dot2, roll_dot3, roll_dot4, roll_dot_temp, yy=255;
+    float roll_dot;
+
+    // Calculating the Roll Angle of the Airplane
+    roll_dot1 = (data[49]);//^xx); Transforming 8bits representation to 32bits representation
+    roll_dot1 = (roll_dot1&yy); // And with yy to ensure that the first bits are 0's
+
+    roll_dot2 = (data[50]);//^xx);Transforming 8bits representation to 32bits representation
+    roll_dot2 = (roll_dot2&yy);// And with yy to ensure that the first bits are 0's
+
+    roll_dot3 = (data[51]);//^xx);Transforming 8bits representation to 32bits representation
+    roll_dot3 = (roll_dot3&yy);// And with yy to ensure that he first bits are 0's
+
+    roll_dot4 = (data[52]);//^xx);Transforming 8bits representation to 32bits representation
+    roll_dot4 = (roll_dot4&yy);// And with yy to ensure that he first bits are 0's
+
+    // Concatenate the 4 bytes
+    roll_dot_temp = (roll_dot4<<24)|(roll_dot3<<16);
+    roll_dot_temp = roll_dot_temp|(roll_dot2<<8);
+    roll_dot_temp = roll_dot_temp|(roll_dot1);
+    roll_dot = *(float*)&roll_dot_temp;
+
+    return roll_dot;
+}
 #endif

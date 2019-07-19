@@ -10,6 +10,10 @@
 #include <fstream>
 #include <cstring>
 
+#ifdef USE_X_PLANE_SIMULATOR
+#include "udp_driver.h"
+#endif
+
 #ifndef __x86_64__
 #include <wiringPi.h>
 #include <phidget22.h>
@@ -48,6 +52,13 @@ public:
     int voter_delay;
     int write_delay;
 
+#ifdef USE_X_PLANE_SIMULATOR
+    UDPSocket udp;
+    uint8_t data[X_PLANE_MAX_BYTE];
+    uint8_t bytes_da[sizeof(float)];
+    float roll_deg, roll_dot, delta_a;
+#endif
+
 #ifndef __x86_64__
     PhidgetVoltageRatioInputHandle ch;
     ChannelInfo channelInfo;
@@ -68,9 +79,16 @@ public:
 };
 
 #ifndef __x86_64__
+#ifdef USE_ENGINE_W_FEEDBACK
 static void CCONV onAttachHandler(PhidgetHandle ph, void *ctx);
 static void CCONV onDetachHandler(PhidgetHandle ph, void *ctx);
 static void CCONV onVoltageRatioChangeHandler(PhidgetVoltageRatioInputHandle ph, void *ctx, double voltageRatio);
+#endif
+#endif
+
+#ifdef USE_X_PLANE_SIMULATOR
+float Decode_Roll_X_plane (uint8_t *data);
+float Decode_Roll_Dot_X_plane (uint8_t *data);
 #endif
 
 #endif //DIST_MILP_ENGINE_HPP

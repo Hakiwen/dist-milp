@@ -23,9 +23,12 @@ void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SO
         }
         NoC->Update_State();
 #if defined (__x86_64__)
-#if ( PRINT )
+#if (PRINT)
     }
     NoC->Disp();
+#else
+        NoC->Disp();
+    }
 #endif
 #else
         NoC->Disp();
