@@ -10,8 +10,23 @@
 #include <fstream>
 #include <cstring>
 
-#ifdef USE_X_PLANE_SIMULATOR
+#if defined ( USE_ENGINE_W_FEEDBACK ) || defined ( USE_ENGINE_WO_FEEDBACK )
+#define MIN_PWM 100
+#define MAX_PWM 200
+#define OPER_PWM 120
+#if defined ( USE_ENGINE_WO_FEEDBACK )
+#define PERCENT_ERROR 0.1
+#endif
+#elif defined ( USE_X_PLANE_SIMULATOR )
 #include "udp_driver.h"
+#define PC_IP_ADDRESS "192.168.0.130"
+#define X_PLANE_IP_ADDRESS "192.168.0.99"
+#define X_PLANE_PORT 49000
+#define X_PLANE_MAX_BYTE 1024
+#define X_PLANE_BUFFER_SIZE 40
+#define X_PLANE_RECEIVE_PACKET_BYTE 113 // dependong on what data you want to received
+#define X_PLANE_SEND_PACKET_BYTE 41 // dependong on what data you want to received
+#define INVALID_DELTA_A_VAL 999
 #endif
 
 #ifndef __x86_64__
@@ -20,23 +35,18 @@
 #include "PhidgetHelperFunctions.hpp" // Manually Modified
 #endif
 
-#define MIN_PWM 100
-#define MAX_PWM 200
-#define OPER_PWM 120
-
 #define TOLERANCE 1
 #define N_APP_TO_VOTE 3
 
 #define MAX_VOTER_DELAY 0 // 1000
 #define MAX_WRITE_DELAY 10
 
-#include <mpi.h>
-
 class ENGINE
 {
 public:
 
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
+
     float sensor_data; // read sensor data from phidget and for broadcasting
 
     int PWM_out; // PWM value sending our from controller nodes to the engine
@@ -49,8 +59,9 @@ public:
     int PWM_PIN; // 1 for wPI
 
 #elif defined ( USE_X_PLANE_SIMULATOR )
+
     UDPSocket udp;
-    uint8_t buf[X_LANE_BUFFER_SIZE];
+    uint8_t buf[X_PLANE_BUFFER_SIZE];
     uint8_t data[X_PLANE_MAX_BYTE];
     float roll_deg, roll_dot, delta_a_out;
     float *delta_a_in;
@@ -58,6 +69,7 @@ public:
     float *delta_a_for_Voter; // for voter to choose and detecting faults
     float *delta_a_for_Voter_ind;
     float delta_a_to_X_plane; // actual PWM number to send to the engine
+
 #endif
 
     int EngineSetup;
@@ -79,7 +91,7 @@ public:
     void read_sensor();
     void pwm_send();
 
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
     void voter(int N_CRs);
     int error_detector(int* array);
     double voter_mean(int* array, int err_detector_result);

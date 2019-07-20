@@ -16,22 +16,14 @@
 
 #define USE_MPI
 
-//// Choose one, comment others ////
+/** Choose one, comment others **/
 //#define CPLEX_AS_SOLVER
 #define GLPK_AS_SOLVER
 
-//// Choose one, comment others ////
+/** Choose one, comment others **/
 //#define USE_ENGINE_W_FEEDBACK
-//#define USE_ENGINE_WO_FEEDBACK
-#define USE_X_PLANE_SIMULATOR
-
-#ifdef USE_X_PLANE_SIMULATOR
-#define X_PLANE_IP_ADDRESS "192.168.0.99"
-#define X_PLANE_PORT 49000
-#define X_PLANE_MAX_BYTE 1024
-#define X_LANE_BUFFER_SIZE 40
-#define X_PLANE_PACKET_BYTE 113 // dependong on what data you want to received
-#endif
+#define USE_ENGINE_WO_FEEDBACK
+//#define USE_X_PLANE_SIMULATOR
 
 #endif //DIST_MILP_MY_MACROS_HPP
 

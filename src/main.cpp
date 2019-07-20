@@ -132,7 +132,9 @@ int main (int argc, char* argv[])
         step++;
 
 #ifdef __x86_64__ // only put the delay on the simulation
-//        usleep(1000000);
+#ifndef USE_X_PLANE_SIMULATOR
+        usleep(1000000);
+#endif
 #endif
     }
 #else
@@ -142,7 +144,7 @@ int main (int argc, char* argv[])
     NoC.app_to_run = NoC.allocator_app_ind; // always runs the allocator for debugging optimization problem
     while (true)
     {
-#ifdef USE_X_PLANE_SIMULATOR
+#ifdef USE_X_PLANE_SIMULATOR // for testing the controller
         if(Engine.udp.initYet) Engine.udp.receivePacket(Engine.data, X_PLANE_PACKET_BYTE);
         Engine.roll_deg = Decode_Roll_X_plane (Engine.data);
         Engine.roll_dot = Decode_Roll_Dot_X_plane (Engine.data);
@@ -156,22 +158,22 @@ int main (int argc, char* argv[])
         Encode_Delta_to_X_plane(Engine.delta_a_out, Engine.buf);
         Engine.udp.sendPacket(Engine.buf, 41);
 #endif
-//        if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
-//        {
-//            NoC_GLPK.write_LP(&NoC);
-//            if(prob_GLPK.solve(&NoC_GLPK))
-//            {
-//                NoC_GLPK.read_Sol(&NoC);
-//                NoC.solver_status = 1;
-//            }
-//            else
-//            {
-//                std::cout << "Infeasible Solution" << std::endl;
-//                NoC.solver_status = 0;
-//            }
-//            NoC.Update_State();
-//        }
-//        NoC.Disp();
+        if (NoC_Fault.Fault_Gathering(&NoC)) // get fault data from others
+        {
+            NoC_GLPK.write_LP(&NoC);
+            if(prob_GLPK.solve(&NoC_GLPK))
+            {
+                NoC_GLPK.read_Sol(&NoC);
+                NoC.solver_status = 1;
+            }
+            else
+            {
+                std::cout << "Infeasible Solution" << std::endl;
+                NoC.solver_status = 0;
+            }
+            NoC.Update_State();
+        }
+        NoC.Disp();
     }
 #endif
 

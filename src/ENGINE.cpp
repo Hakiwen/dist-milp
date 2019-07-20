@@ -6,7 +6,7 @@
 
 ENGINE::ENGINE(int N_CRs)
 {
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
     this->sensor_data = 0;
 
     this->PWM_out = 0;
@@ -27,7 +27,7 @@ ENGINE::ENGINE(int N_CRs)
         this->PWM_for_Voter_ind[i] = 0;
     }
 #elif defined ( USE_X_PLANE_SIMULATOR )
-    this->delta_a_out = 999;
+    this->delta_a_out = INVALID_DELTA_A_VAL;
     this->delta_a_in = new float[N_CRs];
 
     this->delta_a_for_Voter = new float[N_APP_TO_VOTE];
@@ -36,7 +36,7 @@ ENGINE::ENGINE(int N_CRs)
 
     for (int i = 0; i < N_CRs; i++)
     {
-        this->delta_a_in[i] = 999;
+        this->delta_a_in[i] = INVALID_DELTA_A_VAL;
     }
 
     for (int i = 0; i < N_APP_TO_VOTE; i++)
@@ -74,11 +74,8 @@ void ENGINE::read_sensor()
     {
         this->SensorSetup = 1;
 
-#ifdef USE_X_PLANE_SIMULATOR
-        this->udp.init(X_PLANE_IP_ADDRESS, "192.168.0.19", X_PLANE_PORT, X_PLANE_PORT);
-#else
 #ifndef __x86_64__
-#ifdef USE_ENGINE_W_FEEDBACK
+#if defined ( USE_ENGINE_W_FEEDBACK )
         PhidgetVoltageRatioInput_create(&this->ch);
         AskForDeviceParameters(&this->channelInfo, (PhidgetHandle *)&this->ch);
         Phidget_setDeviceSerialNumber((PhidgetHandle)this->ch, this->channelInfo.deviceSerialNumber);
@@ -92,27 +89,33 @@ void ENGINE::read_sensor()
         PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(ch, onVoltageRatioChangeHandler, this);
 
         Phidget_openWaitForAttachment((PhidgetHandle)ch, 5000);
+#elif defined ( USE_X_PLANE_SIMULATOR )
+        this->udp.init(X_PLANE_IP_ADDRESS, "192.168.0.19", X_PLANE_PORT, X_PLANE_PORT);
+#endif
+#else
+#if defined ( USE_X_PLANE_SIMULATOR )
+        this->udp.init(X_PLANE_IP_ADDRESS, PC_IP_ADDRESS, X_PLANE_PORT, X_PLANE_PORT);
 #endif
 #endif
-#endif
-
     }
 
-#ifdef USE_X_PLANE_SIMULATOR
-//    std::cout << "udp_init: " << this->udp.initYet << std::endl;
-    if(this->udp.initYet) this->udp.receivePacket(this->data, X_PLANE_PACKET_BYTE);
+#if defined ( USE_ENGINE_W_FEEDBACK )
+    //    std::cout << "sensor: " << this->sensor_data << std::endl;
+#elif defined ( USE_X_PLANE_SIMULATOR )
+    if(this->udp.initYet)
+    {
+        this->udp.receivePacket(this->data, X_PLANE_RECEIVE_PACKET_BYTE);
+    }
     this->roll_deg = Decode_Roll_X_plane (data);
     this->roll_dot = Decode_Roll_Dot_X_plane (data);
     std::cout << "roll_deg = " << this->roll_deg << std::endl;
     std::cout << "roll_dot = " << this->roll_dot << std::endl;
 #endif
-
-//    std::cout << "sensor: " << this->sensor_data << std::endl;
 }
 
 void ENGINE::pwm_send()
 {
-#if defined ( USE_ENGINE_W_FEEDBACK )
+#if defined ( USE_ENGINE_W_FEEDBACK ) || defined ( USE_ENGINE_WO_FEEDBACK )
     if(!this->EngineSetup)
     {
         this->EngineSetup = 1;
@@ -148,14 +151,13 @@ void ENGINE::pwm_send()
 #endif
 
 #ifdef USE_X_PLANE_SIMULATOR
-    std::cout << this->delta_a_to_X_plane << std::endl;
+//    std::cout << this->delta_a_to_X_plane << std::endl;
     Encode_Delta_to_X_plane(this->delta_a_to_X_plane, this->buf);
-    udp.sendPacket(this->buf, 41);
+    udp.sendPacket(this->buf, X_PLANE_SEND_PACKET_BYTE);
 #endif
 }
 
-
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
 void ENGINE::voter(int N_CRs)
 {
     for (int i = 0; i < N_APP_TO_VOTE; i++)
@@ -256,7 +258,7 @@ void ENGINE::voter(float N_CRs)
 {
     for (int i = 0; i < N_APP_TO_VOTE; i++)
     {
-        this->delta_a_for_Voter[i] = MIN_PWM;
+        this->delta_a_for_Voter[i] = 999;
         this->delta_a_for_Voter_ind[i] = 0;
     }
 
@@ -335,7 +337,7 @@ double ENGINE::voter_mean(float* array, float err_detector_result)
 {
     if (err_detector_result == 6)
     {
-        return MIN_PWM; // all signals are different
+        return INVALID_DELTA_A_VAL; // all signals are different
     }
     else
     {
@@ -358,15 +360,17 @@ void ENGINE::write_data()
         myfile.open ("data.txt", std::ios::out | std::ios::app);
         for (int i = 0; i < N_APP_TO_VOTE; i++)
         {
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
             myfile << this->PWM_for_Voter[i] << ",";
 #elif defined ( USE_X_PLANE_SIMULATOR )
             myfile << this->delta_a_for_Voter[i] << ",";
 #endif
         }
-#if defined (USE_ENGINE_W_FEEDBACK)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
         myfile << this->PWM_to_Engine << ",";
+#if defined (USE_ENGINE_W_FEEDBACK)
         myfile << this->sensor_data << "\n";
+#endif
 #elif defined ( USE_X_PLANE_SIMULATOR )
         myfile << this->delta_a_to_X_plane << ",";
         myfile << this->roll_deg << ",";
@@ -382,36 +386,27 @@ void ENGINE::write_data()
 
 void ENGINE::run(int N_CRs)
 {
-#ifdef USE_X_PLANE_SIMULATOR
+#if defined (__x86_64__)
+#if defined (USE_ENGINE_W_FEEDBACK) || defined ( USE_ENGINE_WO_FEEDBACK )
+#if ( PRINT )
+    std::cout << "I'm the jet engine!" << std::endl;
+#endif
+#elif defined ( USE_X_PLANE_SIMULATOR )
+#if ( PRINT )
     std::cout << "I'm the X-plane!" << std::endl;
+#endif
     this->read_sensor();
     this->voter(N_CRs);
     this->pwm_send();
     this->write_data();
-
-//    if(udp.initYet) udp.receivePacket(data, X_PLANE_PACKET_BYTE);
-//    roll_deg = Decode_Roll_X_plane (data);
-//    roll_dot = Decode_Roll_Dot_X_plane (data);
-//    std::cout << "roll_deg = " << roll_deg << std::endl;
-//    std::cout << "roll_dot = " << roll_dot << std::endl;
-//    float setpoint = 10.0, del_a;
-//    del_a = (setpoint - roll_deg)*40.2 - 22.5*roll_dot;
-//    del_a = 0.5*0.011111*del_a;
-//    delta_a_out = del_a;
-//    std::cout << delta_a_out << std::endl;
-//    Encode_Delta_to_X_plane(delta_a_out, buf);
-//    udp.sendPacket(buf, 41);
-#else
-#if defined (__x86_64__)
-#if ( PRINT )
-    std::cout << "I'm the jet engine!" << std::endl;
 #endif
 #else
+#if !defined ( USE_ENGINE_WO_FEEDBACK )
         this->read_sensor();
+#endif
         this->voter(N_CRs);
         this->pwm_send();
         this->write_data();
-#endif
 #endif
 }
 

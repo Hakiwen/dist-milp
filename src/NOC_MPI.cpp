@@ -86,7 +86,7 @@ void NOC_MPI::Broadcast_External_Fault(ENGINE *Engine, NOC *NoC)
 
 void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
 {
-#if defined ( USE_ENGINE_W_FEEDBACK )
+#if defined ( USE_ENGINE_W_FEEDBACK ) || defined ( USE_ENGINE_WO_FEEDBACK )
     MPI_Bcast(&Engine->sensor_data, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
 #elif defined ( USE_X_PLANE_SIMULATOR )
     MPI_Bcast(&Engine->roll_deg, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -96,7 +96,7 @@ void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
 
 void NOC_MPI::Gather_PWM(ENGINE *Engine)
 {
-#if defined ( USE_ENGINE_W_FEEDBACK )
+#if defined ( USE_ENGINE_W_FEEDBACK ) || defined ( USE_ENGINE_WO_FEEDBACK )
     int *gather_data_receive = NULL;
     if(this->world_rank == 0)
     {
@@ -131,7 +131,7 @@ void NOC_MPI::Gather_PWM(ENGINE *Engine)
         }
     }
 
-    Engine->delta_a_out = 999;
+    Engine->delta_a_out = INVALID_DELTA_A_VAL;
 #endif
 }
 
