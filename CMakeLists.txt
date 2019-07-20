@@ -18,23 +18,23 @@ endif ()
 
 include_directories(include
 			apps
-			lib
+			utils
 		    ${EIGEN3_INCLUDE_DIRS}
 			${MPI_INCLUDE_PATH}
 #		    "/opt/ibm/ILOG/CPLEX_Studio129/cplex/include"
 #		    "/opt/ibm/ILOG/CPLEX_Studio129/concert/include"
 			)
 
-#link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/lib/x86-64_linux/static_pic"
-#		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/lib/x86-64_linux/static_pic")
+#link_directories("/opt/ibm/ILOG/CPLEX_Studio129/cplex/utils/x86-64_linux/static_pic"
+#		 "/opt/ibm/ILOG/CPLEX_Studio129/concert/utils/x86-64_linux/static_pic")
 #set (CPLEX_LINK_LIBS libilocplex.a libconcert.a libcplex.a libcplexdistmip.a m Threads::Threads dl)
 
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB APPS "apps/*.cpp")
-file(GLOB LIBS "lib/*.cpp")
+file(GLOB LIBS "utils/*.cpp")
 
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
-	list(REMOVE_ITEM LIBS ${CMAKE_CURRENT_SOURCE_DIR}/lib/PhidgetHelperFunctions.cpp ${CMAKE_CURRENT_SOURCE_DIR}/lib/PhidgetHelperFunctions.hpp)
+	list(REMOVE_ITEM LIBS ${CMAKE_CURRENT_SOURCE_DIR}/utils/PhidgetHelperFunctions.cpp ${CMAKE_CURRENT_SOURCE_DIR}/utils/PhidgetHelperFunctions.hpp)
 else()
 endif ()
 

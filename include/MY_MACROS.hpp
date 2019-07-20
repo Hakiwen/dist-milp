@@ -31,7 +31,6 @@
 // TODO try...catch... for checking if all arguments to all functions are valid
 // TODO Other topologies besides square
 // TODO MPI should be non-blocking
-// TODO more than one isolated nodes (done?, test on the system)-> faulty on paths -> visualize paths on hardware
+// TODO faults on paths -> visualize paths on hardware
 // TODO computational faults on reallocators
-// TODO integrate with X-plane
 // TODO fault detection system
