@@ -11,6 +11,7 @@
 #include <cstring>
 
 #if defined ( USE_ENGINE_W_FEEDBACK ) || defined ( USE_ENGINE_WO_FEEDBACK )
+#define PIN_PWM 1
 #define MIN_PWM 100
 #define MAX_PWM 200
 #define OPER_PWM 120

@@ -121,7 +121,7 @@ void ENGINE::pwm_send()
         this->EngineSetup = 1;
 
 #ifndef __x86_64__
-        this->PWM_PIN = 1;
+        this->PWM_PIN = PIN_PWM;
         pinMode(this->PWM_PIN, PWM_OUTPUT);
         pwmSetMode (PWM_MODE_MS);
         pwmSetRange (2000);
@@ -143,7 +143,7 @@ void ENGINE::pwm_send()
         this->PWM_to_Engine = MAX_PWM;
     }
 
-    //    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
+//    std::cout << "sensor: " << this->sensor_data << " PWM: " << this->PWM_to_Engine << std::endl;
 
 #ifndef __x86_64__
     pwmWrite(this->PWM_PIN, this->PWM_to_Engine);
@@ -169,7 +169,7 @@ void ENGINE::voter(int N_CRs)
     int j = 0;
     for (int i = 0; i < N_CRs; i++)
     {
-        std::cout << "PWM_" << i+1 << ": " << PWM_in[i] << ", ";
+//        std::cout << "PWM_" << i+1 << ": " << PWM_in[i] << ", ";
         if (this->PWM_in[i] > MIN_PWM)
         {
             this->PWM_for_Voter[j] = this->PWM_in[i];
