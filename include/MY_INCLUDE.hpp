@@ -9,6 +9,7 @@
 #include <csignal>
 #include <fstream>
 #include <unistd.h>
+#include <vector>
 
 #ifndef __x86_64__
 #include <wiringPi.h>

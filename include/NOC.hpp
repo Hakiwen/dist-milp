@@ -50,6 +50,8 @@ public:
     int node_to_run; // node to run on each CR, each node receives
     int app_to_run; // app to run on each CR
     int *comm_path_to_use; //communication path to use for communicating from the reallocators to others
+    Eigen::MatrixXi comm_path_to_use_received; // comm path to use on each path, receives from multiple allocators
+    int *path_to_run;
 
     std::vector<std::vector<int> > disconnected_sets;
     std::vector<int> Fault_Isolated_CRs_ind;
@@ -94,7 +96,9 @@ public:
     void Update_State();
     void Clear_State();
 
+    void Voter(int rank, int step);
     void App_Voter(int rank, int step);
+    void Path_Voter(int step);
     Eigen::MatrixXi get_X_from_nodes(Eigen::MatrixXi nodes_on_CRs_received_voted, int N_rows, int N_cols);
     void Disp();
 };

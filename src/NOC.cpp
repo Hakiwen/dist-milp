@@ -147,12 +147,16 @@ void NOC::CreateAuxMatrices(const char* topo){
 
     /* Other variables for communication paths and Fault Detection on Paths*/
     this->comm_path_to_use = new int[this->N_paths];
+    this->nodes_on_CRs_received.resize(this->N_paths, this->allocator_app_num);
+    this->path_to_run = new int[this->N_paths];
     this->N_Faults_Paths = -1;
     this->prev_N_Faults_Paths = -1;
     this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
     this->Fault_Paths_receive = new int[this->N_paths];
     for (int i = 0; i < this->N_paths; i++)
     {
+        this->comm_path_to_use[i] = 0;
+        this->path_to_run[i] = 0;
         this->Fault_Paths[i] = 0;
         this->Fault_Paths_receive[i] = 0;
     }
@@ -470,6 +474,12 @@ void NOC::Clear_State()
     }
 }
 
+void NOC::Voter(int rank, int step)
+{
+    this->App_Voter(rank, step); // vote on reallocator app signals
+    this->Path_Voter(step); // vote on reallocator path signals
+}
+
 void NOC::App_Voter(int rank, int step)
 {
     if(step == 0)
@@ -487,7 +497,7 @@ void NOC::App_Voter(int rank, int step)
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 0); // allocators 1 and 2 agree, listen to one of them, here 1
             this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(0), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
-            if (VERBOSE) std::cout << "allocators 1 and 2 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 1 and 2 match in app" << std::endl;
 #endif
         }
         else if(mismatch_2_3 == 0)
@@ -495,7 +505,7 @@ void NOC::App_Voter(int rank, int step)
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 1); // allocators 2 and 3 agree, listen to one of them, here 2
             this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(1), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
-            if (VERBOSE) std::cout << "allocators 2 and 3 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 2 and 3 match in app" << std::endl;
 #endif
         }
         else if(mismatch_3_1 == 0)
@@ -503,7 +513,7 @@ void NOC::App_Voter(int rank, int step)
             this->node_to_run = this->nodes_on_CRs_received(rank-1, 2); // allocators 3 and 1 agree, listen to one of them, here 3
             this->X_CRs_nodes_received = this->get_X_from_nodes(this->nodes_on_CRs_received.col(2), this->N_CRs, this->N_nodes);
 #if defined(__x86_64__)
-            if (VERBOSE) std::cout << "allocators 3 and 1 match" << std::endl;
+            if (VERBOSE) std::cout << "allocators 3 and 1 match in app" << std::endl;
 #endif
         }
         else if (mismatch_1_2 == -1 || mismatch_2_3 == -1 || mismatch_3_1 == -1)
@@ -571,14 +581,14 @@ void NOC::App_Voter(int rank, int step)
             }
 
 #if defined(__x86_64__)
-            if (VERBOSE) std::cout << "only one allocator left, I will be another allocator" << std::endl;
+            if (VERBOSE) std::cout << "only one allocator left, I will be another allocator app" << std::endl;
 #endif
         }
         else // all allocators give different results
         {
             // trust no allocators, keep doing what's it doing
 #if defined(__x86_64__)
-            if (VERBOSE) std::cout << "no allocators match" << std::endl;
+            if (VERBOSE) std::cout << "no allocators match in app" << std::endl;
 #endif
         }
     }
@@ -597,6 +607,61 @@ void NOC::App_Voter(int rank, int step)
             {
                 this->X_CRs_nodes_old(i, this->nodes_on_CRs_received(i, 0) - 1) = 1;
             }
+        }
+    }
+}
+
+void NOC::Path_Voter(int step)
+{
+    if(step == 0)
+    {
+        for (int i = 0; i < this->N_paths; i++)
+        {
+            this->path_to_run[i] = this->comm_path_to_use_received(i, 0);
+        }
+    }
+    else
+    {
+        int mismatch_1_2 = MathHelperFunctions_norm_of_difference(1, 2, this->comm_path_to_use_received); // = 0 if values matches, != 0 otherwise
+        int mismatch_2_3 = MathHelperFunctions_norm_of_difference(2, 3, this->comm_path_to_use_received);
+        int mismatch_3_1 = MathHelperFunctions_norm_of_difference(3, 1, this->comm_path_to_use_received);
+
+        if(mismatch_1_2 == 0) // values match
+        {
+            for (int i = 0; i < this->N_paths; i++)
+            {
+                this->path_to_run[i] = this->comm_path_to_use_received(i, 0); // allocators 1 and 2 agree, listen to one of them, here 1
+            }
+#if defined(__x86_64__)
+            if (VERBOSE) std::cout << "allocators 1 and 2 match in path" << std::endl;
+#endif
+        }
+        else if(mismatch_2_3 == 0)
+        {
+            for (int i = 0; i < this->N_paths; i++)
+            {
+                this->path_to_run[i] = this->comm_path_to_use_received(i, 1); // allocators 2 and 3 agree, listen to one of them, here 2
+            }
+#if defined(__x86_64__)
+            if (VERBOSE) std::cout << "allocators 2 and 3 match in path" << std::endl;
+#endif
+        }
+        else if(mismatch_3_1 == 0)
+        {
+            for (int i = 0; i < this->N_paths; i++)
+            {
+                this->path_to_run[i] = this->comm_path_to_use_received(i, 2); // allocators 3 and 1 agree, listen to one of them, here 3
+            }
+#if defined(__x86_64__)
+            if (VERBOSE) std::cout << "allocators 3 and 1 match in path" << std::endl;
+#endif
+        }
+        else // all allocators give different results
+        {
+            // trust no allocators, keep doing what's it doing
+#if defined(__x86_64__)
+            if (VERBOSE) std::cout << "no allocators match in path" << std::endl;
+#endif
         }
     }
 }

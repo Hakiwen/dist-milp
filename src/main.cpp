@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
         }
         else // computer resource nodes
         {
-            NoC.App_Voter(NoC_MPI.world_rank, step); // vote on reallocator signals
+            NoC.Voter(NoC_MPI.world_rank, step); // vote on reallocator signals
 
 #if defined (__x86_64__)
 #if ( PRINT ) // print the simulation
@@ -114,12 +114,14 @@ int main (int argc, char* argv[])
             if(NoC.app_to_run == -1 || fault_internal_status == 1) // dead
             {
                 APP_LED_OFF();
+                PATH_LED(NoC.path_to_run, NoC.G, NoC_MPI.world_rank);
                 NoC.Clear_State();
                 NoC.node_to_run = -1; // The dead won't remember anything
             }
             else
             {
                 app_ptr[NoC.app_to_run](&NoC, &NoC_Fault, &NoC_GLPK, &prob_GLPK, &Engine, NoC.app_color[NoC.app_to_run]);
+                PATH_LED(NoC.path_to_run, NoC.G, NoC_MPI.world_rank);
 
                 if(!(NoC.app_to_run >= NoC.allocator_app_ind && NoC.app_to_run < NoC.allocator_app_ind + NoC.allocator_app_num))
                 {

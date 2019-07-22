@@ -8,6 +8,7 @@
 #include "MY_INCLUDE.hpp"
 
 #include "APP_LED.hpp"
+#include "APP_PATH.hpp"
 #include "APP_PID.hpp"
 #include "APP_REALLOCATOR.hpp"
 

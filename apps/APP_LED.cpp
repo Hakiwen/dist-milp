@@ -108,12 +108,12 @@ void APP_LED_OFF()
 #elif !defined(__x86_64__)
     int RED_LED = RED_LED_PIN;
     int GREEN_LED = GREEN_LED_PIN;
-    int BLUE_LED  = BLUE_LED_PIN;
+    int BLUE_LED = BLUE_LED_PIN;
     pinMode (RED_LED, OUTPUT);
     pinMode (GREEN_LED, OUTPUT);
     pinMode (BLUE_LED, OUTPUT);
-    digitalWrite (RED_LED,  LOW);
-    digitalWrite (GREEN_LED,  LOW);
-    digitalWrite (BLUE_LED,  LOW);
+    digitalWrite (RED_LED, LOW);
+    digitalWrite (GREEN_LED, LOW);
+    digitalWrite (BLUE_LED, LOW);
 #endif
 }

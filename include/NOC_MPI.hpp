@@ -23,6 +23,7 @@ public:
     void Barrier(); // control barrier function
 
     void Scatter_Apps(NOC *NoC);
+    void Scatter_Paths(NOC *NoC);
     void Gather_Internal_Faults(NOC *NoC);
     void Broadcast_External_Fault(ENGINE *Engine, NOC *NoC);
     void Broadcast_Sensor(ENGINE *Engine);

@@ -63,6 +63,53 @@ void NOC_MPI::Scatter_Apps(NOC *NoC)
     }
 }
 
+void NOC_MPI::Scatter_Paths(NOC *NoC)
+{
+    int *scatter_data_send = NULL;
+    scatter_data_send = new int[NoC->N_paths];
+    for (int i = 0; i < NoC->N_paths; i++)
+    {
+        scatter_data_send[i] = NoC->comm_path_to_use[i];
+    }
+
+    int *gather_data_receive = NULL;
+    gather_data_receive = new int[this->world_size*NoC->N_paths];
+
+    MPI_Allgather(scatter_data_send, NoC->N_paths, MPI_INT, gather_data_receive, NoC->N_paths, MPI_INT, MPI_COMM_WORLD);
+
+    Eigen::VectorXd allocator_ind = Eigen::VectorXd::Ones(NoC->allocator_app_num) * -1;
+    int k = 0, ind = 0;
+    for (int i = 0; i < this->world_size*NoC->N_paths; i += NoC->N_paths)
+    {
+        int sum_comm_path_to_use = 0;
+        for (int j = 0; j < NoC->N_paths; j++)
+        {
+            sum_comm_path_to_use = sum_comm_path_to_use + gather_data_receive[i+j];
+        }
+        if (sum_comm_path_to_use != 0)
+        {
+            allocator_ind(ind) = k;
+            ind++;
+        }
+        k++;
+    }
+
+    for (int i = 0; i < NoC->N_paths; i++)
+    {
+        for (int j = 0; j < NoC->allocator_app_num; j++)
+        {
+            if (allocator_ind(j) == -1)
+            {
+                NoC->comm_path_to_use_received(i,j) = 0;
+            }
+            else
+            {
+                NoC->comm_path_to_use_received(i, j) = gather_data_receive[int(allocator_ind(j)) * NoC->N_paths + i];
+            }
+        }
+    }
+}
+
 void NOC_MPI::Gather_Internal_Faults(NOC *NoC)
 {
     int *gather_data_receive = NULL;
@@ -142,6 +189,7 @@ void NOC_MPI::run(NOC *NoC, ENGINE *Engine)
     this->Broadcast_Sensor(Engine);
     this->Gather_PWM(Engine);
     this->Scatter_Apps(NoC);
+    this->Scatter_Paths(NoC);
     this->Gather_Internal_Faults(NoC);
     this->Broadcast_External_Fault(Engine, NoC);
     this->Barrier();
