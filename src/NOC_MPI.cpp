@@ -189,7 +189,7 @@ void NOC_MPI::run(NOC *NoC, ENGINE *Engine)
     this->Broadcast_Sensor(Engine);
     this->Gather_PWM(Engine);
     this->Scatter_Apps(NoC);
-//    this->Scatter_Paths(NoC);
+    this->Scatter_Paths(NoC);
     this->Gather_Internal_Faults(NoC);
     this->Broadcast_External_Fault(Engine, NoC);
     this->Barrier();

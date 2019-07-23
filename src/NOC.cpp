@@ -477,7 +477,7 @@ void NOC::Clear_State()
 void NOC::Voter(int rank, int step)
 {
     this->App_Voter(rank, step); // vote on reallocator app signals
-//    this->Path_Voter(step); // vote on reallocator path signals
+    this->Path_Voter(step); // vote on reallocator path signals
 }
 
 void NOC::App_Voter(int rank, int step)
