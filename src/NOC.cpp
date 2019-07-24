@@ -147,7 +147,7 @@ void NOC::CreateAuxMatrices(const char* topo){
 
     /* Other variables for communication paths and Fault Detection on Paths*/
     this->comm_path_to_use = new int[this->N_paths];
-    this->nodes_on_CRs_received.resize(this->N_paths, this->allocator_app_num);
+    this->comm_path_to_use_received.resize(this->N_paths, this->allocator_app_num);
     this->path_to_run = new int[this->N_paths];
     this->N_Faults_Paths = -1;
     this->prev_N_Faults_Paths = -1;

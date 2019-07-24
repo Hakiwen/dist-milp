@@ -28,9 +28,9 @@ wget https://github.com/Kitware/CMake/releases/download/v3.15.0/cmake-3.15.0.tar
 tar -xvf cmake-3.15.0.tar.gz cmake-3.15.0/
 cd cmake-3.15.0/
 cmake .
-make
+make -j4
 sudo make install
-echo "export CMAKE_ROOT=/usr/local/share/cmake-3.15" >> .bashrc
+echo "export CMAKE_ROOT=/usr/local/share/cmake-3.15" >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -51,7 +51,7 @@ wget http://ftp.gnu.org/gnu/glpk/glpk-4.65.tar.gz
 tar -xvf glpk-4.65.tar.gz
 cd glpk-4.65
 ./configure
-make-j4
+make -j4
 sudo make install
 ```
 
@@ -74,7 +74,7 @@ sudo apt-get install -y xterm
 * Add Libraries to Path
 
 ```
-echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib" >> .bashrc
+echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib" >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -149,10 +149,12 @@ gpio readall
 
 * Install [Phidget](https://www.phidgets.com/docs/Main_Page)
 ```
+sudo -i
 wget -qO- http://www.phidgets.com/gpgkey/pubring.gpg | apt-key add -
 echo 'deb http://www.phidgets.com/debian stretch main' > /etc/apt/sources.list.d/phidgets.list
-sudo apt-get update
-sudo apt-get install libphidget22 libphidget22-dev
+apt-get update
+apt-get install libphidget22 libphidget22-dev
+exit
 ```
 
 ##### Clone the sd card
@@ -166,7 +168,7 @@ cd
 sudo dd if=/dev/sdb of=~/SDCardBackup.img
 ```
 
-* Use [Etcher](https://www.balena.io/etcher/) to flash an image to a new sd card
+* Use [Etcher](https://www.balena.io/etcher/) to flash an image to a new sd card (dd acts weird sometimes on writing)
 
 ##### Change the hostname and ip address of the new sd card
 
