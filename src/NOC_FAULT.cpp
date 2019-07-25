@@ -363,11 +363,13 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
         for (int i = 0; i < NoC->N_paths; i++)
         {
             NoC->Fault_Paths[i] = NoC->Fault_Paths_receive[i] || path_to_fail[i];
+//            std::cout << NoC->Fault_Paths[i];
             if(NoC->Fault_Paths[i])
             {
                 NoC->N_Faults_Paths += 1;
             }
         }
+//        std::cout << std::endl;
 
         if(NoC->N_Faults_CR == NoC->prev_N_Faults_CR && NoC->N_Faults_Paths == NoC->prev_N_Faults_Paths)
         {
@@ -398,13 +400,28 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank) // detect fault from the swit
         int switch_button_1 = NODE_FAULT_PIN;
         pinMode (switch_button_1, INPUT);
         pullUpDnControl (switch_button_1, PUD_UP);
-        if(digitalRead (switch_button_1) == 1)
+        if (digitalRead (switch_button_1) == 1)
         {
             NoC->fault_internal_status_CR = 0;
         }
         else
         {
             NoC->fault_internal_status_CR = 1;
+        }
+
+        int switch_button_path[NoC->N_neighbors] = {PATH_FAULT_PIN_1, PATH_FAULT_PIN_2, PATH_FAULT_PIN_3, PATH_FAULT_PIN_4};
+        for (int i = 0; i < NoC->N_neighbors; i++)
+        {
+            pinMode (switch_button_path[i], INPUT);
+            pullUpDnControl (switch_button_path[i], PUD_UP);
+            if (digitalRead (switch_button_path[i]) == 1)
+            {
+
+            }
+            else
+            {
+
+            }
         }
 #endif
 #ifdef USE_MPI

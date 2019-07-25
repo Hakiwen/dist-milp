@@ -68,7 +68,7 @@ public:
     int prev_N_Faults_Paths;
     int *Fault_Paths; // overall fault paths due to both node failures and path failures
     int *Fault_Paths_receive; // faulty status of each path, solver receives
-    int *fault_Paths_send; // faulty status of neigbor paths, each node sends
+    int *Fault_Paths_send; // faulty status of neighbor paths, each node sends; -1 if node&path not adjacent, 1 if adjacent path is dead, 0 if adjacent path is alive
 
     int solver_status;
     int obj_val;

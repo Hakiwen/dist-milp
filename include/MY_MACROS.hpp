@@ -9,16 +9,22 @@
 #define PRINT 1
 
 #define LED_PATHS_PER_NODE 2 // each node takes care of at most two paths
-#define RED_LED_PATH_PIN_1 22
-#define GREEN_LED_PATH_PIN_1 23
-#define BLUE_LED_PATH_PIN_1 24
-#define RED_LED_PATH_PIN_2 22
-#define GREEN_LED_PATH_PIN_2 23
-#define BLUE_LED_PATH_PIN_2 24
+#define RED_LED_PATH_PIN_1 7
+#define GREEN_LED_PATH_PIN_1 0
+#define BLUE_LED_PATH_PIN_1 1
+#define RED_LED_PATH_PIN_2 2
+#define GREEN_LED_PATH_PIN_2 3
+#define BLUE_LED_PATH_PIN_2 4
 
 #define RED_LED_PIN 26
 #define GREEN_LED_PIN 27
 #define BLUE_LED_PIN 28
+
+#define MAX_NEIGHBOR_NUM_SQUARE_TOPO 4  // UP, DOWN, LEFT, RIGHT
+#define PATH_FAULT_PIN_1 12
+#define PATH_FAULT_PIN_2 13
+#define PATH_FAULT_PIN_3 14
+#define PATH_FAULT_PIN_4 10
 
 #define COMPUTATIONAL_FAULT_PIN 25 // external fault, only the node fails (running, but gives wrong results), its neighbor paths are still alive
 #define NODE_FAULT_PIN 29 // internal fault , the node and its neighbor are completely fail

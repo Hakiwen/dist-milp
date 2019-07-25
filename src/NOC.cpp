@@ -82,7 +82,7 @@ void NOC::CreateTopology(const char *topo)
 
 void NOC::CreateSquareTopology()
 {
-    this->N_neighbors = 4; // UP, DOWN, LEFT, RIGHT
+    this->N_neighbors = MAX_NEIGHBOR_NUM_SQUARE_TOPO; // UP, DOWN, LEFT, RIGHT
     this->N_paths =
             (this->N_Col_CRs - 1) * this->N_Row_CRs + (this->N_Row_CRs - 1) * this->N_Col_CRs; // square topology
     this->N_links_apps = new int[this->N_apps];
@@ -153,17 +153,14 @@ void NOC::CreateAuxMatrices(const char* topo){
     this->prev_N_Faults_Paths = -1;
     this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
     this->Fault_Paths_receive = new int[this->N_paths];
+    this->Fault_Paths_send = new int[this->N_paths];
     for (int i = 0; i < this->N_paths; i++)
     {
         this->comm_path_to_use[i] = 0;
         this->path_to_run[i] = 0;
         this->Fault_Paths[i] = 0;
         this->Fault_Paths_receive[i] = 0;
-    }
-    this->fault_Paths_send = new int[this->N_neighbors];
-    for (int i = 0; i < this->N_neighbors; i++)
-    {
-        this->fault_Paths_send[i] = 0;
+        this->Fault_Paths_send[i] = -1;
     }
 }
 
@@ -432,6 +429,10 @@ void NOC::Update_State()
         this->apps_on_CRs[i] = get_app_from_node(this->nodes_on_CRs[i]);
     }
 
+    for (int i = 0; i < this->N_paths; i++)
+    {
+        this->comm_path_to_use[i] = 0;
+    }
     for (int k = 0; k < this->allocator_app_num; k++)
     {
         for (int i = 0; i < this->N_paths; i++)
@@ -441,8 +442,7 @@ void NOC::Update_State()
             {
                 sum_path_in_CRs += abs(this->X_comm_paths[k](i, j));
             }
-
-            if (this->Fault_Paths[i] == 1) // that node is faulty
+            if (this->Fault_Paths[i] == 1) // that path is faulty
             {
                 this->comm_path_to_use[i] = -1;
             }
@@ -456,7 +456,7 @@ void NOC::Update_State()
             }
             else
             {
-                this->nodes_on_CRs[i] |= (0 << k);
+                this->comm_path_to_use[i] |= (0 << k);
             }
         }
     }
@@ -693,15 +693,15 @@ void NOC::Disp()
     std::cout << "result1: \n" << result1 << std::endl;
     std::cout << "result2: \n" << result2 << std::endl;
 
-//    for(int i = 0; i < this->N_paths; i ++)
-//    {
-//        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
-//        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
-//        {
-//            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
-//        }
-//        std::cout << std::endl;
-//    }
+    for(int i = 0; i < this->N_paths; i ++)
+    {
+        std::cout << "comm path " << i+1 << ": " << comm_path_to_use[i] << ", ";
+        for (unsigned int j = (1 << (this->allocator_app_num - 1)); j > 0; j = j / 2)
+        {
+            ( (comm_path_to_use[i] & j) && (comm_path_to_use[i] >= 0) ) ? std::printf("1") : std::printf("0");
+        }
+        std::cout << std::endl;
+    }
 
 //    for (int k = 0; k < this->allocator_app_num; k++)
 //    {

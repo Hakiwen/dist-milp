@@ -6,6 +6,7 @@
 void sighandler(int signal)
 {
     APP_LED_OFF();
+    PATH_LED_OFF();
     APP_PWM_OFF();
     exit(1);
 }
@@ -114,7 +115,7 @@ int main (int argc, char* argv[])
             if(NoC.app_to_run == -1 || fault_internal_status == 1) // dead
             {
                 APP_LED_OFF();
-                PATH_LED(NoC.path_to_run, NoC.G, NoC_MPI.world_rank);
+                PATH_LED_OFF();
                 NoC.Clear_State();
                 NoC.node_to_run = -1; // The dead won't remember anything
             }
