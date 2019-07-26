@@ -174,55 +174,96 @@ void NOC::CreateNeighborMatrixSquareTopology()
 
     for (int i = 0; i < this->N_CRs; i++)
     {
-        neighbor_ind[LEFT_IND] = (i + 1) - 1;
-        neighbor_ind[RIGHT_IND] = (i + 1) + 1;
-        neighbor_ind[UP_IND] = (i + 1) - this->N_Col_CRs;
-        neighbor_ind[DOWN_IND] = (i + 1) + this->N_Col_CRs;
-
-        for (int j = 0; j < Neighbor_NUM; j++)
+        if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0) // if the CR is alive
         {
-            if (neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
+            neighbor_ind[LEFT_IND] = (i + 1) - 1;
+            neighbor_ind[RIGHT_IND] = (i + 1) + 1;
+            neighbor_ind[UP_IND] = (i + 1) - this->N_Col_CRs;
+            neighbor_ind[DOWN_IND] = (i + 1) + this->N_Col_CRs;
+
+            for (int j = 0; j < Neighbor_NUM; j++)
             {
-                if ((this->Fault_Internal_CRs[neighbor_ind[j] - 1] || this->Fault_External_CRs[neighbor_ind[j] - 1]) == 0 && (this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0)
+                if (neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
                 {
-                    this->D(i, i) += 1;
-                    this->A(i, neighbor_ind[j] - 1) = 1;
+                    if ((this->Fault_Internal_CRs[neighbor_ind[j] - 1] ||
+                         this->Fault_External_CRs[neighbor_ind[j] - 1]) == 0)
+                    {
+                        this->D(i, i) += 1;
+                        this->A(i, neighbor_ind[j] - 1) = 1;
+                    }
+                }
+            }
+
+            if (this->N_Col_CRs > 1)
+            {
+                if ((i + 1) % this->N_Col_CRs == 1) // first column
+                {
+                    if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
+                    {
+                        this->D(i, i) -= 1;
+                        if ((this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1] ||
+                             this->Fault_External_CRs[neighbor_ind[LEFT_IND] - 1]) == 1)
+                        {
+                            this->D(i, i) += 1;
+                        }
+                        this->A(i, neighbor_ind[LEFT_IND] - 1) = 0;
+                    }
+                }
+                else if ((i + 1) % this->N_Col_CRs == 0) // last column
+                {
+                    if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
+                    {
+                        this->D(i, i) -= 1;
+                        if ((this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1] ||
+                             this->Fault_External_CRs[neighbor_ind[RIGHT_IND] - 1]) == 1)
+                        {
+                            this->D(i, i) += 1;
+                        }
+                        this->A(i, neighbor_ind[RIGHT_IND] - 1) = 0;
+                    }
                 }
             }
         }
-
-        if (this->N_Col_CRs > 1)
-        {
-            if ((i + 1) % this->N_Col_CRs == 1) // first column
-            {
-                if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
-                {
-                    this->D(i, i) -= 1;
-                    if ((this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1] || this->Fault_External_CRs[neighbor_ind[LEFT_IND] - 1]) == 1)
-                    {
-                        this->D(i, i) += 1;
-                    }
-                    this->A(i, neighbor_ind[LEFT_IND] - 1) = 0;
-                }
-            }
-            else if ((i + 1) % this->N_Col_CRs == 0) // last column
-            {
-                if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
-                {
-                    this->D(i, i) -= 1;
-                    if ((this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1] || this->Fault_External_CRs[neighbor_ind[RIGHT_IND] - 1]) == 1)
-                    {
-                        this->D(i, i) += 1;
-                    }
-                    this->A(i, neighbor_ind[RIGHT_IND] - 1) = 0;
-                }
-            }
-        }
-
-        if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 1)
+        else if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 1) // if the CR is dead
         {
             this->D(i, i) = -1;
             this->A(i, i) = -1;
+        }
+    }
+
+    int ind_1 = -1, ind_2 = -1;
+    for (int j = 0; j < this->N_paths; j++)
+    {
+        if (this->Fault_Paths_receive[j] == 1) // if path j is faulty
+        {
+            for (int i = 0; i < this->N_CRs; i++) // see which two of CRs, a faulty path j connects
+            {
+                if (this->G(i, j) != 0)
+                {
+                    if (ind_1 == -1)
+                    {
+                        ind_1 = i;
+                    }
+                    else if (ind_2 == -1)
+                    {
+                        ind_2 = i;
+                        break;
+                    }
+                }
+            }
+            if (ind_1 != -1 && ind_2 != -1)
+            {
+                this->A(ind_1, ind_2) = 0;
+                this->A(ind_2, ind_1) = 0;
+                if (this->D(ind_1, ind_1) >= 1)
+                {
+                    this->D(ind_1, ind_1) -= 1;
+                }
+                if (this->D(ind_2, ind_2) >= 1)
+                {
+                    this->D(ind_2, ind_2) -= 1;
+                }
+            }
         }
     }
 }
