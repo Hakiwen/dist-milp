@@ -4,9 +4,24 @@
 
 #include "APP_REALLOCATOR.hpp"
 
+int is_blink = 0;
+
 void APP_REALLOCATOR(NOC *NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *prob_GLPK, ENGINE *Engine, int color)
 {
-    APP_LED(NoC, NoC_Fault, NoC_GLPK, prob_GLPK, Engine, color);
+    if (is_blink < 60)
+    {
+        is_blink++;
+        APP_LED(NoC, NoC_Fault, NoC_GLPK, prob_GLPK, Engine, LED_YELLOW);
+    }
+    else if (is_blink < 80)
+    {
+        is_blink++;
+        APP_LED(NoC, NoC_Fault, NoC_GLPK, prob_GLPK, Engine, color);
+    }
+    else
+    {
+        is_blink = 0;
+    }
 
     if (NoC_Fault->Fault_Gathering(NoC)) // get fault data from others
     {

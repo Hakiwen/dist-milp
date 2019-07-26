@@ -33,9 +33,9 @@ int main (int argc, char* argv[])
     app_ptr[1] = &APP_PID;          app_color[1] = LED_RED;     // 1st priority app
     app_ptr[2] = &APP_PID;          app_color[2] = LED_GREEN;   // and so on...
     app_ptr[3] = &APP_PID;          app_color[3] = LED_BLUE;
-    app_ptr[4] = &APP_REALLOCATOR;  app_color[4] = LED_YELLOW;
-    app_ptr[5] = &APP_REALLOCATOR;  app_color[5] = LED_YELLOW;
-    app_ptr[6] = &APP_REALLOCATOR;  app_color[6] = LED_YELLOW;
+    app_ptr[4] = &APP_REALLOCATOR;  app_color[4] = LED_RED;
+    app_ptr[5] = &APP_REALLOCATOR;  app_color[5] = LED_GREEN;
+    app_ptr[6] = &APP_REALLOCATOR;  app_color[6] = LED_BLUE;
     app_ptr[7] = &APP_LED;          app_color[7] = LED_MAGENTA;
 
     // index of app where the first allocator starts, and the total number allocators

@@ -356,7 +356,7 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
             {
                 NoC->N_Faults_CR += 1;
             }
-//            std::cout << NoC->Fault_Isolated_CRs[i] << std::endl;
+//            std::cout << NoC->Fault_Internal_CRs[i];
         }
 
         NoC->N_Faults_Paths = 0;
@@ -410,19 +410,63 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank) // detect fault from the swit
         }
 
         int switch_button_path[NoC->N_neighbors] = {PATH_FAULT_PIN_1, PATH_FAULT_PIN_2, PATH_FAULT_PIN_3, PATH_FAULT_PIN_4};
+        int switch_button_status[NoC->N_neighbors] = {0, 0, 0, 0}; // alive at the beginning
         for (int i = 0; i < NoC->N_neighbors; i++)
         {
             pinMode (switch_button_path[i], INPUT);
             pullUpDnControl (switch_button_path[i], PUD_UP);
             if (digitalRead (switch_button_path[i]) == 1)
             {
-
+                switch_button_status[i] = 0;
             }
             else
             {
+                switch_button_status[i] = 1;
+            }
+//            if (rank == 1) std::cout << switch_button_status[i];
+        }
+//        if (rank == 1) std::cout << std::endl;
 
+        int path_ind[NoC->N_neighbors], UP_IND = 0, DOWN_IND = 1, LEFT_IND = 2, RIGHT_IND = 3;
+        int i = rank - 1, N_Col = NoC->N_Col_CRs, N_Row = NoC->N_Row_CRs;
+        int N_joint = (N_Col - 1)*N_Row + (N_Row - 1)*N_Col;
+        int current_row = int(i / N_Col);
+        path_ind[UP_IND] = (i+1) - N_Col + (N_Col - 1)*current_row;
+        path_ind[DOWN_IND] = (i+1) + (N_Col - 1)*(current_row + 1);
+        path_ind[LEFT_IND] = (i+1) - N_Col + (N_Col - 1)*(current_row + 1);
+        path_ind[RIGHT_IND] = (i+1) + (N_Col - 1)*current_row;
+
+        for (int j = 0; j < NoC->N_neighbors; j++)
+        {
+            if(path_ind[j] > 0 && path_ind[j] <= N_joint)
+            {
+                NoC->Fault_Paths_send[path_ind[j] - 1] = switch_button_status[j];
             }
         }
+
+        if(N_Col > 1)
+        {
+            if ((i + 1) % N_Col == 1) // first column
+            {
+                if (path_ind[LEFT_IND] > 0 && path_ind[LEFT_IND] <= N_joint)
+                {
+                    NoC->Fault_Paths_send[path_ind[LEFT_IND] - 1] = -1;
+                }
+            }
+            else if ((i + 1) % N_Col == 0) // last column
+            {
+                if (path_ind[RIGHT_IND] > 0 && path_ind[RIGHT_IND] <= N_joint)
+                {
+                    NoC->Fault_Paths_send[path_ind[RIGHT_IND] - 1] = -1;
+                }
+            }
+        }
+
+//        for(int j = 0; j < NoC->N_paths; j++)
+//        {
+//            if (rank == 2) std::cout << NoC->Fault_Paths_send[j] << ", ";
+//        }
+//        if (rank == 2) std::cout << std::endl;
 #endif
 #ifdef USE_MPI
         Fault_Isolated_Update(NoC);
