@@ -24,8 +24,8 @@ public:
 
     NOC_FAULT(NOC *NoC, int rank);
 
-    void Fault_Isolated_Update(NOC *NoC);
-    void Find_Isolated_Sets(NOC *NoC);
+    void Fault_Isolated_Update(NOC *NoC, int rank);
+    void Find_Isolated_Sets(NOC *NoC, int rank);
     void Find_Isolated_CRs_by_max_nodes(NOC *NoC);
     void Find_Isolated_CRs_by_max_alloc(NOC *NoC);
     int Find_Alloc_Num_in_Set(NOC *NoC, std::vector<int> set);

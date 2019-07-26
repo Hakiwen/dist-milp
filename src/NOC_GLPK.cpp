@@ -130,7 +130,7 @@ void NOC_GLPK::CreateModel(NOC *NoC)
         glp_add_rows(this->model, 1);
         glp_set_row_name(this->model, NoC->con_size, name.c_str());
 
-        if(NoC->Fault_CRs[i-1] == 0) //&& NoC->D(i-1, i-1) > 0)
+        if(NoC->Fault_CRs[i-1] == 0 && NoC->Fault_External_CRs[i-1] == 0) //&& NoC->D(i-1, i-1) > 0)
         {
             glp_set_row_bnds(this->model, NoC->con_size, GLP_UP, 0.0, 1.0);
         }

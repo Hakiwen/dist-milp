@@ -16,26 +16,30 @@ NOC_FAULT::NOC_FAULT(NOC *NoC, int rank)
 #endif
 }
 
-void NOC_FAULT::Fault_Isolated_Update(NOC *NoC)
+void NOC_FAULT::Fault_Isolated_Update(NOC *NoC, int rank)
 {
     // Two lines below are updated from both internal and external faults
     NoC->CreateNeighborMatrixSquareTopology(); // update a Degree Matrix and Adjacency Matrix
-    this->Find_Isolated_Sets(NoC); // update Isolated sets
+    this->Find_Isolated_Sets(NoC, rank); // update Isolated sets
 //    this->Find_Isolated_CRs_by_max_nodes(NoC); // update Fault_Isolated
     this->Find_Isolated_CRs_by_max_alloc(NoC); // update Fault_Isolated
 }
 
-void NOC_FAULT::Find_Isolated_Sets(NOC *NoC)
+void NOC_FAULT::Find_Isolated_Sets(NOC *NoC, int rank)
 {
-//    std::cout << "Disconnected: " << std::endl;
-//    std::cout << A << std::endl;
+//    if(rank == 1)
+//    {
+//        std::cout << "Disconnected: " << std::endl;
+//        std::cout << NoC->A << std::endl;
+//    }
     std::vector<bool> visited(NoC->N_CRs, false);
     std::vector<int> disconnected_set;
 
     NoC->disconnected_sets.clear();
     for (int i = 0; i < NoC->N_CRs; i++)
     {
-        if (visited[i] == false && (NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i]) == 0)
+//        if (visited[i] == false && (NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i]) == 0)
+        if (visited[i] == false && NoC->Fault_Internal_CRs[i] == 0)
         {
             std::list<int> q;
             visited[i] = true;
@@ -62,12 +66,21 @@ void NOC_FAULT::Find_Isolated_Sets(NOC *NoC)
         }
     }
 
-//    std::cout <<  "disconnected_sets: " << std::endl;
-//    for (unsigned int i = 0; i < NoC->disconnected_sets.size(); i++)
+//    if(rank == 1)
 //    {
-//        for (unsigned int j = 0; j < NoC->disconnected_sets[i].size(); j++)
+//        std::cout << "disconnected_sets: " << std::endl;
+//        for (unsigned int i = 0; i < NoC->disconnected_sets.size(); i++)
 //        {
-//            std::cout << NoC->disconnected_sets[i][j] << " ";
+//            for (unsigned int j = 0; j < NoC->disconnected_sets[i].size(); j++)
+//            {
+//                std::cout << NoC->disconnected_sets[i][j] << " ";
+//            }
+//            std::cout << std::endl;
+//        }
+//
+//        for (int i = 0; i < NoC->N_paths; i++)
+//        {
+//            std::cout << NoC->Fault_Paths_receive[i] << " ";
 //        }
 //        std::cout << std::endl;
 //    }
@@ -135,7 +148,7 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_nodes(NOC *NoC)
 
         for (int i = 0; i < NoC->N_CRs; i++)
         {
-            if(NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i])
+            if(NoC->Fault_Internal_CRs[i])// || NoC->Fault_External_CRs[i])
             {
                 NoC->Fault_Isolated_CRs_ind.erase(std::remove(NoC->Fault_Isolated_CRs_ind.begin(), NoC->Fault_Isolated_CRs_ind.end(), i+1), NoC->Fault_Isolated_CRs_ind.end());
             }
@@ -199,7 +212,25 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
                     }
                     max_alloc_set = i;
                 }
-                else
+                else if (Find_Alloc_Num_in_Set(NoC, NoC->disconnected_sets[i]) == Find_Alloc_Num_in_Set(NoC, NoC->disconnected_sets[max_alloc_set]))
+                {
+                    if (NoC->disconnected_sets[i].size() > NoC->disconnected_sets[max_alloc_set].size())
+                    {
+                        for (unsigned int j = 0; j < NoC->disconnected_sets[max_alloc_set].size(); j++)
+                        {
+                            NoC->Fault_Isolated_CRs_ind.push_back(NoC->disconnected_sets[max_alloc_set][j]);
+                        }
+                        max_alloc_set = i;
+                    }
+                    else
+                    {
+                        for (unsigned int j = 0; j < NoC->disconnected_sets[i].size(); j++)
+                        {
+                            NoC->Fault_Isolated_CRs_ind.push_back(NoC->disconnected_sets[i][j]);
+                        }
+                    }
+                }
+                else if(Find_Alloc_Num_in_Set(NoC, NoC->disconnected_sets[i]) < Find_Alloc_Num_in_Set(NoC, NoC->disconnected_sets[max_alloc_set]))
                 {
                     for (unsigned int j = 0; j < NoC->disconnected_sets[i].size(); j++)
                     {
@@ -266,7 +297,7 @@ void NOC_FAULT::Find_Isolated_CRs_by_max_alloc(NOC *NoC)
 
         for (int i = 0; i < NoC->N_CRs; i++)
         {
-            if(NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i]) // if the fault is already in internal/external, remove it from isolated
+            if(NoC->Fault_Internal_CRs[i])// || NoC->Fault_External_CRs[i]) // if the fault is already in internal/external, remove it from isolated
             {
                 NoC->Fault_Isolated_CRs_ind.erase(std::remove(NoC->Fault_Isolated_CRs_ind.begin(), NoC->Fault_Isolated_CRs_ind.end(), i+1), NoC->Fault_Isolated_CRs_ind.end());
             }
@@ -351,8 +382,9 @@ int NOC_FAULT::Fault_Gathering(NOC *NoC)
                     }
                 }
             }
-            NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i] || NoC->Fault_Isolated_CRs[i] || CRs_to_fail[i];
-            if(NoC->Fault_CRs[i])
+//            NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_External_CRs[i] || NoC->Fault_Isolated_CRs[i] || CRs_to_fail[i];
+            NoC->Fault_CRs[i] = NoC->Fault_Internal_CRs[i] || NoC->Fault_Isolated_CRs[i] || CRs_to_fail[i];
+            if(NoC->Fault_CRs[i] || NoC->Fault_External_CRs[i])
             {
                 NoC->N_Faults_CR += 1;
             }
@@ -469,7 +501,7 @@ int NOC_FAULT::Fault_Detection(NOC *NoC, int rank) // detect fault from the swit
 //        if (rank == 2) std::cout << std::endl;
 #endif
 #ifdef USE_MPI
-        Fault_Isolated_Update(NoC);
+        Fault_Isolated_Update(NoC, rank);
 #endif
         return NoC->fault_internal_status_CR;
     }

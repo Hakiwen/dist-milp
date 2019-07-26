@@ -138,17 +138,12 @@ void NOC_MPI::Gather_Path_Faults(NOC *NoC)
     for (int i = 0; i < NoC->N_paths; i++)
     {
         scatter_data_send[i] = NoC->Fault_Paths_send[i];
+        NoC->Fault_Paths_receive[i] = 0;
     }
 
     int *gather_data_receive = NULL;
     gather_data_receive = new int[this->world_size*NoC->N_paths];
     MPI_Allgather(scatter_data_send, NoC->N_paths, MPI_INT, gather_data_receive, NoC->N_paths, MPI_INT, MPI_COMM_WORLD);
-
-//    for (int i = 0; i < this->world_size*NoC->N_paths; i++)
-//    {
-//        if (this->world_rank == 7) std::cout << gather_data_receive[i] << ", ";
-//    }
-//    if( this->world_rank == 7) std::cout << std::endl;
 
     for (int i = NoC->N_paths; i < this->world_size*NoC->N_paths; i += NoC->N_paths)
     {
@@ -160,15 +155,6 @@ void NOC_MPI::Gather_Path_Faults(NOC *NoC)
             }
         }
     }
-
-//    if (this->world_rank == 7)
-//    {
-//        for (int j = 0; j < NoC->N_paths; j++)
-//        {
-//            std::cout << NoC->Fault_Paths_receive[j] << ", ";
-//        }
-//        std::cout << std::endl;
-//    }
 }
 
 void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)

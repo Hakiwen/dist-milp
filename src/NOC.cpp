@@ -174,7 +174,8 @@ void NOC::CreateNeighborMatrixSquareTopology()
 
     for (int i = 0; i < this->N_CRs; i++)
     {
-        if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0) // if the CR is alive
+//        if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 0) // if the CR is alive
+        if (this->Fault_Internal_CRs[i] == 0) // if the CR is alive
         {
             neighbor_ind[LEFT_IND] = (i + 1) - 1;
             neighbor_ind[RIGHT_IND] = (i + 1) + 1;
@@ -185,8 +186,9 @@ void NOC::CreateNeighborMatrixSquareTopology()
             {
                 if (neighbor_ind[j] > 0 && neighbor_ind[j] <= this->N_CRs)
                 {
-                    if ((this->Fault_Internal_CRs[neighbor_ind[j] - 1] ||
-                         this->Fault_External_CRs[neighbor_ind[j] - 1]) == 0)
+//                    if ((this->Fault_Internal_CRs[neighbor_ind[j] - 1] ||
+//                         this->Fault_External_CRs[neighbor_ind[j] - 1]) == 0)
+                    if (this->Fault_Internal_CRs[neighbor_ind[j] - 1]  == 0)
                     {
                         this->D(i, i) += 1;
                         this->A(i, neighbor_ind[j] - 1) = 1;
@@ -201,8 +203,9 @@ void NOC::CreateNeighborMatrixSquareTopology()
                     if (neighbor_ind[LEFT_IND] > 0 && neighbor_ind[LEFT_IND] <= this->N_CRs)
                     {
                         this->D(i, i) -= 1;
-                        if ((this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1] ||
-                             this->Fault_External_CRs[neighbor_ind[LEFT_IND] - 1]) == 1)
+//                        if ((this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1] ||
+//                             this->Fault_External_CRs[neighbor_ind[LEFT_IND] - 1]) == 1)
+                        if (this->Fault_Internal_CRs[neighbor_ind[LEFT_IND] - 1]  == 0)
                         {
                             this->D(i, i) += 1;
                         }
@@ -214,8 +217,9 @@ void NOC::CreateNeighborMatrixSquareTopology()
                     if (neighbor_ind[RIGHT_IND] > 0 && neighbor_ind[RIGHT_IND] <= this->N_CRs)
                     {
                         this->D(i, i) -= 1;
-                        if ((this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1] ||
-                             this->Fault_External_CRs[neighbor_ind[RIGHT_IND] - 1]) == 1)
+//                        if ((this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1] ||
+//                             this->Fault_External_CRs[neighbor_ind[RIGHT_IND] - 1]) == 1)
+                        if (this->Fault_Internal_CRs[neighbor_ind[RIGHT_IND] - 1]  == 0)
                         {
                             this->D(i, i) += 1;
                         }
@@ -224,16 +228,16 @@ void NOC::CreateNeighborMatrixSquareTopology()
                 }
             }
         }
-        else if ((this->Fault_Internal_CRs[i] || this->Fault_External_CRs[i]) == 1) // if the CR is dead
+        else if ((this->Fault_Internal_CRs[i]))// || this->Fault_External_CRs[i]) == 1) // if the CR is dead
         {
             this->D(i, i) = -1;
             this->A(i, i) = -1;
         }
     }
 
-    int ind_1 = -1, ind_2 = -1;
     for (int j = 0; j < this->N_paths; j++)
     {
+        int ind_1 = -1, ind_2 = -1;
         if (this->Fault_Paths_receive[j] == 1) // if path j is faulty
         {
             for (int i = 0; i < this->N_CRs; i++) // see which two of CRs, a faulty path j connects
@@ -247,7 +251,6 @@ void NOC::CreateNeighborMatrixSquareTopology()
                     else if (ind_2 == -1)
                     {
                         ind_2 = i;
-                        break;
                     }
                 }
             }
