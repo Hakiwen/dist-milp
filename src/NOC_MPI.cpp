@@ -169,7 +169,7 @@ void NOC_MPI::Gather_Path_Faults(NOC *NoC)
 //        }
 //        std::cout << std::endl;
 //    }
-//}
+}
 
 void NOC_MPI::Broadcast_Sensor(ENGINE *Engine)
 {
