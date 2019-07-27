@@ -50,10 +50,12 @@ int main (int argc, char* argv[])
      * Initialization
      */
 
+    NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
+//    std::cout << NoC_MPI.world_rank << std::endl;
+
     NOC NoC = NOC(N_Row_CRs, N_Col_CRs, N_apps, N_Row_apps, N_Col_apps, app_color, allocator_app_ind, allocator_app_num); // NoC Object
     NoC.CreateTopology("square");
 
-    NOC_MPI NoC_MPI = NOC_MPI(); // NoC MPI Object
     NOC_FAULT NoC_Fault = NOC_FAULT(&NoC, NoC_MPI.world_rank); // NoC Fault Detection Object
 
     NOC_GLPK NoC_GLPK = NOC_GLPK(LP_file, Sol_file); // NoC to GLPK Object
@@ -100,7 +102,6 @@ int main (int argc, char* argv[])
         else // computer resource nodes
         {
             NoC.Voter(NoC_MPI.world_rank, step); // vote on reallocator signals
-
 #if defined (__x86_64__)
 #if ( PRINT ) // print the simulation
             std::cout << "My Rank: " << NoC_MPI.world_rank;

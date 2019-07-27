@@ -36,9 +36,9 @@
 #define GLPK_AS_SOLVER
 
 /** Choose one, comment others **/
-#define USE_ENGINE_W_FEEDBACK
+//#define USE_ENGINE_W_FEEDBACK
 //#define USE_ENGINE_WO_FEEDBACK
-//#define USE_X_PLANE_SIMULATOR
+#define USE_X_PLANE_SIMULATOR
 
 #endif //DIST_MILP_MY_MACROS_HPP
 

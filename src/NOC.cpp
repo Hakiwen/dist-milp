@@ -100,6 +100,24 @@ void NOC::CreateSquareTopology()
         std::cout << "N_nodes: " << this->N_nodes << std::endl;
         std::cout << "N_links: " << this->N_links << std::endl;
     }
+
+    /* Other variables for communication paths and Fault Detection on Paths*/
+    this->comm_path_to_use = new int[this->N_paths];
+    this->comm_path_to_use_received.resize(this->N_paths, this->allocator_app_num);
+    this->path_to_run = new int[this->N_paths];
+    this->N_Faults_Paths = -1;
+    this->prev_N_Faults_Paths = -1;
+    this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
+    this->Fault_Paths_receive = new int[this->N_paths];
+    this->Fault_Paths_send = new int[this->N_paths];
+    for (int i = 0; i < this->N_paths; i++)
+    {
+        this->comm_path_to_use[i] = 0;
+        this->path_to_run[i] = 0;
+        this->Fault_Paths[i] = 0;
+        this->Fault_Paths_receive[i] = 0;
+        this->Fault_Paths_send[i] = -1;
+    }
 }
 
 void NOC::CreateAuxMatrices(const char* topo){
@@ -143,24 +161,6 @@ void NOC::CreateAuxMatrices(const char* topo){
     if(VERBOSE)
     {
         std::cout << "H: \n" << this->H << std::endl;
-    }
-
-    /* Other variables for communication paths and Fault Detection on Paths*/
-    this->comm_path_to_use = new int[this->N_paths];
-    this->comm_path_to_use_received.resize(this->N_paths, this->allocator_app_num);
-    this->path_to_run = new int[this->N_paths];
-    this->N_Faults_Paths = -1;
-    this->prev_N_Faults_Paths = -1;
-    this->Fault_Paths = new int[this->N_paths]; // 0 no fault, 1 has fault (for solver)
-    this->Fault_Paths_receive = new int[this->N_paths];
-    this->Fault_Paths_send = new int[this->N_paths];
-    for (int i = 0; i < this->N_paths; i++)
-    {
-        this->comm_path_to_use[i] = 0;
-        this->path_to_run[i] = 0;
-        this->Fault_Paths[i] = 0;
-        this->Fault_Paths_receive[i] = 0;
-        this->Fault_Paths_send[i] = -1;
     }
 }
 

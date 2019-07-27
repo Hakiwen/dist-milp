@@ -11,7 +11,7 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
     float setpoint = 90.0;
     float Kp = 0.5;
 #elif defined ( USE_X_PLANE_SIMULATOR )
-    float setpoint = 15.0;
+    float setpoint = 15.0, del_a;
     float K_roll = 40.2, K_roll_dot = 22.5, Kp = 0.5*0.011111;
 #endif
 
@@ -46,6 +46,9 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
             Engine->PWM_out = (int)(OPER_PWM + Kp*error);
 #elif defined ( USE_X_PLANE_SIMULATOR )
             Engine->delta_a_out = Kp*(K_roll*(setpoint - Engine->roll_deg) - K_roll_dot*Engine->roll_dot);
+//            del_a = (setpoint - Engine->roll_deg)*40.2 - 22.5*Engine->roll_dot;
+//            del_a = 0.5*0.011111*del_a;
+//            Engine->delta_a_out = del_a;
 #endif
             break;
         }
