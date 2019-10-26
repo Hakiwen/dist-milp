@@ -324,7 +324,7 @@ sudo nano /etc/rc.local
 
 * Add this line before `exit 0`
 ```
-/home/pi/batsetup-rpi.sh &
+/home/pi/batman.sh &
 ```
 
 * Reboot
