@@ -222,7 +222,7 @@ cd ../bin
 
 To deploy this on the immobotarium (Raspberry Pi cluster)
 
-* Instlall [rsync](https://rsync.samba.org/) on both local PC and raspberry pi
+* Install [rsync](https://rsync.samba.org/) on both local PC and raspberry pi
 
 ```
 sudo apt-get install rsync
@@ -253,6 +253,109 @@ sudo mpiexec -np 17 -hosts 192.168.0.19,192.168.0.3,192.168.0.4,192.168.0.5,192.
 ```
 
 ## Building Wireless Mesh Network
+
+### Installation (Internet requires only this step)
+
+* Install dependencies
+```
+sudo apt install libnl-3-dev libnl-genl-3-dev
+```
+
+* Install [B.A.T.M.A.N.-adv](https://www.open-mesh.org/projects/open-mesh/wiki)
+```
+git clone https://git.open-mesh.org/batctl.git
+cd batctl
+sudo make install
+sudo apt-get install alfred
+```
+
+### Create a script for setting up mesh network
+```
+nano batman.sh
+```
+
+* Put this snippet in the text file
+```
+#!/bin/bash
+sudo modprobe batman-adv
+sleep 1s
+sudo ip link set wlan0 down
+sleep 1s
+sudo service dhcpcd stop
+sleep 1s
+sudo service wpa_supplicant stop
+sleep 1s
+#sudo ifconfig wlan0 mtu 1532
+sudo iwconfig wlan0 mode ad-hoc
+sudo iwconfig wlan0 essid my-mesh-network
+sudo iwconfig wlan0 ap <ANY_MAC_ADDRESS> # must be the same for all nodes
+sudo iwconfig wlan0 channel 8
+sleep 1s
+sudo ip link set wlan0 up
+sleep 1s
+sudo batctl if add wlan0
+sleep 1s
+sudo ifconfig bat0 up
+sleep 5s
+sudo ifconfig bat0 172.27.0.x/16 # IP Address must be different among nodes
+sleep 1s
+sudo service dhcpcd start
+sleep 1s
+sudo service wpa_supplicant start
+sleep 1s
+exit 0
+```
+
+### Disable Dhcpcd for wireless module
+```
+sudo nano /etc/dhcpcd.conf
+```
+
+* Add this line at the end of the file
+```
+denyinterfaces wlan0
+```
+
+### Start the script after boot
+```
+sudo rfkill unblack all
+sudo nano /etc/rc.local
+```
+
+* Add this line before `exit 0`
+```
+/home/pi/batsetup-rpi.sh &
+```
+
+* Reboot
+
+### Checking
+* Check if batman is running correctly 
+```
+sudo ifconfig
+```
+* Both `bat0` and `wlan0` should be appeared
+
+* Look at neighbors' wireless interface MAC address
+```
+sudo batctl n
+```
+
+* Look at neighbors' IP address
+```
+sudo batctl dc
+```
+
+### Testing
+* ping a neighbor using IP address
+```
+sudo ping 172.27.0.x
+```
+
+* ping a neighbor using MAC address
+```
+sudo batctl ping xx:xx:xx:xx:xx:xx
+```
 
 ## Troubleshoot
 
