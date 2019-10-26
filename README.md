@@ -250,6 +250,8 @@ sudo mpiexec -np 18 -hosts 192.168.0.2,192.168.0.3,192.168.0.4,192.168.0.5,192.1
 sudo mpiexec -np 17 -hosts 192.168.0.19,192.168.0.3,192.168.0.4,192.168.0.5,192.168.0.6,192.168.0.7,192.168.0.8,192.168.0.9,192.168.0.10,192.168.0.11,192.168.0.12,192.168.0.13,192.168.0.14,192.168.0.15,192.168.0.16,192.168.0.17,192.168.0.18 ./DIST_MILP
 ```
 
+## Building Wireless Mesh Network
+
 ## Troubleshoot
 
 * make sure the local pc and the raspberry pi that will execute mpiexec used to ssh to all other Pis at least once

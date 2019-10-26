@@ -20,7 +20,7 @@
 #endif
 #elif defined ( USE_X_PLANE_SIMULATOR )
 #include "udp_driver.h"
-#define PC_IP_ADDRESS "192.168.0.130"
+#define PC_IP_ADDRESS "192.168.0.19"
 #define X_PLANE_IP_ADDRESS "192.168.0.99"
 #define X_PLANE_PORT 49000
 #define X_PLANE_MAX_BYTE 1024

@@ -11,7 +11,7 @@ void APP_PID(NOC* NoC, NOC_FAULT *NoC_Fault, NOC_GLPK *NoC_GLPK, GLPK_SOLVER *pr
     float setpoint = 90.0;
     float Kp = 0.5;
 #elif defined ( USE_X_PLANE_SIMULATOR )
-    float setpoint = 15.0, del_a;
+    float setpoint = 5.0, del_a;
     float K_roll = 40.2, K_roll_dot = 22.5, Kp = 0.5*0.011111;
 #endif
 
