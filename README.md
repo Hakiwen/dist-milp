@@ -2,6 +2,8 @@
 
 Safety-Critical Task Allocation software project sponsored by [SAFRAN](https://www.safran-group.com/).
 
+For more information on theoretical aspect, refer to this [paper](https://ieeexplore.ieee.org/document/8569348).
+
 This repository includes both centralized and decentralized versions.
 
 ## Getting Started
