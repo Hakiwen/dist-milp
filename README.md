@@ -299,9 +299,9 @@ sudo ifconfig bat0 <IP_ADDRESS> up
 #sleep 5s
 #sudo ifconfig bat0 172.27.0.x/16 # IP Address must be different among nodes
 sleep 1s
-sudo service dhcpcd start
-sleep 1s
 sudo service wpa_supplicant start
+sleep 1s
+sudo service dhcpcd start
 sleep 1s
 exit 0
 ```
