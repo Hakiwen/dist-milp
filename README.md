@@ -306,6 +306,11 @@ sleep 1s
 exit 0
 ```
 
+* Allow the file to be executed
+```
+chmod +x batman.sh
+```
+
 ### Disable Dhcpcd for wireless module
 ```
 sudo nano /etc/dhcpcd.conf
