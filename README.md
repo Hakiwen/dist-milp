@@ -295,9 +295,9 @@ sudo ip link set wlan0 up
 sleep 1s
 sudo batctl if add wlan0
 sleep 1s
-sudo ifconfig bat0 up
-sleep 5s
-sudo ifconfig bat0 172.27.0.x/16 # IP Address must be different among nodes
+sudo ifconfig bat0 <IP_ADDRESS> up
+#sleep 5s
+#sudo ifconfig bat0 172.27.0.x/16 # IP Address must be different among nodes
 sleep 1s
 sudo service dhcpcd start
 sleep 1s
@@ -318,7 +318,7 @@ denyinterfaces wlan0
 
 ### Start the script after boot
 ```
-sudo rfkill unblack all
+sudo rfkill unblock all
 sudo nano /etc/rc.local
 ```
 
