@@ -2,7 +2,9 @@
 
 Safety-Critical Task Allocation software project sponsored by [SAFRAN](https://www.safran-group.com/).
 
-For more information on theoretical aspect, refer to this [paper](https://ieeexplore.ieee.org/document/8569348).
+For more information on theoretical aspect, refer to these papers.
+1) [L. Sutter et al., "Experimental Allocation of Safety-Critical Applications on Reconfigurable Multi-Core Architecture," 2018 IEEE/AIAA 37th Digital Avionics Systems Conference (DASC), London, 2018, pp. 1-10, doi: 10.1109/DASC.2018.8569348.](https://ieeexplore.ieee.org/document/8569348)
+2) [T. Khamvilai et al., "Task Allocation of Safety-Critical Applications on Reconfigurable Multi-Core Architectures with an Application on Control of Propulsion System," 2019 IEEE/AIAA 38th Digital Avionics Systems Conference (DASC), San Diego, CA, USA, 2019, pp. 1-10, doi: 10.1109/DASC43569.2019.9081642.](https://ieeexplore.ieee.org/document/9081642)
 
 This repository includes both centralized and decentralized versions.
 
